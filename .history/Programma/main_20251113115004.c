@@ -93,7 +93,7 @@ int inserisciRotolo(t_Rotolo[], int);
 int modificaRotolo(t_Rotolo[], int);
 int eliminaRotolo(t_Rotolo[], int);
 int visualizzaRotolo(t_Rotolo[], int);
-int cercaRotoloPerColore(t_Rotolo[], int);
+int cercaRotoloPerCategoria();
 int SalvaRotoliSuFile(t_Rotolo[], int);
 int CaricaRotoliDaFile(t_Rotolo[], int *);
 int SalvaProgettiSuFile(t_Progetto[], int);
@@ -125,15 +125,13 @@ int main()
             nRotoli = inserisciRotolo(rotoli);
             break;
         case 2:
-            printf("INSERISCI L'ID DEL ROTOLO DA ELIMINARE: ");
-            scanf("%s", );
-            modificaRotolo(rotoli, nRotoli, id);
+            modificaRotolo(rotoli);
             break;
         case 3:
-            nRotoli = eliminaRotolo(rotoli, nRotoli);
+            nRotoli = eliminaRotolo(rotoli);
             break;
         case 4:
-            visualizzaRotolo(rotoli, nRotoli);
+            visualizzaRotolo(rotoli);
             break;
         case 5:
             cercaRotoloPerCategoria();
@@ -225,6 +223,8 @@ int eliminaRotolo(t_Rotolo rotoli[], int nRotoli)
 {
     int i, j;
     char id[MAX_CARATTERI];
+    printf("INSERISCI L'ID DEL ROTOLO DA ELIMINARE: ");
+    scanf("%s", id);
     for(i=0; i<nRotoli; i++) {
         if(strcmp(rotoli[i].id, id) == 0) {
             for(j=i; j<nRotoli-1; j++) {
@@ -238,58 +238,4 @@ int eliminaRotolo(t_Rotolo rotoli[], int nRotoli)
     printf("ROTOLO %s NON TROVATO.\n", id);
     return nRotoli;
 }
-
-int visualizzaRotolo(t_Rotolo rotoli[], int nRotoli)
-{
-    int i;
-    printf("ELENCO ROTOLO:\n");
-    for(i=0; i<nRotoli; i++) {
-        printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA TOTALE: %.2f m, RESIDUO: %.2f cm, COSTO AL METRO: %.2f, FORNITORE: %s\n",
-               rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-               rotoli[i].lunghezza_totale, rotoli[i].residuo,
-               rotoli[i].costo_metro, rotoli[i].fornitore);
-    }
-    return 0;
-}
-
-int cercaRotoloPerColore()
-{
-    char categoria[MAX_CARATTERI];
-    printf("INSERISCI LA CATEGORIA DA CERCARE: ");
-    scanf("%s", categoria);
-    // Implementare la logica di ricerca in base alla categoria
-    printf("FUNZIONE DI RICERCA NON ANCORA IMPLEMENTATA.\n");
-    return 0;
-}
-
-int SalvaRotoliSuFile(t_Rotolo rotoli[], int nRotoli)
-{
-    FILE *file = fopen(FNROTOLO, "wb");
-    if (file == NULL)
-    {
-        printf("ERRORE NEL SALVATAGGIO DEI ROTOLO SUL FILE.\n");
-        return -1;
-    }
-    fwrite(&nRotoli, sizeof(int), 1, file);
-    fwrite(rotoli, sizeof(t_Rotolo), nRotoli, file);
-    fclose(file);
-    printf("ROTOLO SALVATI CON SUCCESSO SUL FILE.\n");
-    return 0;
-}
-
-int CaricaRotoliDaFile(t_Rotolo rotoli[], int *nRotoli)
-{
-    FILE *file = fopen(FNROTOLO, "rb");
-    if (file == NULL)
-    {
-        printf("ERRORE NEL CARICAMENTO DEI ROTOLO DAL FILE.\n");
-        return -1;
-    }
-    fread(nRotoli, sizeof(int), 1, file);
-    fread(rotoli, sizeof(t_Rotolo), *nRotoli, file);
-    fclose(file);
-    printf("ROTOLO CARICATI CON SUCCESSO DAL FILE.\n");
-    return 0;
-}
-
 

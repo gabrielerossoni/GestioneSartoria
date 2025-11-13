@@ -126,7 +126,7 @@ int main()
             break;
         case 2:
             printf("INSERISCI L'ID DEL ROTOLO DA ELIMINARE: ");
-            scanf("%s", );
+            scanf("%s", id);
             modificaRotolo(rotoli, nRotoli, id);
             break;
         case 3:

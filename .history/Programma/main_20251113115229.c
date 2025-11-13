@@ -94,6 +94,7 @@ int modificaRotolo(t_Rotolo[], int);
 int eliminaRotolo(t_Rotolo[], int);
 int visualizzaRotolo(t_Rotolo[], int);
 int cercaRotoloPerColore(t_Rotolo[], int);
+
 int SalvaRotoliSuFile(t_Rotolo[], int);
 int CaricaRotoliDaFile(t_Rotolo[], int *);
 int SalvaProgettiSuFile(t_Progetto[], int);
@@ -126,7 +127,7 @@ int main()
             break;
         case 2:
             printf("INSERISCI L'ID DEL ROTOLO DA ELIMINARE: ");
-            scanf("%s", );
+            scanf("%s", id);
             modificaRotolo(rotoli, nRotoli, id);
             break;
         case 3:
