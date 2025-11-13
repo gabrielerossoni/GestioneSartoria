@@ -8,6 +8,8 @@
 
 // ---COSTANTI---
 #define MAX_CARATTERI 50
+#define MAX_ROTOLI 500
+#define MAX_PROGETTI00
 #define FNABITI "abiti.dat"
 #define FNINVENTARIO "inventario.dat"
 #define FNROTOLO "rotoli.dat"
@@ -47,11 +49,11 @@ typedef struct
 } t_Ritaglio;
 typedef struct
 {
-    char nome[50];
-    char partita_iva[20];
-    char indirizzo[100];
-    char telefono[20];
-    char email[50];
+    char nome[MAX_CARATTERI];
+    char partita_iva[MAX_CARATTERI];
+    char indirizzo[MAX_CARATTERI];
+    char telefono[MAX_CARATTERI];
+    char email[MAX_CARATTERI];
 } t_Fornitore;
 
 typedef struct
@@ -82,55 +84,75 @@ typedef struct
 
 // ---PROTOTIPI FUNZIONI---
 int menu();
-int inserisciRotolo();
-int modificaRotolo();
+int inserisciRotolo(t_Rotolo[]);
+int modificaRotolo(t_Rotolo[]);
+int eliminaRotolo(t_Rotolo[]);
+int visualizzaRotolo(t_Rotolo[]);
+int cercaRotoloPerCategoria();
+int SalvaRotoliSuFile(t_Rotolo[], int);
+int CaricaRotoliDaFile(t_Rotolo[], int *);
+int SalvaProgettiSuFile(t_Progetto[], int);
+int CaricaProgettiDaFile(t_Progetto[], int *);
+int SalvaFornitoriSuFile(t_Fornitore[], int);
+int CaricaFornitoriDaFile(t_Fornitore[], int *);
+int SalvaPrelieviSuFile(t_Prelievo[], int);
+int CaricaPrelieviDaFile(t_Prelievo[], int *);
+int SalvaRitagliSuFile(t_Ritaglio[], int);
+int CaricaRitagliDaFile(t_Ritaglio[], int *);
 
 // ---MAIN---
 int main()
 {
+    t_Rotolo rotoli[MAX_ROTOLI];
+    t_Progetto progetti[MAX_PROGETTI];
+    t_Fornitore fornitori[200];
+    t_Prelievo prelievi[200];
+    t_Ritaglio ritagli[200];
+    int nRotoli=0, nProgetti=0, nFornitori=0, nPrelievi=0, nRitagli=0;
     int scelta;
-    do
-    {
+
+    do{
         scelta = menu();
         switch (scelta)
         {
         case 1:
-
-            inserisciRotolo();
+            nRotoli = inserisciRotolo(rotoli);
             break;
         case 2:
-            modificaRotolo();
+            modificaRotolo(rotoli);
             break;
         case 3:
-            eliminaRotolo();
+            nRotoli = eliminaRotolo(rotoli);
             break;
         case 4:
-            ();
+            visualizzaRotolo(rotoli);
             break;
         case 5:
-            cercaAbitoPerTaglia();
-            break;
-        case 6:
-            cercaAbitoPerPrezzo();
+            cercaRotoloPerCategoria();
             break;
         case 7:
+            SalvaRotoliSuFile(rotoli, nRotoli);
             printf("Uscita dal programma.\n");
             break;
         default:
             printf("Opzione non valida. Riprova.\n");
+            break;
         }
-    } while (scelta != 7);
+    }while (scelta!=7);
     return 0;
 }
 
 //---FUNZIONI---
-int menu(){
+int menu()
+{
     int scelta;
     printf("\n--- MENU SARTORIA ---\n");
     printf("1. AGGIUNGI ROTOLO\n");
-    printf("2. VISUALIZZA ROTOLO\n");
-    printf("3. CERCA ROTOLO PER CATEGORIA\n");
-    printf("7. ESCI\n");
+    printf("2. MODIFICA ROTOLO\n");
+    printf("3. ELIMINA ROTOLO\n");
+    printf("4. VISUALIZZA ROTOLO\n");
+    printf("5. CERCA ROTOLO PER CATEGORIA\n");
+    printf("7. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
