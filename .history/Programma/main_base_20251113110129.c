@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 // ---COSTANTI---
 #define MAX_CARATTERI 50
 #define FILENAME1 "abiti.dat"
@@ -13,7 +14,8 @@
 #define FILENAME3 "rotoli.dat"
 
 // ---STRUTTURE DATI---
-typedef struct{
+typedef struct
+{
     char id[MAX_CARATTERI]; // auto incrementale
     char tipo[MAX_CARATTERI];
     char colore[MAX_CARATTERI];
@@ -24,11 +26,12 @@ typedef struct{
     int quantita;
 } Rotolo;
 
-typedef struct {
-    char id[50];	// incrementale
+typedef struct
+{
+    char id[50]; // incrementale
     char id_rotolo[50];
     float metraggio_prelevato;
-    char operatore[50];	// nome di chi ha effettuato il prelievo
+    char operatore[50]; // nome di chi ha effettuato il prelievo
     char data[11];
 } Prelievo;
 
@@ -60,13 +63,14 @@ typedef struct
 int menu();
 int inserisciRotolo();
 int modificaRotolo();
-int cercaAbitoPerTipo();
+int ();
 int cercaAbitoPerColore();
 int cercaAbitoPerTaglia();
 int cercaAbitoPerPrezzo();
 
-// ---MAIN---   
-int main(){
+// ---MAIN---
+int main()
+{
     int scelta;
     do
     {
@@ -101,23 +105,20 @@ int main(){
     return 0;
 }
 
-// 
+//---FUNZIONI---
 int menu(){
     int scelta;
     printf("\n--- MENU SARTORIA ---\n");
-    printf("1. AGGIUNGI ABITO\n");
-    printf("2. VISUALIZZA ABITI\n");
-    printf("3. CERCA ABITO PER TIPO\n");
-    printf("4. CERCA ABITO PER COLORE\n");
-    printf("5. CERCA ABITO PER TAGLIA\n");
-    printf("6. CERCA ABITO PER PREZZO\n");
+    printf("1. AGGIUNGI ROTOLO\n");
+    printf("2. VISUALIZZA ROTOLO\n");
+    printf("3. CERCA ROTOLO PER CATEGORIA\n");
     printf("7. ESCI\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
 }
-void aggiungiAbito()
-{
+
+void aggiungiAbito(){
     Abito abito;
     FILE *file = fopen(FILENAME, "ab");
     if (file == NULL)

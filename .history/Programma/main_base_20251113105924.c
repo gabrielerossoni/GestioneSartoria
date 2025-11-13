@@ -101,16 +101,13 @@ int main(){
     return 0;
 }
 
-// 
+
 int menu(){
     int scelta;
     printf("\n--- MENU SARTORIA ---\n");
     printf("1. AGGIUNGI ABITO\n");
     printf("2. VISUALIZZA ABITI\n");
-    printf("3. CERCA ABITO PER TIPO\n");
-    printf("4. CERCA ABITO PER COLORE\n");
-    printf("5. CERCA ABITO PER TAGLIA\n");
-    printf("6. CERCA ABITO PER PREZZO\n");
+    printf("3. CERCA ABITO PER TIPO\n")
     printf("7. ESCI\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);

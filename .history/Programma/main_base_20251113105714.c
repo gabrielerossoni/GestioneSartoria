@@ -101,7 +101,7 @@ int main(){
     return 0;
 }
 
-// 
+
 int menu(){
     int scelta;
     printf("\n--- MENU SARTORIA ---\n");

@@ -101,8 +101,8 @@ int main(){
     return 0;
 }
 
-// 
-int menu(){
+
+int manu(){
     int scelta;
     printf("\n--- MENU SARTORIA ---\n");
     printf("1. AGGIUNGI ABITO\n");
@@ -112,7 +112,7 @@ int menu(){
     printf("5. CERCA ABITO PER TAGLIA\n");
     printf("6. CERCA ABITO PER PREZZO\n");
     printf("7. ESCI\n");
-    printf("SCELTA: ");
+    printf("Scegli un'opzione: ");
     scanf("%d", &scelta);
     return scelta;
 }

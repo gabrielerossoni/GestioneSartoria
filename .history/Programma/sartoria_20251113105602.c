@@ -66,7 +66,8 @@ int cercaAbitoPerTaglia();
 int cercaAbitoPerPrezzo();
 
 // ---MAIN---   
-int main(){
+int main()
+{
     int scelta;
     do
     {
@@ -101,18 +102,18 @@ int main(){
     return 0;
 }
 
-// 
-int menu(){
+int main()
+{
     int scelta;
-    printf("\n--- MENU SARTORIA ---\n");
-    printf("1. AGGIUNGI ABITO\n");
-    printf("2. VISUALIZZA ABITI\n");
-    printf("3. CERCA ABITO PER TIPO\n");
-    printf("4. CERCA ABITO PER COLORE\n");
-    printf("5. CERCA ABITO PER TAGLIA\n");
-    printf("6. CERCA ABITO PER PREZZO\n");
-    printf("7. ESCI\n");
-    printf("SCELTA: ");
+    printf("\n--- Menu Sartoria ---\n");
+    printf("1. Aggiungi Abito\n");
+    printf("2. Visualizza Abiti\n");
+    printf("3. Cerca Abito per Tipo\n");
+    printf("4. Cerca Abito per Colore\n");
+    printf("5. Cerca Abito per Taglia\n");
+    printf("6. Cerca Abito per Prezzo\n");
+    printf("7. Esci\n");
+    printf("Scegli un'opzione: ");
     scanf("%d", &scelta);
     return scelta;
 }

@@ -1,23 +1,16 @@
-// Marcello Patrini e Gabriele Rossoni - 4IB
-// LINK PROGETTO GITHUB: https://github.com/gabrielerossoni/GestioneSartoria
+// Marcello Patrini e Gabriele Rossoni      4IB
+// LINK PROGETTO GITHUB: 
 
-// ---LIBRERIE---
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// ---COSTANTI---
-#define MAX_CARATTERI 50
-#define FILENAME1 "abiti.dat"
-#define FILENAME2 "inventario.dat"
-#define FILENAME3 "rotoli.dat"
-
-// ---STRUTTURE DATI---
-typedef struct{
-    char id[MAX_CARATTERI]; // auto incrementale
-    char tipo[MAX_CARATTERI];
-    char colore[MAX_CARATTERI];
-    char fantasia[MAX_CARATTERI];
+typedef struct
+{
+    char id[50]; // auto incrementale
+    char tipo[50];
+    char colore[30];
+    char fantasia[30];
     int lunghezza;   /* metri */
     float larghezza; /* centimetri */
     float peso;      /* chilogrammi */
@@ -56,17 +49,16 @@ typedef struct
     float;
 } Fornitore;
 
-// ---PROTOTIPI FUNZIONI---
 int menu();
 int inserisciRotolo();
-int modificaRotolo();
+int visualizzaAbiti();
 int cercaAbitoPerTipo();
 int cercaAbitoPerColore();
 int cercaAbitoPerTaglia();
 int cercaAbitoPerPrezzo();
 
-// ---MAIN---   
-int main(){
+int main()
+{
     int scelta;
     do
     {
@@ -101,18 +93,18 @@ int main(){
     return 0;
 }
 
-// 
-int menu(){
+int main()
+{
     int scelta;
-    printf("\n--- MENU SARTORIA ---\n");
-    printf("1. AGGIUNGI ABITO\n");
-    printf("2. VISUALIZZA ABITI\n");
-    printf("3. CERCA ABITO PER TIPO\n");
-    printf("4. CERCA ABITO PER COLORE\n");
-    printf("5. CERCA ABITO PER TAGLIA\n");
-    printf("6. CERCA ABITO PER PREZZO\n");
-    printf("7. ESCI\n");
-    printf("SCELTA: ");
+    printf("\n--- Menu Sartoria ---\n");
+    printf("1. Aggiungi Abito\n");
+    printf("2. Visualizza Abiti\n");
+    printf("3. Cerca Abito per Tipo\n");
+    printf("4. Cerca Abito per Colore\n");
+    printf("5. Cerca Abito per Taglia\n");
+    printf("6. Cerca Abito per Prezzo\n");
+    printf("7. Esci\n");
+    printf("Scegli un'opzione: ");
     scanf("%d", &scelta);
     return scelta;
 }
