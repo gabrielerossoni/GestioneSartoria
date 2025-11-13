@@ -1,4 +1,4 @@
-// Marcello Patrini e Gabriele Rossoni - 4IB
+// Gabriele Rossoni e Marcello Patrini - 4IB
 // LINK PROGETTO GITHUB: https://github.com/gabrielerossoni/GestioneSartoria
 
 // ---LIBRERIE---
@@ -8,9 +8,9 @@
 
 // ---COSTANTI---
 #define MAX_CARATTERI 50
-#define FILENAME1 "abiti.dat"
-#define FILENAME2 "inventario.dat"
-#define FILENAME3 "rotoli.dat"
+#define FNABITI "abiti.dat"
+#define FNINVENTARIO "inventario.dat"
+#define FNROTOLO "rotoli.dat"
 
 // ---STRUTTURE DATI---
 typedef struct{
@@ -18,55 +18,59 @@ typedef struct{
     char tipo[MAX_CARATTERI];
     char colore[MAX_CARATTERI];
     char fantasia[MAX_CARATTERI];
-    int lunghezza;   /* metri */
-    float larghezza; /* centimetri */
-    float peso;      /* chilogrammi */
-    int quantita;
-} Rotolo;
+    float lunghezza_totale;   /* metri */
+    float residuo; /* centimetri */
+    float costo_metro;
+    char fornitore[MAX_CARATTERI];
+    char lotto[MAX_CARATTERI];
+    t_Data data_acquisto;
+    char stato[MAX_CARATTERI];
+    char noteAggiuntive[100];
+} t_Rotolo;
 
-typedef struct {
-    char id[50];	// incrementale
-    char id_rotolo[50];
+typedef struct{
+    char id[MAX_CARATTERI];
+    char id_rotolo[MAX_CARATTERI];
     float metraggio_prelevato;
-    char operatore[50];	// nome di chi ha effettuato il prelievo
-    char data[11];
-} Prelievo;
+    t_Data data;
+    char operatore[MAX_CARATTERI];
+} t_Prelievo;
 
-typedef struct
-{
-    lunghezza; /* metri */
+typedef struct{
+    char idRitaglio[MAX_CARATTERI];
+    char id_rotolo[MAX_CARATTERI];
+    float lunghezza;
+    t_Data dataCreazione;
+} t_Ritaglio;
+typedef struct{
+    char nome[50];
+    char partita_iva[20];
+    char indirizzo[100];
+    char telefono[20];
+    char email[50];
+} t_Fornitore;
 
-    float larghezza; /* centimetri */
-    float peso;      /* chilogrammi */
-    int quantita;
-} Rotolo;
-typedef struct
-{
-    lunghezza; /* metri */
-
-    float larghezza; /* centimetri */
-    float peso;      /* chilogrammi */
-    int quantita;
-} Rotolo;
-typedef struct
-{
-    char tipo[MAX];
-    char colore[MAX];
-    char taglia[MAX];
-    float;
-} Fornitore;
+typedef struct{
+    char tipo[MAX_CARATTERI];
+    char colore[MAX_CARATTERI];
+    char taglia[MAX_CARATTERI];
+    float prezzo;
+} t_;
+typedef struct{
+    int giorno;
+    int mese;
+    int anno;
+} t_Data;
 
 // ---PROTOTIPI FUNZIONI---
 int menu();
 int inserisciRotolo();
 int modificaRotolo();
-int cercaAbitoPerTipo();
-int cercaAbitoPerColore();
-int cercaAbitoPerTaglia();
-int cercaAbitoPerPrezzo();
+int eliminaRotolo();
 
-// ---MAIN---   
-int main(){
+// ---MAIN---
+int main()
+{
     int scelta;
     do
     {
@@ -74,13 +78,14 @@ int main(){
         switch (scelta)
         {
         case 1:
-            aggiungiAbito();
+    
+            inserisciRotolo();
             break;
         case 2:
-            visualizzaAbiti();
+            modificaRotolo();
             break;
         case 3:
-            cercaAbitoPerTipo();
+            eliminaRotolo();
             break;
         case 4:
             cercaAbitoPerColore();
@@ -101,23 +106,20 @@ int main(){
     return 0;
 }
 
-// 
+//---FUNZIONI---
 int menu(){
     int scelta;
     printf("\n--- MENU SARTORIA ---\n");
-    printf("1. AGGIUNGI ABITO\n");
-    printf("2. VISUALIZZA ABITI\n");
-    printf("3. CERCA ABITO PER TIPO\n");
-    printf("4. CERCA ABITO PER COLORE\n");
-    printf("5. CERCA ABITO PER TAGLIA\n");
-    printf("6. CERCA ABITO PER PREZZO\n");
+    printf("1. AGGIUNGI ROTOLO\n");
+    printf("2. VISUALIZZA ROTOLO\n");
+    printf("3. CERCA ROTOLO PER CATEGORIA\n");
     printf("7. ESCI\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
 }
-void aggiungiAbito()
-{
+
+void aggiungiAbito(){
     Abito abito;
     FILE *file = fopen(FILENAME, "ab");
     if (file == NULL)

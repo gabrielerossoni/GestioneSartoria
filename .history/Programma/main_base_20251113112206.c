@@ -124,7 +124,8 @@ int main()
 }
 
 //---FUNZIONI---
-int menu(){
+int menu()
+{
     int scelta;
     printf("\n--- MENU SARTORIA ---\n");
     printf("1. AGGIUNGI ROTOLO\n");
@@ -134,4 +135,26 @@ int menu(){
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
+}
+
+void aggiungiAbito()
+{
+    Abito abito;
+    FILE *file = fopen(FILENAME, "ab");
+    if (file == NULL)
+    {
+        printf("Errore nell'apertura del file.\n");
+        return;
+    }
+    printf("Inserisci il tipo di abito: ");
+    scanf("%s", abito.tipo);
+    printf("Inserisci il colore di abito: ");
+    scanf("%s", abito.colore);
+    printf("Inserisci la taglia di abito: ");
+    scanf("%s", abito.taglia);
+    printf("Inserisci il prezzo di abito: ");
+    scanf("%f", &abito.prezzo);
+    fwrite(&abito, sizeof(Abito), 1, file);
+    fclose(file);
+    printf("Abito aggiunto con successo.\n");
 }

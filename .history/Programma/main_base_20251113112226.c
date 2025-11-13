@@ -124,7 +124,8 @@ int main()
 }
 
 //---FUNZIONI---
-int menu(){
+int menu()
+{
     int scelta;
     printf("\n--- MENU SARTORIA ---\n");
     printf("1. AGGIUNGI ROTOLO\n");

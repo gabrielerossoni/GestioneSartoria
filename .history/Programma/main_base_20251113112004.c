@@ -13,14 +13,13 @@
 #define FNROTOLO "rotoli.dat"
 
 // ---STRUTTURE DATI---
-typedef struct
-{
+typedef struct{
     char id[MAX_CARATTERI]; // auto incrementale
     char tipo[MAX_CARATTERI];
     char colore[MAX_CARATTERI];
     char fantasia[MAX_CARATTERI];
-    float lunghezza_totale; /* metri */
-    float residuo;          /* centimetri */
+    float lunghezza_totale;   /* metri */
+    float residuo; /* centimetri */
     float costo_metro;
     char fornitore[MAX_CARATTERI];
     char lotto[MAX_CARATTERI];
@@ -29,8 +28,7 @@ typedef struct
     char noteAggiuntive[100];
 } t_Rotolo;
 
-typedef struct
-{
+typedef struct{
     char id[MAX_CARATTERI];
     char id_rotolo[MAX_CARATTERI];
     float metraggio_prelevato;
@@ -38,15 +36,13 @@ typedef struct
     char operatore[MAX_CARATTERI];
 } t_Prelievo;
 
-typedef struct
-{
+typedef struct{
     char idRitaglio[MAX_CARATTERI];
     char id_rotolo[MAX_CARATTERI];
     float lunghezza;
     t_Data dataCreazione;
 } t_Ritaglio;
-typedef struct
-{
+typedef struct{
     char nome[50];
     char partita_iva[20];
     char indirizzo[100];
@@ -54,27 +50,21 @@ typedef struct
     char email[50];
 } t_Fornitore;
 
-typedef struct
-{
-    char id[50];
-    char idCliente[50];
-    char tipo_capo[50];
-    char idRotolo[50];
-    char tessuto_usato[50];
-    t_Data dataConsegna;
-} t_Progetto;
-
-typedef struct
-{
-    t_Data data_controllo;
-    t_Rotolo rotoli[200];
-    float valoreTotale;
-    float metraggioTotale;
-    int numeroRotoli;
-    int priorita_utilizzo;
-} t_Magazzino;
-typedef struct
-{
+typedef struct{
+    id(char[50]) = Codice identificativo univoco del progetto, utile per la 
+tracciabilità. 
+●  idCliente(char[50]) = Codice fiscale del cliente per collegare il progetto al 
+destinatario. 
+●  tipo_capo (char[50]) = Specifica il tipo di capo realizzato (camicia, giacca, 
+pantalone, ecc.). 
+●  idRotolo (char[50]) = Codice del rotolo principale da cui è stato prelevato il 
+tessuto. 
+●  tessuto_usato(char[50]) = Descrizione del tessuto impiegato nel progetto 
+(tipo, colore, fantasia). 
+●   dataConsegna(struct data) = Giorno, mese e anno della consegna prevista 
+o effettiva del capo.
+} t_Proge;
+typedef struct{
     int giorno;
     int mese;
     int anno;
@@ -84,6 +74,7 @@ typedef struct
 int menu();
 int inserisciRotolo();
 int modificaRotolo();
+int eliminaRotolo();
 
 // ---MAIN---
 int main()
@@ -95,7 +86,7 @@ int main()
         switch (scelta)
         {
         case 1:
-
+    
             inserisciRotolo();
             break;
         case 2:
@@ -134,4 +125,25 @@ int menu(){
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
+}
+
+void aggiungiAbito(){
+    Abito abito;
+    FILE *file = fopen(FILENAME, "ab");
+    if (file == NULL)
+    {
+        printf("Errore nell'apertura del file.\n");
+        return;
+    }
+    printf("Inserisci il tipo di abito: ");
+    scanf("%s", abito.tipo);
+    printf("Inserisci il colore di abito: ");
+    scanf("%s", abito.colore);
+    printf("Inserisci la taglia di abito: ");
+    scanf("%s", abito.taglia);
+    printf("Inserisci il prezzo di abito: ");
+    scanf("%f", &abito.prezzo);
+    fwrite(&abito, sizeof(Abito), 1, file);
+    fclose(file);
+    printf("Abito aggiunto con successo.\n");
 }

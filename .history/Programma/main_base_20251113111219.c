@@ -13,77 +13,44 @@
 #define FNROTOLO "rotoli.dat"
 
 // ---STRUTTURE DATI---
-typedef struct
-{
+typedef struct{
     char id[MAX_CARATTERI]; // auto incrementale
     char tipo[MAX_CARATTERI];
     char colore[MAX_CARATTERI];
     char fantasia[MAX_CARATTERI];
-    float lunghezza_totale; /* metri */
-    float residuo;          /* centimetri */
-    float costo_metro;
-    char fornitore[MAX_CARATTERI];
-    char lotto[MAX_CARATTERI];
-    t_Data data_acquisto;
-    char stato[MAX_CARATTERI];
-    char noteAggiuntive[100];
-} t_Rotolo;
+    float lunghezza_totale;   /* metri */
+    float residuo; /* centimetri */
+    costo_metro (float) = Prezzo del tessuto per metro lineare. 
+●  fornitore (struct Fornitore) = Struttura che contiene i dati del fornitore 
+(Partita IVA, nome, indirizzo, contatti, ecc.). 
+●  lotto (char[50]) = Codice identificativo del lotto, generato automaticamente 
+in base al fornitore. 
+●  data_acquisto (struct data) = Struttura che memorizza la data di acquisto 
+(giorno, mese, anno). 
+●  stato (char) = Indica lo stato del rotolo (es. NUOVO, ESAURITO, ecc.). 
+●  noteAggiuntive (char[100]) = Campo testuale per eventuali annotazioni
+} Rotolo;
 
-typedef struct
-{
-    char id[MAX_CARATTERI];
-    char id_rotolo[MAX_CARATTERI];
-    float metraggio_prelevato;
-    t_Data data;
-    char operatore[MAX_CARATTERI];
-} t_Prelievo;
+typedef struct{
+    int id; // auto incrementale
+    int rotolo_id; // riferimento al rotolo
+    float lunghezza_utilizzata; // metri   
+    float costo; // euro
+    float
+    
+} Prelievo;
 
-typedef struct
-{
-    char idRitaglio[MAX_CARATTERI];
-    char id_rotolo[MAX_CARATTERI];
-    float lunghezza;
-    t_Data dataCreazione;
-} t_Ritaglio;
-typedef struct
-{
-    char nome[50];
-    char partita_iva[20];
-    char indirizzo[100];
-    char telefono[20];
-    char email[50];
-} t_Fornitore;
-
-typedef struct
-{
-    char id[50];
-    char idCliente[50];
-    char tipo_capo[50];
-    char idRotolo[50];
-    char tessuto_usato[50];
-    t_Data dataConsegna;
-} t_Progetto;
-
-typedef struct
-{
-    t_Data data_controllo;
-    t_Rotolo rotoli[200];
-    float valoreTotale;
-    float metraggioTotale;
-    int numeroRotoli;
-    int priorita_utilizzo;
-} t_Magazzino;
-typedef struct
-{
+typedef struct{
     int giorno;
     int mese;
     int anno;
-} t_Data;
+} Data;
 
 // ---PROTOTIPI FUNZIONI---
 int menu();
 int inserisciRotolo();
 int modificaRotolo();
+int eliminaRotolo();
 
 // ---MAIN---
 int main()
@@ -95,7 +62,7 @@ int main()
         switch (scelta)
         {
         case 1:
-
+    
             inserisciRotolo();
             break;
         case 2:
@@ -134,4 +101,25 @@ int menu(){
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
+}
+
+void aggiungiAbito(){
+    Abito abito;
+    FILE *file = fopen(FILENAME, "ab");
+    if (file == NULL)
+    {
+        printf("Errore nell'apertura del file.\n");
+        return;
+    }
+    printf("Inserisci il tipo di abito: ");
+    scanf("%s", abito.tipo);
+    printf("Inserisci il colore di abito: ");
+    scanf("%s", abito.colore);
+    printf("Inserisci la taglia di abito: ");
+    scanf("%s", abito.taglia);
+    printf("Inserisci il prezzo di abito: ");
+    scanf("%f", &abito.prezzo);
+    fwrite(&abito, sizeof(Abito), 1, file);
+    fclose(file);
+    printf("Abito aggiunto con successo.\n");
 }
