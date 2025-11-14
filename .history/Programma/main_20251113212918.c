@@ -295,3 +295,4 @@ int CaricaRotoliDaFile(t_Rotolo rotoli[], int *nRotoli)
     printf("ROTOLO CARICATI CON SUCCESSO DAL FILE.\n");
     return 0;
 }
+

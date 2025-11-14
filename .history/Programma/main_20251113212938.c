@@ -295,3 +295,8 @@ int CaricaRotoliDaFile(t_Rotolo rotoli[], int *nRotoli)
     printf("ROTOLO CARICATI CON SUCCESSO DAL FILE.\n");
     return 0;
 }
+int SalvaProgettiSuFile(t_Progetto progetti[], int nProgetti)
+{
+    // Implementare la funzione di salvataggio progetti su file
+    return 0;
+}
