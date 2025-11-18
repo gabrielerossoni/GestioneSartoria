@@ -89,7 +89,6 @@ typedef struct
 
 // ---PROTOTIPI FUNZIONI---
 int menu();
-int menuRotoli();
 int inserisciRotolo(t_Rotolo[], int);
 int modificaRotolo(t_Rotolo[], int, int);
 int eliminaRotolo(t_Rotolo[], int *);
@@ -123,7 +122,7 @@ int main()
         switch (scelta)
         {
         case 1:
-            flag = inserisciRotolo(rotoli, nRotoli);
+            flag=inserisciRotolo(rotoli, nRotoli);
             break;
         case 2:
             printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
@@ -175,16 +174,16 @@ int menu()
     return scelta;
 }
 
-int menuRotoli()
+int menu()
 {
     int scelta;
-    printf("\n--- RICERCA ROTOLO ---\n");
-    printf("1. Cerca per CODICE ROTOLO\n");
-    printf("2. Cerca per TIPO TESSUTO\n");
-    printf("3. Cerca per COLORE\n");
-    printf("4. Cerca per FORNITORE\n");
-    printf("5. Cerca per STATO\n");
-    printf("6. Cerca per DISPONIBILITA' MINIMA\n");
+    printf("\n--- MENU SARTORIA ---\n");
+    printf("1. AGGIUNGI ROTOLO\n");
+    printf("2. MODIFICA ROTOLO\n");
+    printf("3. ELIMINA ROTOLO\n");
+    printf("4. VISUALIZZA ROTOLO\n");
+    printf("5. CERCA ROTOLO PER CATEGORIA\n");
+    printf("7. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -283,7 +282,15 @@ int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
     char ricerca[MAX_CARATTERI];
     float lunghezzaMin;
 
-    scelta = menuRotoli();
+    printf("\n--- RICERCA ROTOLO ---\n");
+    printf("1. Cerca per CODICE ROTOLO\n");
+    printf("2. Cerca per TIPO TESSUTO\n");
+    printf("3. Cerca per COLORE\n");
+    printf("4. Cerca per FORNITORE\n");
+    printf("5. Cerca per STATO\n");
+    printf("6. Cerca per DISPONIBILITA' MINIMA\n");
+    printf("SCELTA: ");
+    scanf("%d", &scelta);
 
     switch (scelta)
     {
@@ -383,6 +390,8 @@ int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
 
     return trovati;
 }
+
+
 
 int SalvaRotoliSuFile(t_Rotolo rotoli[], int nRotoli)
 {

@@ -89,7 +89,6 @@ typedef struct
 
 // ---PROTOTIPI FUNZIONI---
 int menu();
-int menuRotoli();
 int inserisciRotolo(t_Rotolo[], int);
 int modificaRotolo(t_Rotolo[], int, int);
 int eliminaRotolo(t_Rotolo[], int *);
@@ -123,7 +122,7 @@ int main()
         switch (scelta)
         {
         case 1:
-            flag = inserisciRotolo(rotoli, nRotoli);
+            flag=inserisciRotolo(rotoli, nRotoli);
             break;
         case 2:
             printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
@@ -283,7 +282,7 @@ int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
     char ricerca[MAX_CARATTERI];
     float lunghezzaMin;
 
-    scelta = menuRotoli();
+    scelta=
 
     switch (scelta)
     {
@@ -383,6 +382,8 @@ int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
 
     return trovati;
 }
+
+
 
 int SalvaRotoliSuFile(t_Rotolo rotoli[], int nRotoli)
 {

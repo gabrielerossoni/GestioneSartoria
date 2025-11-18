@@ -89,7 +89,6 @@ typedef struct
 
 // ---PROTOTIPI FUNZIONI---
 int menu();
-int menuRotoli();
 int inserisciRotolo(t_Rotolo[], int);
 int modificaRotolo(t_Rotolo[], int, int);
 int eliminaRotolo(t_Rotolo[], int *);

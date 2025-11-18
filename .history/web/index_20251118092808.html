@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gestione Sartoria - Frontend JSON</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Gestione Sartoria - Frontend JSON</h1>
+      <p>
+        Carica o ricevi JSON dal programma C. Supporta file, drag&drop,
+        WebSocket e chiamata diretta.
+      </p>
+    </header>
+
+    <main>
+      <section class="controls">
+        <div class="file-controls">
+          <label class="btn">
+            <input id="fileInput" type="file" accept=".json,application/json" />
+            <span>Seleziona file JSON</span>
+          </label>
+          <button id="downloadBtn" disabled>Scarica JSON corrente</button>
+        </div>
+
+        <div class="ws-controls">
+          <button id="wsConnectBtn">
+            Connetti WebSocket (ws://localhost:8080)
+          </button>
+          <span id="wsStatus" class="status">disconnesso</span>
+        </div>
+      </section>
+
+      <section id="dropArea" class="drop-area">
+        Trascina qui un file JSON o clicca "Seleziona file JSON"
+      </section>
+
+      <section class="viewers">
+        <div class="viewer">
+          <h2>Tabella/Struttura</h2>
+          <div id="tableView" class="table-view">Nessun JSON caricato</div>
+        </div>
+
+        <div class="viewer">
+          <h2>Raw JSON</h2>
+          <pre id="rawView" class="raw-view">{}</pre>
+        </div>
+      </section>
+
+      <section class="log">
+        <h3>Log / Stato</h3>
+        <pre id="logArea" class="log-area">Pronto.</pre>
+      </section>
+    </main>
+
+    <footer>
+      <small
+        >Pronto a ricevere JSON. Chiamare window.receiveJson(obj) per iniezione
+        diretta.</small
+      >
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

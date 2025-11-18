@@ -10,56 +10,23 @@
     <header class="site-header">
       <div class="header-inner">
         <div class="brand">
-          <svg
-            class="logo"
-            width="36"
-            height="36"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden
-          >
-            <rect
-              x="3"
-              y="7"
-              width="18"
-              height="10"
-              rx="2"
-              fill="#fff"
-              opacity="0.12"
-            />
-            <path
-              d="M3 7c3-3 6-3 9-3s6 0 9 3v10c-3 3-6 3-9 3s-6 0-9-3V7z"
-              fill="currentColor"
-              opacity="0.12"
-            />
+          <svg class="logo" width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <rect x="3" y="7" width="18" height="10" rx="2" fill="#fff" opacity="0.12" />
+            <path d="M3 7c3-3 6-3 9-3s6 0 9 3v10c-3 3-6 3-9 3s-6 0-9-3V7z" fill="currentColor" opacity="0.12" />
           </svg>
           <h1>Gestione Sartoria</h1>
         </div>
 
         <div class="header-actions">
-          <button
-            id="themeToggle"
-            class="icon-btn"
-            title="Cambia tema"
-            aria-label="Toggle tema"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-            >
+          <button id="themeToggle" class="icon-btn" title="Cambia tema" aria-label="Toggle tema">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor">
               <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
             </svg>
           </button>
           <span class="desc">Ricevi JSON da programma C o file locale</span>
         </div>
       </div>
-      <p class="sub">
-        Interfaccia pronta per integrazione tramite WebSocket o chiamata
-        window.receiveJson()
-      </p>
+      <p class="sub">Interfaccia pronta per integrazione tramite WebSocket o chiamata window.receiveJson()</p>
     </header>
 
     <main>
@@ -80,11 +47,8 @@
 
       <section id="dropArea" class="drop-area">
         <div class="drop-inner">
-          <strong>Trascina qui</strong> un file JSON oppure clicca "Seleziona
-          file JSON"
-          <p class="hint">
-            Accetta array di ordini, liste clienti o singoli oggetti
-          </p>
+          <strong>Trascina qui</strong> un file JSON oppure clicca "Seleziona file JSON"
+          <p class="hint">Accetta array di ordini, liste clienti o singoli oggetti</p>
         </div>
       </section>
 
@@ -107,10 +71,7 @@
     </main>
 
     <footer class="site-footer">
-      <small
-        >Pronto a ricevere JSON. Usa window.receiveJson(obj) per iniezione
-        diretta.</small
-      >
+      <small>Pronto a ricevere JSON. Usa window.receiveJson(obj) per iniezione diretta.</small>
     </footer>
 
     <script src="script.js"></script>

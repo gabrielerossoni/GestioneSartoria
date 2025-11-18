@@ -89,12 +89,11 @@ typedef struct
 
 // ---PROTOTIPI FUNZIONI---
 int menu();
-int menuRotoli();
 int inserisciRotolo(t_Rotolo[], int);
 int modificaRotolo(t_Rotolo[], int, int);
 int eliminaRotolo(t_Rotolo[], int *);
 int visualizzaRotolo(t_Rotolo[], int);
-int cercaRotolo(t_Rotolo[], int);
+int cercaRotoloPerColore(t_Rotolo[], int);
 int SalvaRotoliSuFile(t_Rotolo[], int);
 int CaricaRotoliDaFile(t_Rotolo[], int *);
 int SalvaProgettiSuFile(t_Progetto[], int);
@@ -123,7 +122,7 @@ int main()
         switch (scelta)
         {
         case 1:
-            flag = inserisciRotolo(rotoli, nRotoli);
+            flag=inserisciRotolo(rotoli, nRotoli);
             break;
         case 2:
             printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
@@ -145,7 +144,7 @@ int main()
             visualizzaRotolo(rotoli, nRotoli);
             break;
         case 5:
-            cercaRotolo(rotoli, nRotoli);
+            cercaRotoloPerColore();
             break;
         case 7:
             SalvaRotoliSuFile(rotoli, nRotoli);
@@ -170,21 +169,6 @@ int menu()
     printf("4. VISUALIZZA ROTOLO\n");
     printf("5. CERCA ROTOLO PER CATEGORIA\n");
     printf("7. SALVATAGGIO E TERMINAZIONE\n");
-    printf("SCELTA: ");
-    scanf("%d", &scelta);
-    return scelta;
-}
-
-int menuRotoli()
-{
-    int scelta;
-    printf("\n--- RICERCA ROTOLO ---\n");
-    printf("1. Cerca per CODICE ROTOLO\n");
-    printf("2. Cerca per TIPO TESSUTO\n");
-    printf("3. Cerca per COLORE\n");
-    printf("4. Cerca per FORNITORE\n");
-    printf("5. Cerca per STATO\n");
-    printf("6. Cerca per DISPONIBILITA' MINIMA\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -277,111 +261,14 @@ int visualizzaRotolo(t_Rotolo rotoli[], int nRotoli)
     return 0;
 }
 
-int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
+int cercaRotoloPerColore()
 {
-    int scelta, i, trovati = 0;
-    char ricerca[MAX_CARATTERI];
-    float lunghezzaMin;
+    char categoria[MAX_CARATTERI];
+    printf("INSERISCI LA CATEGORIA DA CERCARE: ");
+    scanf("%s", categoria);
+    // Implementare la logica di ricerca in base alla categoria
 
-    scelta = menuRotoli();
-
-    switch (scelta)
-    {
-    case 1:
-        printf("INSERISCI IL CODICE ROTOLO: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nRotoli; i++)
-        {
-            if (strcmp(rotoli[i].id, ricerca) == 0)
-            {
-                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                trovati++;
-            }
-        }
-        break;
-    case 2:
-        printf("INSERISCI IL TIPO TESSUTO: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nRotoli; i++)
-        {
-            if (strcmp(rotoli[i].tipo, ricerca) == 0)
-            {
-                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                trovati++;
-            }
-        }
-        break;
-    case 3:
-        printf("INSERISCI IL COLORE: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nRotoli; i++)
-        {
-            if (strcmp(rotoli[i].colore, ricerca) == 0)
-            {
-                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                trovati++;
-            }
-        }
-        break;
-    case 4:
-        printf("INSERISCI IL FORNITORE: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nRotoli; i++)
-        {
-            if (strcmp(rotoli[i].fornitore, ricerca) == 0)
-            {
-                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                trovati++;
-            }
-        }
-        break;
-    case 5:
-        printf("INSERISCI LO STATO (NUOVO/IN USO/ESAURITO): ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nRotoli; i++)
-        {
-            if (strcmp(rotoli[i].stato, ricerca) == 0)
-            {
-                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                trovati++;
-            }
-        }
-        break;
-    case 6:
-        printf("INSERISCI LUNGHEZZA MINIMA (m): ");
-        scanf("%f", &lunghezzaMin);
-        for (i = 0; i < nRotoli; i++)
-        {
-            if (rotoli[i].lunghezza_totale > lunghezzaMin)
-            {
-                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                trovati++;
-            }
-        }
-        break;
-    default:
-        printf("OPZIONE NON VALIDA.\n");
-        return -1;
-    }
-
-    if (trovati == 0)
-        printf("NESSUN ROTOLO TROVATO.\n");
-    else
-        printf("TOTALE ROTOLI TROVATI: %d\n", trovati);
-
-    return trovati;
+    return 0;
 }
 
 int SalvaRotoliSuFile(t_Rotolo rotoli[], int nRotoli)

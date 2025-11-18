@@ -234,8 +234,7 @@
     } else {
       // default: usa preferenza sistema
       const prefersDark =
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches;
+        window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
       applyTheme(prefersDark ? "dark" : "light");
     }
   })();

@@ -7,7 +7,6 @@
   const wsBtn = document.getElementById("wsConnectBtn");
   const wsStatus = document.getElementById("wsStatus");
   const downloadBtn = document.getElementById("downloadBtn");
-  const themeToggle = document.getElementById("themeToggle"); // nuovo: theme toggle
 
   let currentJson = null;
   let ws = null;
@@ -16,18 +15,6 @@
   function log(msg) {
     const time = new Date().toLocaleTimeString();
     logArea.textContent = `[${time}] ${msg}\n` + logArea.textContent;
-  }
-
-  // Utility: piccolo effetto visivo al ricevimento JSON
-  function flashElements() {
-    [dropArea, tableView].forEach((el) => {
-      if (!el) return;
-      el.classList.remove("flash");
-      // forzare reflow per riavviare l'animazione
-      void el.offsetWidth;
-      el.classList.add("flash");
-      setTimeout(() => el.classList.remove("flash"), 900);
-    });
   }
 
   // Parsing e rendering del JSON ricevuto
@@ -42,7 +29,6 @@
       renderStructure(obj);
       downloadBtn.disabled = false;
       log(`JSON ricevuto da ${source}`);
-      flashElements(); // evidenzia cambiamento
     } catch (e) {
       log(`Errore parsing JSON: ${e.message}`);
       rawView.textContent = `Errore parsing JSON: ${e.message}`;
@@ -217,34 +203,6 @@
     // payload può essere oggetto o stringa JSON
     handleJson(payload, "direct");
   };
-
-  // Theme toggle: salva preferenza in localStorage
-  function applyTheme(pref) {
-    if (pref === "dark") {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
-  }
-  // inizializzazione tema
-  (function initTheme() {
-    const saved = localStorage.getItem("gs_theme");
-    if (saved) {
-      applyTheme(saved);
-    } else {
-      // default: usa preferenza sistema
-      const prefersDark =
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches;
-      applyTheme(prefersDark ? "dark" : "light");
-    }
-  })();
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      const isDark = document.body.classList.toggle("dark");
-      localStorage.setItem("gs_theme", isDark ? "dark" : "light");
-    });
-  }
 
   // Messaggio iniziale
   log(
