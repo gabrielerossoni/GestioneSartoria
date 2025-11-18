@@ -92,10 +92,10 @@ typedef struct
 int menuGenerale();
 int menuRotoli();
 int menuProgetti();
-int menuFornitori();
+int menuFornitori();   
 int menuPrelievi();
 int menuRitagli();
-int menuMagazzino();
+
 
 // Funzioni di Data
 int controlloData(t_Data);
@@ -162,14 +162,6 @@ int CaricaPrelieviDaFile(t_Prelievo[], int *);
 int SalvaRitagliSuFile(t_Ritaglio[], int);
 int CaricaRitagliDaFile(t_Ritaglio[], int *);
 
-// Funzione salvataggio e caricamento su file MAGAZZINO
-int SalvaMagazzinoSuFile(t_Magazzino[], int);
-int CaricaMagazzinoDaFile(t_Magazzino[], int *);
-
-// Funzione salvataggio e caricamento su file TUTTO IL PROGRAMMA
-int SalvaTuttoSuFile();
-int CaricaTuttoDaFile();
-
 // ---MAIN---
 int main()
 {
@@ -229,11 +221,10 @@ int menuGenerale()
     int scelta;
     printf("\n--- MENU GENERALE SARTORIA ---\n");
     printf("1. ROTOLI\n");
-    printf("2. RITAGLI\n");
-    printf("3. PRELIEVI\n");
-    printf("4. PROGETTI\n");
-    printf("5. MAGAZZINO\n");
-    printf("6. FORNITORI\n");
+    printf("2. MODIFICA ROTOLO\n");
+    printf("3. ELIMINA ROTOLO\n");
+    printf("4. VISUALIZZA ROTOLO\n");
+    printf("5. CERCA ROTOLO PER CATEGORIA\n");
     printf("7. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
@@ -258,9 +249,9 @@ int menuRotolo()
 int controlloData(t_Data data)
 {
     int bisestile;
-    if (data.anno < 1900 || data.anno > 2100)
+    if(data.anno<1900 || data.anno>2100)
         return 0;
-    if (data.mese < 1 || data.mese > 12)
+    if(data.mese< 1 || data.mese > 12)
         return 0;
     if (data.giorno < 1 || data.giorno > 31)
         return 0;

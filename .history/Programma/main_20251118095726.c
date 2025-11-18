@@ -165,11 +165,6 @@ int CaricaRitagliDaFile(t_Ritaglio[], int *);
 // Funzione salvataggio e caricamento su file MAGAZZINO
 int SalvaMagazzinoSuFile(t_Magazzino[], int);
 int CaricaMagazzinoDaFile(t_Magazzino[], int *);
-
-// Funzione salvataggio e caricamento su file TUTTO IL PROGRAMMA
-int SalvaTuttoSuFile();
-int CaricaTuttoDaFile();
-
 // ---MAIN---
 int main()
 {

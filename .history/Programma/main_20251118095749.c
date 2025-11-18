@@ -168,7 +168,6 @@ int CaricaMagazzinoDaFile(t_Magazzino[], int *);
 
 // Funzione salvataggio e caricamento su file TUTTO IL PROGRAMMA
 int SalvaTuttoSuFile();
-int CaricaTuttoDaFile();
 
 // ---MAIN---
 int main()
