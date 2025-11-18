@@ -92,10 +92,8 @@ typedef struct
 int menu();
 int menuRotoli();
 
-// Funzioni di Data
-int controlloData(t_Data);
-
 // Funzioni di gestione ROTOLO
+int controlloData(t_Data);
 int inserisciRotolo(t_Rotolo[], int);
 int modificaRotolo(t_Rotolo[], int, int);
 int eliminaRotolo(t_Rotolo[], int *);

@@ -92,7 +92,7 @@ typedef struct
 int menu();
 int menuRotoli();
 
-// Funzioni di Data
+
 int controlloData(t_Data);
 
 // Funzioni di gestione ROTOLO

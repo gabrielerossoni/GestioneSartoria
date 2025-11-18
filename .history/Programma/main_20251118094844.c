@@ -31,7 +31,7 @@ typedef struct
     float costo_metro;
     char fornitore[MAX_CARATTERI];
     char lotto[MAX_CARATTERI];
-    t_Data data;
+    t_Data data_acquisto;
     char stato[MAX_CARATTERI];
     char noteAggiuntive[100];
 } t_Rotolo;
@@ -50,7 +50,7 @@ typedef struct
     char idRitaglio[MAX_CARATTERI];
     char id_rotolo[MAX_CARATTERI];
     float lunghezza;
-    t_Data data;
+    t_Data dataCreazione;
 } t_Ritaglio;
 typedef struct
 {
@@ -88,72 +88,22 @@ typedef struct
 } t_Data;
 
 // ---PROTOTIPI FUNZIONI---
-// Funzioni di Menu
 int menu();
 int menuRotoli();
-
-// Funzioni di Data
 int controlloData(t_Data);
-
-// Funzioni di gestione ROTOLO
 int inserisciRotolo(t_Rotolo[], int);
 int modificaRotolo(t_Rotolo[], int, int);
 int eliminaRotolo(t_Rotolo[], int *);
 int visualizzaRotolo(t_Rotolo[], int);
 int cercaRotolo(t_Rotolo[], int);
-
-// Funzioni di gestione RITAGLIO
-int inserisciRitaglio(t_Ritaglio[], int);
-int modificaRitaglio(t_Ritaglio[], int, int);
-int eliminaRitaglio(t_Ritaglio[], int *);
-int visualizzaRitaglio(t_Ritaglio[], int);
-int cercaRitaglio(t_Ritaglio[], int);
-
-// Funzioni di gestione PRELIEVO
-int inserisciPrelievo(t_Prelievo[], int);
-int modificaPrelievo(t_Prelievo[], int, int);
-int eliminaPrelievo(t_Prelievo[], int *);
-int visualizzaPrelievo(t_Prelievo[], int);
-int cercaPrelievo(t_Prelievo[], int);
-
-// Funzioni di gestione FORNITORE
-int inserisciFornitore(t_Fornitore[], int);
-int modificaFornitore(t_Fornitore[], int, int);
-int eliminaFornitore(t_Fornitore[], int *);
-int visualizzaFornitore(t_Fornitore[], int);
-int cercaFornitore(t_Fornitore[], int);
-
-// Funzioni di gestione PROGETTO
-int inserisciProgetto(t_Progetto[], int);
-int modificaProgetto(t_Progetto[], int, int);
-int eliminaProgetto(t_Progetto[], int *);
-int visualizzaProgetto(t_Progetto[], int);
-int cercaProgetto(t_Progetto[], int);
-
-// Funzioni di gestione MAGAZZINO
-int inserisciRitaglio(t_Ritaglio[], int);
-int modificaRitaglio(t_Ritaglio[], int, int);
-int eliminaRitaglio(t_Ritaglio[], int *);
-int visualizzaRitaglio(t_Ritaglio[], int);
-int cercaRitaglio(t_Ritaglio[], int);
-
-// Funzioni di salvataggio e caricamento su file ROTOLO
 int SalvaRotoliSuFile(t_Rotolo[], int);
 int CaricaRotoliDaFile(t_Rotolo[], int *);
-
-// Funzioni di salvataggio e caricamento su file PROGETTO
 int SalvaProgettiSuFile(t_Progetto[], int);
 int CaricaProgettiDaFile(t_Progetto[], int *);
-
-// Funzioni di salvataggio e caricamento su file FORNITORE
 int SalvaFornitoriSuFile(t_Fornitore[], int);
 int CaricaFornitoriDaFile(t_Fornitore[], int *);
-
-// Funzioni di salvataggio e caricamento su file PRELIEVO
 int SalvaPrelieviSuFile(t_Prelievo[], int);
 int CaricaPrelieviDaFile(t_Prelievo[], int *);
-
-// Funzioni di salvataggio e caricamento su file RITAGLIO
 int SalvaRitagliSuFile(t_Ritaglio[], int);
 int CaricaRitagliDaFile(t_Ritaglio[], int *);
 
