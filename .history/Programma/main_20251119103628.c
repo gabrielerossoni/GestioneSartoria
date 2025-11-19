@@ -190,45 +190,223 @@ int main()
         scelta = menuGenerale();
         switch (scelta)
         {
-            case 1:
-                flag = inserisciRotolo(rotoli, nRotoli);
-                break;
-            case 2:
-                printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
-                scanf("%s", id);
-                modificaRotolo(rotoli, nRotoli, id);
-                break;
-            case 3:
-                printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
-                scanf("%s", id);
-                nRotoli = eliminaRotolo(rotoli, &nRotoli, id);
-                if (nRotoli == -1)
+            case 1: // ROTOLI
+                do
                 {
-                    printf("ROTOLO NON TROVATO.\n");
-                }
-                else
+                    int sceltaRotoli = menuRotoli();
+                    switch (sceltaRotoli)
+                    {
+                        case 1:
+                            nRotoli = inserisciRotolo(rotoli, nRotoli);
+                            break;
+                        case 2:
+                            printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
+                            scanf("%s", id);
+                            modificaRotolo(rotoli, nRotoli, id);
+                            break;
+                        case 3:
+                            printf("INSERISCI L'ID DEL ROTOLO DA ELIMINARE: ");
+                            scanf("%s", id);
+                            flag = eliminaRotolo(rotoli, &nRotoli, id);
+                            if (flag == -1)
+                                printf("ROTOLO NON TROVATO.\n");
+                            else
+                                printf("ROTOLO ELIMINATO CON SUCCESSO.\n");
+                            break;
+                        case 4:
+                            visualizzaRotolo(rotoli, nRotoli);
+                            break;
+                        case 5:
+                            cercaRotolo(rotoli, nRotoli);
+                            break;
+                        default:
+                            printf("OPZIONE NON VALIDA.\n");
+                            break;
+                    }
+                } while (sceltaRotoli != 6);
+                break;
+
+            case 2: // RITAGLI
+                do
                 {
-                    printf("ROTOLO ELIMINATO CON SUCCESSO.\n");
-                }
+                    int sceltaRitagli = menuRitagli();
+                    switch (sceltaRitagli)
+                    {
+                        case 1:
+                            nRitagli = inserisciRitaglio(ritagli, nRitagli);
+                            break;
+                        case 2:
+                            printf("INSERISCI L'ID DEL RITAGLIO DA MODIFICARE: ");
+                            scanf("%s", id);
+                            modificaRitaglio(ritagli, nRitagli, id);
+                            break;
+                        case 3:
+                            printf("INSERISCI L'ID DEL RITAGLIO DA ELIMINARE: ");
+                            scanf("%s", id);
+                            flag = eliminaRitaglio(ritagli, &nRitagli, id);
+                            if (flag == -1)
+                                printf("RITAGLIO NON TROVATO.\n");
+                            else
+                                printf("RITAGLIO ELIMINATO CON SUCCESSO.\n");
+                            break;
+                        case 4:
+                            visualizzaRitaglio(ritagli, nRitagli);
+                            break;
+                        case 5:
+                            cercaRitaglio(ritagli, nRitagli);
+                            break;
+    int menuPrelievi()    default:
+                            printf("OPZIONE NON VALIDA.\n");
+                            break;
+        printf("\n"--- MENU PRELIEVI ---\n");
+                while (sceltaRitagli != 6);
                 break;
-            case 4:
-                visualizzaRotolo(rotoli, nRotoli);
+
+            case 3: // PRELIEVI
+                do
+                {
+                    int sceltaPrelievi = menuPrelievi();
+                    switch (sceltaPrelievi)
+                    {
+                        case 1:
+                            nPrelievi = inserisciPrelievo(prelievi, nPrelievi);
+                            break;
+                        case 2:
+                            printf("INSERISCI L'ID DEL PRELIEVO DA MODIFICARE: ");
+                            scanf("%s", id);
+                            modificaPrelievo(prelievi, nPrelievi, id);
+                            break;
+                        case 3:
+                            printf("INSERISCI L'ID DEL PRELIEVO DA ELIMINARE: ");
+                            scanf("%s", id);
+                            flag = eliminaPrelievo(prelievi, &nPrelievi, id);
+                            if (flag == -1)
+                                printf("PRELIEVO NON TROVATO.\n");
+                            else
+                                printf("PRELIEVO ELIMINATO CON SUCCESSO.\n");
+                            break;
+                        case 4:
+                            visualizzaPrelievo(prelievi, nPrelievi);
+                            break;
+                        case 5:
+                            cercaPrelievo(prelievi, nPrelievi);
+                            break;
+                        default:
+                            printf("OPZIONE NON VALIDA.\n");
+                            break;
+                    }
+                } while (sceltaPrelievi != 6);
                 break;
-            case 5:
-                cercaRotolo(rotoli, nRotoli, id);
+
+            case 4: // PROGETTI
+                do
+                {
+                    int sceltaProgetti = menuProgetti();
+                    switch (sceltaProgetti)
+                    {
+                        case 1:
+                            nProgetti = inserisciProgetto(progetti, nProgetti);
+                            break;
+                        case 2:
+                            printf("INSERISCI L'ID DEL PROGETTO DA MODIFICARE: ");
+                            scanf("%s", id);
+                            modificaProgetto(progetti, nProgetti, id);
+                            break;
+                        case 3:
+                            printf("INSERISCI L'ID DEL PROGETTO DA ELIMINARE: ");
+                            scanf("%s", id);
+                            flag = eliminaProgetto(progetti, &nProgetti, id);
+                            if (flag == -1)
+                                printf("PROGETTO NON TROVATO.\n");
+                            else
+                                printf("PROGETTO ELIMINATO CON SUCCESSO.\n");
+                            break;
+                        case 4:
+                            visualizzaProgetto(progetti, nProgetti);
+                            break;
+
+                            cercaProgetto(progetti, nProgetti);
+                            break;
+                        default:
+                            printf("OPZIONE NON VALIDA.\n");
+                            break;
+                    }
+                } while (sceltaProgetti != 6);
                 break;
+
+            case 5: // MAGAZZINO
+                do
+                {
+                    int sceltaMagazzino = menuMagazzino();
+                    switch (sceltaMagazzino)
+                    {
+                        case 1:
+                            visualizzaRitaglio(ritagli, nRitagli);
+                            break;
+                        case 2:
+                            printf("INSERISCI L'ID DEL RITAGLIO DA CERCARE: ");
+                            scanf("%s", id);
+                            cercaRitaglio(ritagli, nRitagli);
+                            break;
+                        default:
+                            printf("OPZIONE NON VALIDA.\n");
+                            break;
+                    }
+                } while (sceltaMagazzino != 3);
+                break;
+
+            case 6: // FORNITORI
+                do
+                {
+                    int sceltaFornitori = menuFornitori();
+                    switch (sceltaFornitori)
+                    {
+                        case 1:
+                            nFornitori = inserisciFornitore(fornitori, nFornitori);
+                            break;
+                        case 2:
+                            printf("INSERISCI L'ID DEL FORNITORE DA MODIFICARE: ");
+                            scanf("%s", id);
+                            modificaFornitore(fornitori, nFornitori, id);
+                            break;
+                        case 3:
+                            printf("INSERISCI L'ID DEL FORNITORE DA ELIMINARE: ");
+                            scanf("%s", id);
+                            flag = eliminaFornitore(fornitori, &nFornitori, id);
+                            if (flag == -1)
+                                printf("FORNITORE NON TROVATO.\n");
+                            else
+                                printf("FORNITORE ELIMINATO CON SUCCESSO.\n");
+                            break;
+                        case 4:
+                            visualizzaFornitore(fornitori, nFornitori);
+                            break;
+                        case 5:
+                            cercaFornitore(fornitori, nFornitori);
+                            break;
+                        default:
+                            printf("OPZIONE NON VALIDA.\n");
+                            break;
+                    }
+                } while (sceltaFornitori != 6);
+                break;
+
             case 7:
                 SalvaRotoliSuFile(rotoli, nRotoli);
+                SalvaProgettiSuFile(progetti, nProgetti);
+                SalvaFornitoriSuFile(fornitori, nFornitori);
+                SalvaPrelieviSuFile(prelievi, nPrelievi);
+                SalvaRitagliSuFile(ritagli, nRitagli);
+                printf("TUTTI I DATI SALVATI CON SUCCESSO.\n");
                 printf("USCITA PROGRAMMA.\n");
                 break;
+
             default:
                 printf("OPZIONE NON VALIDA. Riprova.\n");
                 break;
         }
-        while (scelta != 7);
-        return 0;
-    }while(scelta!=3);
-}
+    } while (scelta != 7);
+    return 0;
 
     //---FUNZIONI---
     int menuGenerale()

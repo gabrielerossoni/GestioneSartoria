@@ -190,45 +190,53 @@ int main()
         scelta = menuGenerale();
         switch (scelta)
         {
-            case 1:
-                flag = inserisciRotolo(rotoli, nRotoli);
-                break;
-            case 2:
-                printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
-                scanf("%s", id);
-                modificaRotolo(rotoli, nRotoli, id);
-                break;
-            case 3:
-                printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
-                scanf("%s", id);
-                nRotoli = eliminaRotolo(rotoli, &nRotoli, id);
-                if (nRotoli == -1)
+            case 1: // ROTOLI
+                do
                 {
-                    printf("ROTOLO NON TROVATO.\n");
-                }
-                else
-                {
-                    printf("ROTOLO ELIMINATO CON SUCCESSO.\n");
-                }
+                    int sceltaRotoli = menuRotoli();
+                    switch (sceltaRotoli)
+                    {
+                        case 1:
+                            nRotoli = inserisciRotolo(rotoli, nRotoli);
+                            break;
+                        case 2:
+                            printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
+                            scanf("%s", id);
+                            modificaRotolo(rotoli, nRotoli, id);
+                            break;
+                        case 3:
+                            printf("INSERISCI L'ID DEL ROTOLO DA ELIMINARE: ");
+                            scanf("%s", id);
+                            flag = eliminaRotolo(rotoli, &nRotoli, id);
+                            if (flag == -1)
+                                printf("ROTOLO NON TROVATO.\n");
+                            else
+                                printf("ROTOLO ELIMINATO CON SUCCESSO.\n");
+                            break;
+                        case 4:
+                            visualizzaRotolo(rotoli, nRotoli);
+                            break;
+                        case 5:
+                            cercaRotolo(rotoli, nRotoli);
+                            break;
+                        default:
+                            printf("OPZIONE NON VALIDA.\n");
+                            break;
+                    }
+                } while (sceltaRotoli != 6);
                 break;
-            case 4:
-                visualizzaRotolo(rotoli, nRotoli);
-                break;
-            case 5:
-                cercaRotolo(rotoli, nRotoli, id);
-                break;
+
             case 7:
                 SalvaRotoliSuFile(rotoli, nRotoli);
                 printf("USCITA PROGRAMMA.\n");
                 break;
+
             default:
                 printf("OPZIONE NON VALIDA. Riprova.\n");
                 break;
         }
-        while (scelta != 7);
-        return 0;
-    }while(scelta!=3);
-}
+    } while (scelta != 7);
+    return 0;
 
     //---FUNZIONI---
     int menuGenerale()

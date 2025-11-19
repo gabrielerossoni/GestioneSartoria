@@ -190,6 +190,8 @@ int main()
         scelta = menuGenerale();
         switch (scelta)
         {
+
+            {
             case 1:
                 flag = inserisciRotolo(rotoli, nRotoli);
                 break;
@@ -224,11 +226,12 @@ int main()
             default:
                 printf("OPZIONE NON VALIDA. Riprova.\n");
                 break;
+            }
         }
-        while (scelta != 7);
+        while (scelta != 7)
+            ;
         return 0;
-    }while(scelta!=3);
-}
+    }
 
     //---FUNZIONI---
     int menuGenerale()
