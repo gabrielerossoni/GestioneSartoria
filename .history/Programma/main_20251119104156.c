@@ -185,255 +185,49 @@ int main()
     char id[MAX_CARATTERI];
 
     // MENU PRINCIPALE
+    do
     {
-        /* contatori locali (non toccare le variabili già dichiarate sopra) */
-        int nRotoli_count = 0;
-        int quit = 0;
-        int scelta_sub;
-
-        do
+        scelta = menuGenerale();
+        switch (scelta)
         {
-            scelta = menuGenerale();
-            switch (scelta)
-            {
-            case 1: // ROTOLO
-                do
+            case 1:
+                flag = inserisciRotolo(rotoli, nRotoli);
+                break;
+            case 2:
+                printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
+                scanf("%s", id);
+                modificaRotolo(rotoli, nRotoli, id);
+                break;
+            case 3:
+                printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
+                scanf("%s", id);
+                nRotoli = eliminaRotolo(rotoli, &nRotoli, id);
+                if (nRotoli == -1)
                 {
-                    scelta_sub = menuRotolo();
-                    switch (scelta_sub)
-                    {
-                    case 1: // AGGIUNGI ROTOLO
-                        inserisciRotolo(rotoli, nRotoli_count);
-                        break;
-                    case 2: // MODIFICA ROTOLO
-                        printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
-                        scanf("%s", id);
-                        modificaRotolo(rotoli, nRotoli_count, id);
-                        break;
-                    case 3: // ELIMINA ROTOLO
-                        printf("INSERISCI L'ID DEL ROTOLO DA ELIMINARE: ");
-                        scanf("%s", id);
-                        if (eliminaRotolo(rotoli, &nRotoli_count, id) == 1)
-                            printf("ROTOLO ELIMINATO CON SUCCESSO.\n");
-                        else
-                            printf("ROTOLO NON TROVATO.\n");
-                        break;
-                    case 4: // VISUALIZZA ROTOLO
-                        visualizzaRotolo(rotoli, nRotoli_count);
-                        break;
-                    case 5: // CERCA ROTOLO
-                        cercaRotolo(rotoli, nRotoli_count);
-                        break;
-                    case 7: // SALVA E TERMINA
-                        SalvaRotoliSuFile(rotoli, nRotoli_count);
-                        quit = 1;
-                        break;
-                    default:
-                        printf("OPZIONE NON VALIDA. Riprova.\n");
-                        break;
-                    }
-                } while (scelta_sub != 7 && !quit);
-                break;
-
-            case 2: // RITAGLI
-                do
+                    printf("ROTOLO NON TROVATO.\n");
+                }
+                else
                 {
-                    scelta_sub = menuRitagli();
-                    switch (scelta_sub)
-                    {
-                    case 1:
-                        inserisciRitaglio(ritagli, nRitagli);
-                        break;
-                    case 2:
-                        printf("INSERISCI L'ID DEL RITAGLIO DA MODIFICARE: ");
-                        scanf("%s", id);
-                        modificaRitaglio(ritagli, nRitagli, id);
-                        break;
-                    case 3:
-                        printf("INSERISCI L'ID DEL RITAGLIO DA ELIMINARE: ");
-                        scanf("%s", id);
-                        eliminaRitaglio(ritagli, &nRitagli, id);
-                        break;
-                    case 4:
-                        visualizzaRitaglio(ritagli, nRitagli);
-                        break;
-                    case 5:
-                        cercaRitaglio(ritagli, nRitagli);
-                        break;
-                    case 7:
-                        SalvaRitagliSuFile(ritagli, nRitagli);
-                        quit = 1;
-                        break;
-                    default:
-                        printf("OPZIONE NON VALIDA. Riprova.\n");
-                        break;
-                    }
-                } while (scelta_sub != 7 && !quit);
+                    printf("ROTOLO ELIMINATO CON SUCCESSO.\n");
+                }
                 break;
-
-            case 3: // PRELIEVI
-                do
-                {
-                    scelta_sub = menuPrelievi();
-                    switch (scelta_sub)
-                    {
-                    case 1:
-                        inserisciPrelievo(prelievi, nPrelievi);
-                        break;
-                    case 2:
-                        printf("INSERISCI L'ID DEL PRELIEVO DA MODIFICARE: ");
-                        scanf("%s", id);
-                        modificaPrelievo(prelievi, nPrelievi, id);
-                        break;
-                    case 3:
-                        printf("INSERISCI L'ID DEL PRELIEVO DA ELIMINARE: ");
-                        scanf("%s", id);
-                        eliminaPrelievo(prelievi, &nPrelievi, id);
-                        break;
-                    case 4:
-                        visualizzaPrelievo(prelievi, nPrelievi);
-                        break;
-                    case 5:
-                        cercaPrelievo(prelievi, nPrelievi);
-                        break;
-                    case 7:
-                        SalvaPrelieviSuFile(prelievi, nPrelievi);
-                        quit = 1;
-                        break;
-                    default:
-                        printf("OPZIONE NON VALIDA. Riprova.\n");
-                        break;
-                    }
-                } while (scelta_sub != 7 && !quit);
+            case 4:
+                visualizzaRotolo(rotoli, nRotoli);
                 break;
-
-            case 4: // PROGETTI
-                do
-                {
-                    scelta_sub = MenuProgetti();
-                    printf("\n--- MENU PROGETTI (base) ---\n1 Inserisci\n2 Modifica\n3 Elimina\n4 Visualizza\n5 Cerca\n7 Salva e termina\nSCELTA: ");
-                    scanf("%d", &scelta_sub);
-                    switch (scelta_sub)
-                    {
-                    case 1:
-                        inserisciProgetto(progetti, nProgetti);
-                        break;
-                    case 2:
-                        printf("INSERISCI L'ID DEL PROGETTO DA MODIFICARE: ");
-                        scanf("%s", id);
-                        modificaProgetto(progetti, nProgetti, id);
-                        break;
-                    case 3:
-                        printf("INSERISCI L'ID DEL PROGETTO DA ELIMINARE: ");
-                        scanf("%s", id);
-                        eliminaProgetto(progetti, &nProgetti, id);
-                        break;
-                    case 4:
-                        visualizzaProgetto(progetti, nProgetti);
-                        break;
-                    case 5:
-                        cercaProgetto(progetti, nProgetti);
-                        break;
-                    case 7:
-                        SalvaProgettiSuFile(progetti, nProgetti);
-                        quit = 1;
-                        break;
-                    default:
-                        printf("OPZIONE NON VALIDA. Riprova.\n");
-                        break;
-                    }
-                } while (scelta_sub != 7 && !quit);
+            case 5:
+                cercaRotolo(rotoli, nRotoli, id);
                 break;
-
-            case 5: // MAGAZZINO
-                do
-                {
-                    scelta_sub = menuMagazzino();
-                    switch (scelta_sub)
-                    {
-                    case 1:
-                        // esempio: controllo magazzino (puoi chiamare la funzione relativa)
-                        printf("Eseguo controllo magazzino...\n");
-                        break;
-                    case 2:
-                        // aggiungi ritaglio in magazzino
-                        printf("Aggiungi ritaglio in magazzino...\n");
-                        break;
-                    case 3:
-                        // rimuovi ritaglio
-                        printf("Rimuovi ritaglio da magazzino...\n");
-                        break;
-                    case 4:
-                        // visualizza magazzino
-                        printf("Visualizza magazzino...\n");
-                        break;
-                    case 5:
-                        // imposta priorita'
-                        printf("Imposta priorita' utilizzo...\n");
-                        break;
-                    case 7:
-                        SalvaMagazzinoSuFile(NULL, 0); // adattare i parametri se necessario
-                        quit = 1;
-                        break;
-                    default:
-                        printf("OPZIONE NON VALIDA. Riprova.\n");
-                        break;
-                    }
-                } while (scelta_sub != 7 && !quit);
+            case 7:
+                SalvaRotoliSuFile(rotoli, nRotoli);
+                printf("USCITA PROGRAMMA.\n");
                 break;
-
-            case 6: // FORNITORI
-                do
-                {
-                    scelta_sub = menuFornitori();
-                    switch (scelta_sub)
-                    {
-                    case 1:
-                        inserisciFornitore(fornitori, nFornitori);
-                        break;
-                    case 2:
-                        printf("INSERISCI L'ID DEL FORNITORE DA MODIFICARE: ");
-                        scanf("%s", id);
-                        modificaFornitore(fornitori, nFornitori, id);
-                        break;
-                    case 3:
-                        printf("INSERISCI L'ID DEL FORNITORE DA ELIMINARE: ");
-                        scanf("%s", id);
-                        eliminaFornitore(fornitori, &nFornitori, id);
-                        break;
-                    case 4:
-                        visualizzaFornitore(fornitori, nFornitori);
-                        break;
-                    case 5:
-                        cercaFornitore(fornitori, nFornitori);
-                        break;
-                    case 7:
-                        SalvaFornitoriSuFile(fornitori, nFornitori);
-                        quit = 1;
-                        break;
-                    default:
-                        printf("OPZIONE NON VALIDA. Riprova.\n");
-                        break;
-                    }
-                } while (scelta_sub != 7 && !quit);
-                break;
-
-            case 7: // SALVA E TERMINA PROGRAMMA
-                SalvaRotoliSuFile(rotoli, nRotoli_count);
-                SalvaProgettiSuFile(progetti, nProgetti);
-                SalvaFornitoriSuFile(fornitori, nFornitori);
-                SalvaPrelieviSuFile(prelievi, nPrelievi);
-                SalvaRitagliSuFile(ritagli, nRitagli);
-                printf("SALVATAGGIO COMPLETATO. USCITA PROGRAMMA.\n");
-                quit = 1;
-                break;
-
             default:
                 printf("OPZIONE NON VALIDA. Riprova.\n");
                 break;
-            }
-        } while (!quit);
-    }
+        }
+        while (scelta != 7);
+        return 0;
+    }while(scelta!=3);
 }
 
     //---FUNZIONI---
@@ -462,12 +256,26 @@ int main()
         printf("3. ELIMINA ROTOLO\n");
         printf("4. VISUALIZZA ROTOLO\n");
         printf("5. CERCA ROTOLO PER CATEGORIA\n");
+        printf("7. SALVATAGGIO E TERMINAZIONE\n");
         printf("SCELTA: ");
         scanf("%d", &scelta);
         return scelta;
     }
 
- 
+    int menuRotoli()
+    {
+        int scelta;
+        printf("\n--- RICERCA ROTOLO ---\n");
+        printf("1. Cerca per CODICE ROTOLO\n");
+        printf("2. Cerca per TIPO TESSUTO\n");
+        printf("3. Cerca per COLORE\n");
+        printf("4. Cerca per FORNITORE\n");
+        printf("5. Cerca per STATO\n");
+        printf("6. Cerca per DISPONIBILITA' MINIMA\n");
+        printf("SCELTA: ");
+        scanf("%d", &scelta);
+        return scelta;
+    }
 
     int menuPrelievi()
     {
@@ -478,6 +286,7 @@ int main()
         printf("3. ELIMINA PRELIEVO\n");
         printf("4. VISUALIZZA PRELIEVI\n");
         printf("5. CERCA PRELIEVO\n");
+        printf("7. SALVATAGGIO E TERMINAZIONE\n");
         printf("SCELTA: ");
         scanf("%d", &scelta);
         return scelta;
@@ -487,8 +296,12 @@ int main()
     {
         int scelta;
         printf("\n--- MENU RITAGLI ---\n");
+        printf("1. INSERISCI RITAGLIO\n");
+        printf("2. MODIFICA RITAGLIO\n");
+        printf("3. ELIMINA RITAGLIO\n");
         printf("4. VISUALIZZA RITAGLI\n");
         printf("5. CERCA RITAGLIO\n");
+        printf("7. SALVATAGGIO E TERMINAZIONE\n");
         printf("SCELTA: ");
         scanf("%d", &scelta);
         return scelta;
@@ -636,21 +449,7 @@ int main()
         }
         return 0;
     }
-   int manuCercaRotoli()
-    {
-        int scelta;
-        printf("\n--- RICERCA ROTOLO ---\n");
-        printf("1. Cerca per CODICE ROTOLO\n");
-        printf("2. Cerca per TIPO TESSUTO\n");
-        printf("3. Cerca per COLORE\n");
-        printf("4. Cerca per FORNITORE\n");
-        printf("5. Cerca per STATO\n");
-        printf("6. Cerca per DISPONIBILITA' MINIMA\n");
-        printf("SCELTA: ");
-        scanf("%d", &scelta);
-        return scelta;
-    }
-    
+
     int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
     {
         int scelta, i, trovati = 0;

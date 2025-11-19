@@ -462,6 +462,7 @@ int main()
         printf("3. ELIMINA ROTOLO\n");
         printf("4. VISUALIZZA ROTOLO\n");
         printf("5. CERCA ROTOLO PER CATEGORIA\n");
+        printf("7. SALVATAGGIO E TERMINAZIONE\n");
         printf("SCELTA: ");
         scanf("%d", &scelta);
         return scelta;

@@ -310,7 +310,7 @@ int main()
             case 4: // PROGETTI
                 do
                 {
-                    scelta_sub = MenuProgetti();
+                    // qui si può mettere un menuProgetti() se presente; riuso menuGenerale per semplicità
                     printf("\n--- MENU PROGETTI (base) ---\n1 Inserisci\n2 Modifica\n3 Elimina\n4 Visualizza\n5 Cerca\n7 Salva e termina\nSCELTA: ");
                     scanf("%d", &scelta_sub);
                     switch (scelta_sub)
@@ -462,12 +462,26 @@ int main()
         printf("3. ELIMINA ROTOLO\n");
         printf("4. VISUALIZZA ROTOLO\n");
         printf("5. CERCA ROTOLO PER CATEGORIA\n");
+        printf("7. SALVATAGGIO E TERMINAZIONE\n");
         printf("SCELTA: ");
         scanf("%d", &scelta);
         return scelta;
     }
 
- 
+    int manuCercaRotoli()
+    {
+        int scelta;
+        printf("\n--- RICERCA ROTOLO ---\n");
+        printf("1. Cerca per CODICE ROTOLO\n");
+        printf("2. Cerca per TIPO TESSUTO\n");
+        printf("3. Cerca per COLORE\n");
+        printf("4. Cerca per FORNITORE\n");
+        printf("5. Cerca per STATO\n");
+        printf("6. Cerca per DISPONIBILITA' MINIMA\n");
+        printf("SCELTA: ");
+        scanf("%d", &scelta);
+        return scelta;
+    }
 
     int menuPrelievi()
     {
@@ -478,6 +492,7 @@ int main()
         printf("3. ELIMINA PRELIEVO\n");
         printf("4. VISUALIZZA PRELIEVI\n");
         printf("5. CERCA PRELIEVO\n");
+        printf("7. SALVATAGGIO E TERMINAZIONE\n");
         printf("SCELTA: ");
         scanf("%d", &scelta);
         return scelta;
@@ -487,8 +502,12 @@ int main()
     {
         int scelta;
         printf("\n--- MENU RITAGLI ---\n");
+        printf("1. INSERISCI RITAGLIO\n");
+        printf("2. MODIFICA RITAGLIO\n");
+        printf("3. ELIMINA RITAGLIO\n");
         printf("4. VISUALIZZA RITAGLI\n");
         printf("5. CERCA RITAGLIO\n");
+        printf("7. SALVATAGGIO E TERMINAZIONE\n");
         printf("SCELTA: ");
         scanf("%d", &scelta);
         return scelta;
@@ -636,21 +655,7 @@ int main()
         }
         return 0;
     }
-   int manuCercaRotoli()
-    {
-        int scelta;
-        printf("\n--- RICERCA ROTOLO ---\n");
-        printf("1. Cerca per CODICE ROTOLO\n");
-        printf("2. Cerca per TIPO TESSUTO\n");
-        printf("3. Cerca per COLORE\n");
-        printf("4. Cerca per FORNITORE\n");
-        printf("5. Cerca per STATO\n");
-        printf("6. Cerca per DISPONIBILITA' MINIMA\n");
-        printf("SCELTA: ");
-        scanf("%d", &scelta);
-        return scelta;
-    }
-    
+
     int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
     {
         int scelta, i, trovati = 0;

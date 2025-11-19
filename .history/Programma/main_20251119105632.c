@@ -462,6 +462,7 @@ int main()
         printf("3. ELIMINA ROTOLO\n");
         printf("4. VISUALIZZA ROTOLO\n");
         printf("5. CERCA ROTOLO PER CATEGORIA\n");
+        printf("7. SALVATAGGIO E TERMINAZIONE\n");
         printf("SCELTA: ");
         scanf("%d", &scelta);
         return scelta;
@@ -478,6 +479,7 @@ int main()
         printf("3. ELIMINA PRELIEVO\n");
         printf("4. VISUALIZZA PRELIEVI\n");
         printf("5. CERCA PRELIEVO\n");
+        printf("7. SALVATAGGIO E TERMINAZIONE\n");
         printf("SCELTA: ");
         scanf("%d", &scelta);
         return scelta;
@@ -486,9 +488,12 @@ int main()
     int menuRitagli()
     {
         int scelta;
-        printf("\n--- MENU RITAGLI ---\n");
+        printf("\n--- MENU RITAGLI ---\n")
+        printf("2. MODIFICA RITAGLIO\n");
+        printf("3. ELIMINA RITAGLIO\n");
         printf("4. VISUALIZZA RITAGLI\n");
         printf("5. CERCA RITAGLIO\n");
+        printf("7. SALVATAGGIO E TERMINAZIONE\n");
         printf("SCELTA: ");
         scanf("%d", &scelta);
         return scelta;
