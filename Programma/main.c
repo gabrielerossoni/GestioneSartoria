@@ -24,6 +24,12 @@
 // ---STRUTTURE DATI---
 typedef struct
 {
+    int giorno;
+    int mese;
+    int anno;
+} t_Data;
+typedef struct
+{
     char id[MAX_CARATTERI]; // auto incrementale
     char tipo[MAX_CARATTERI];
     char colore[MAX_CARATTERI];
@@ -82,12 +88,6 @@ typedef struct
     int numeroRotoli;
     int priorita_utilizzo;
 } t_Magazzino;
-typedef struct
-{
-    int giorno;
-    int mese;
-    int anno;
-} t_Data;
 
 // ---PROTOTIPI FUNZIONI---
 // Funzioni di Menu
@@ -199,7 +199,7 @@ int main()
             case 1: // ROTOLO
                 do
                 {
-                    scelta_sub = menuRotolo();
+                    scelta_sub = menuRotoli();
                     switch (scelta_sub)
                     {
                     case 1: // AGGIUNGI ROTOLO
@@ -436,131 +436,156 @@ int main()
     }
 }
 
-    //---FUNZIONI---
-    int menuGenerale()
-    {
-        int scelta;
-        printf("\n--- MENU GENERALE SARTORIA ---\n");
-        printf("1. ROTOLI\n");
-        printf("2. RITAGLI\n");
-        printf("3. PRELIEVI\n");
-        printf("4. PROGETTI\n");
-        printf("5. MAGAZZINO\n");
-        printf("6. FORNITORI\n");
-        printf("7. SALVATAGGIO E TERMINAZIONE\n");
-        printf("SCELTA: ");
-        scanf("%d", &scelta);
-        return scelta;
-    }
+//---FUNZIONI---
+int menuGenerale()
+{
+    int scelta;
+    printf("\n--- MENU GENERALE SARTORIA ---\n");
+    printf("1. ROTOLI\n");
+    printf("2. RITAGLI\n");
+    printf("3. PRELIEVI\n");
+    printf("4. PROGETTI\n");
+    printf("5. MAGAZZINO\n");
+    printf("6. FORNITORI\n");
+    printf("7. SALVATAGGIO E TERMINAZIONE\n");
+    printf("SCELTA: ");
+    scanf("%d", &scelta);
+    return scelta;
+}
 
-    int menuRotolo()
-    {
-        int scelta;
-        printf("\n--- MENU ROTOLO ---\n");
-        printf("1. AGGIUNGI ROTOLO\n");
-        printf("2. MODIFICA ROTOLO\n");
-        printf("3. ELIMINA ROTOLO\n");
-        printf("4. VISUALIZZA ROTOLO\n");
-        printf("5. CERCA ROTOLO PER CATEGORIA\n");
-        printf("SCELTA: ");
-        scanf("%d", &scelta);
-        return scelta;
-    }
+int menuRotolo()
+{
+    int scelta;
+    printf("\n--- MENU ROTOLO ---\n");
+    printf("1. AGGIUNGI ROTOLO\n");
+    printf("2. MODIFICA ROTOLO\n");
+    printf("3. ELIMINA ROTOLO\n");
+    printf("4. VISUALIZZA ROTOLO\n");
+    printf("5. CERCA ROTOLO PER CATEGORIA\n");
+    printf("SCELTA: ");
+    scanf("%d", &scelta);
+    return scelta;
+}
 
- 
+int menuPrelievi()
+{
+    int scelta;
+    printf("\n--- MENU PRELIEVI ---\n");
+    printf("1. INSERISCI PRELIEVO\n");
+    printf("2. MODIFICA PRELIEVO\n");
+    printf("3. ELIMINA PRELIEVO\n");
+    printf("4. VISUALIZZA PRELIEVI\n");
+    printf("5. CERCA PRELIEVO\n");
+    printf("SCELTA: ");
+    scanf("%d", &scelta);
+    return scelta;
+}
 
-    int menuPrelievi()
-    {
-        int scelta;
-        printf("\n--- MENU PRELIEVI ---\n");
-        printf("1. INSERISCI PRELIEVO\n");
-        printf("2. MODIFICA PRELIEVO\n");
-        printf("3. ELIMINA PRELIEVO\n");
-        printf("4. VISUALIZZA PRELIEVI\n");
-        printf("5. CERCA PRELIEVO\n");
-        printf("SCELTA: ");
-        scanf("%d", &scelta);
-        return scelta;
-    }
+int menuRitagli()
+{
+    int scelta;
+    printf("\n--- MENU RITAGLI ---\n");
+    printf("4. VISUALIZZA RITAGLI\n");
+    printf("5. CERCA RITAGLIO\n");
+    printf("SCELTA: ");
+    scanf("%d", &scelta);
+    return scelta;
+}
 
-    int menuRitagli()
-    {
-        int scelta;
-        printf("\n--- MENU RITAGLI ---\n");
-        printf("4. VISUALIZZA RITAGLI\n");
-        printf("5. CERCA RITAGLIO\n");
-        printf("SCELTA: ");
-        scanf("%d", &scelta);
-        return scelta;
-    }
+int menuFornitori()
+{
+    int scelta;
+    printf("\n--- MENU FORNITORI ---\n");
+    printf("1. INSERISCI FORNITORE\n");
+    printf("2. MODIFICA FORNITORE\n");
+    printf("3. ELIMINA FORNITORE\n");
+    printf("4. VISUALIZZA FORNITORI\n");
+    printf("5. CERCA FORNITORE\n");
+    printf("7. SALVATAGGIO E TERMINAZIONE\n");
+    printf("SCELTA: ");
+    scanf("%d", &scelta);
+    return scelta;
+}
 
-    int menuFornitori()
-    {
-        int scelta;
-        printf("\n--- MENU FORNITORI ---\n");
-        printf("1. INSERISCI FORNITORE\n");
-        printf("2. MODIFICA FORNITORE\n");
-        printf("3. ELIMINA FORNITORE\n");
-        printf("4. VISUALIZZA FORNITORI\n");
-        printf("5. CERCA FORNITORE\n");
-        printf("7. SALVATAGGIO E TERMINAZIONE\n");
-        printf("SCELTA: ");
-        scanf("%d", &scelta);
-        return scelta;
-    }
+int menuMagazzino()
+{
+    int scelta;
+    printf("\n--- MENU MAGAZZINO ---\n");
+    printf("1. CONTROLLO MAGAZZINO (valore/metraggio/numero rotoli)\n");
+    printf("2. AGGIUNGI RITAGLIO IN MAGAZZINO\n");
+    printf("3. RIMUOVI RITAGLIO\n");
+    printf("4. VISUALIZZA MAGAZZINO\n");
+    printf("5. IMPOSTA PRIORITA' UTILIZZO\n");
+    printf("7. SALVATAGGIO E TERMINAZIONE\n");
+    printf("SCELTA: ");
+    scanf("%d", &scelta);
+    return scelta;
+}
 
-    int menuMagazzino()
-    {
-        int scelta;
-        printf("\n--- MENU MAGAZZINO ---\n");
-        printf("1. CONTROLLO MAGAZZINO (valore/metraggio/numero rotoli)\n");
-        printf("2. AGGIUNGI RITAGLIO IN MAGAZZINO\n");
-        printf("3. RIMUOVI RITAGLIO\n");
-        printf("4. VISUALIZZA MAGAZZINO\n");
-        printf("5. IMPOSTA PRIORITA' UTILIZZO\n");
-        printf("7. SALVATAGGIO E TERMINAZIONE\n");
-        printf("SCELTA: ");
-        scanf("%d", &scelta);
-        return scelta;
-    }
+int controlloData(t_Data data)
+{
+    int bisestile;
+    if (data.anno < 1900 || data.anno > 2100)
+        return 0;
+    if (data.mese < 1 || data.mese > 12)
+        return 0;
+    if (data.giorno < 1 || data.giorno > 31)
+        return 0;
 
-    int controlloData(t_Data data)
+    if (data.mese == 2)
     {
-        int bisestile;
-        if (data.anno < 1900 || data.anno > 2100)
+        bisestile = (data.anno % 4 == 0 && data.anno % 100 != 0) || (data.anno % 400 == 0);
+        if (bisestile && data.giorno > 29)
             return 0;
-        if (data.mese < 1 || data.mese > 12)
+        if (!bisestile && data.giorno > 28)
             return 0;
-        if (data.giorno < 1 || data.giorno > 31)
-            return 0;
-
-        if (data.mese == 2)
-        {
-            bisestile = (data.anno % 4 == 0 && data.anno % 100 != 0) || (data.anno % 400 == 0);
-            if (bisestile && data.giorno > 29)
-                return 0;
-            if (!bisestile && data.giorno > 28)
-                return 0;
-        }
-        else if (data.mese == 4 || data.mese == 6 || data.mese == 9 || data.mese == 11)
-        {
-            if (data.giorno > 30)
-                return 0;
-        }
-        return 1;
     }
-
-    int inserisciRotolo(t_Rotolo rotoli[], int nRotoli)
+    else if (data.mese == 4 || data.mese == 6 || data.mese == 9 || data.mese == 11)
     {
-        int i;
-        printf("NUMERO ROTOLI DA AGGIUNGERE: ");
-        scanf("%d", &nRotoli);
+        if (data.giorno > 30)
+            return 0;
+    }
+    return 1;
+}
 
-        for (i = 0; i < nRotoli; i++)
+int inserisciRotolo(t_Rotolo rotoli[], int nRotoli)
+{
+    int i;
+    printf("NUMERO ROTOLI DA AGGIUNGERE: ");
+    scanf("%d", &nRotoli);
+
+    for (i = 0; i < nRotoli; i++)
+    {
+        printf("Inserisci i dati per il rotolo %d:\n", i + 1);
+        printf("ID: ");
+        scanf("%s", rotoli[i].id);
+        printf("TIPO: ");
+        scanf("%s", rotoli[i].tipo);
+        printf("COLORE: ");
+        scanf("%s", rotoli[i].colore);
+        printf("FANTASIA: ");
+        scanf("%s", rotoli[i].fantasia);
+        printf("LUNGHEZZA TOTALE (m): ");
+        scanf("%f", &rotoli[i].lunghezza_totale);
+        printf("REDIDUO (cm): ");
+        scanf("%f", &rotoli[i].residuo);
+        printf("COSTO AL METRO: ");
+        scanf("%f", &rotoli[i].costo_metro);
+        printf("FORNITORE: ");
+        scanf("%s", rotoli[i].fornitore);
+    }
+    return 0;
+}
+
+int modificaRotolo(t_Rotolo rotoli[], int nRotoli, int id)
+{
+    int i;
+    char id[MAX_CARATTERI];
+    for (i = 0; i < nRotoli; i++)
+    {
+        if (strcmp(rotoli[i].id, id) == 0)
         {
-            printf("Inserisci i dati per il rotolo %d:\n", i + 1);
-            printf("ID: ");
-            scanf("%s", rotoli[i].id);
+            printf("MODIFICA I DATI DEL ROTOLO %s:\n", id);
             printf("TIPO: ");
             scanf("%s", rotoli[i].tipo);
             printf("COLORE: ");
@@ -569,341 +594,314 @@ int main()
             scanf("%s", rotoli[i].fantasia);
             printf("LUNGHEZZA TOTALE (m): ");
             scanf("%f", &rotoli[i].lunghezza_totale);
-            printf("REDIDUO (cm): ");
+            printf("RESIDUO (cm): ");
             scanf("%f", &rotoli[i].residuo);
             printf("COSTO AL METRO: ");
             scanf("%f", &rotoli[i].costo_metro);
-            printf("FORNITORE: ");
-            scanf("%s", rotoli[i].fornitore);
         }
-        return 0;
     }
+    return 0;
+}
 
-    int modificaRotolo(t_Rotolo rotoli[], int nRotoli, int id)
+int eliminaRotolo(t_Rotolo rotoli[], int *nRotoli, char *id)
+{
+    int i, j;
+    for (i = 0; i < *nRotoli; i++)
     {
-        int i;
-        char id[MAX_CARATTERI];
+        if (strcmp(rotoli[i].id, id) == 0)
+        {
+            for (j = i; j < *nRotoli - 1; j++)
+            {
+                rotoli[j] = rotoli[j + 1];
+            }
+            (*nRotoli)--;
+            return 1;
+        }
+    }
+    return -1;
+}
+
+int visualizzaRotolo(t_Rotolo rotoli[], int nRotoli)
+{
+    int i;
+    printf("ELENCO ROTOLO:\n");
+    for (i = 0; i < nRotoli; i++)
+    {
+        printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA TOTALE: %.2f m, RESIDUO: %.2f cm, COSTO AL METRO: %.2f, FORNITORE: %s\n",
+               rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
+               rotoli[i].lunghezza_totale, rotoli[i].residuo,
+               rotoli[i].costo_metro, rotoli[i].fornitore);
+    }
+    return 0;
+}
+int manuCercaRotoli()
+{
+    int scelta;
+    printf("\n--- RICERCA ROTOLO ---\n");
+    printf("1. Cerca per CODICE ROTOLO\n");
+    printf("2. Cerca per TIPO TESSUTO\n");
+    printf("3. Cerca per COLORE\n");
+    printf("4. Cerca per FORNITORE\n");
+    printf("5. Cerca per STATO\n");
+    printf("6. Cerca per DISPONIBILITA' MINIMA\n");
+    printf("SCELTA: ");
+    scanf("%d", &scelta);
+    return scelta;
+}
+
+int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
+{
+    int scelta, i, trovati = 0;
+    char ricerca[MAX_CARATTERI];
+    float lunghezzaMin;
+
+    scelta = menuRotoli();
+
+    switch (scelta)
+    {
+    case 1:
+        printf("INSERISCI IL CODICE ROTOLO: ");
+        scanf("%s", ricerca);
         for (i = 0; i < nRotoli; i++)
         {
-            if (strcmp(rotoli[i].id, id) == 0)
+            if (strcmp(rotoli[i].id, ricerca) == 0)
             {
-                printf("MODIFICA I DATI DEL ROTOLO %s:\n", id);
-                printf("TIPO: ");
-                scanf("%s", rotoli[i].tipo);
-                printf("COLORE: ");
-                scanf("%s", rotoli[i].colore);
-                printf("FANTASIA: ");
-                scanf("%s", rotoli[i].fantasia);
-                printf("LUNGHEZZA TOTALE (m): ");
-                scanf("%f", &rotoli[i].lunghezza_totale);
-                printf("RESIDUO (cm): ");
-                scanf("%f", &rotoli[i].residuo);
-                printf("COSTO AL METRO: ");
-                scanf("%f", &rotoli[i].costo_metro);
+                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
+                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
+                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
+                trovati++;
             }
         }
-        return 0;
-    }
-
-    int eliminaRotolo(t_Rotolo rotoli[], int *nRotoli, char *id)
-    {
-        int i, j;
-        for (i = 0; i < *nRotoli; i++)
+        break;
+    case 2:
+        printf("INSERISCI IL TIPO TESSUTO: ");
+        scanf("%s", ricerca);
+        for (i = 0; i < nRotoli; i++)
         {
-            if (strcmp(rotoli[i].id, id) == 0)
+            if (strcmp(rotoli[i].tipo, ricerca) == 0)
             {
-                for (j = i; j < *nRotoli - 1; j++)
-                {
-                    rotoli[j] = rotoli[j + 1];
-                }
-                (*nRotoli)--;
-                return 1;
+                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
+                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
+                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
+                trovati++;
             }
         }
+        break;
+    case 3:
+        printf("INSERISCI IL COLORE: ");
+        scanf("%s", ricerca);
+        for (i = 0; i < nRotoli; i++)
+        {
+            if (strcmp(rotoli[i].colore, ricerca) == 0)
+            {
+                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
+                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
+                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
+                trovati++;
+            }
+        }
+        break;
+    case 4:
+        printf("INSERISCI IL FORNITORE: ");
+        scanf("%s", ricerca);
+        for (i = 0; i < nRotoli; i++)
+        {
+            if (strcmp(rotoli[i].fornitore, ricerca) == 0)
+            {
+                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
+                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
+                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
+                trovati++;
+            }
+        }
+        break;
+    case 5:
+        printf("INSERISCI LO STATO (NUOVO/IN USO/ESAURITO): ");
+        scanf("%s", ricerca);
+        for (i = 0; i < nRotoli; i++)
+        {
+            if (strcmp(rotoli[i].stato, ricerca) == 0)
+            {
+                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
+                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
+                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
+                trovati++;
+            }
+        }
+        break;
+    case 6:
+        printf("INSERISCI LUNGHEZZA MINIMA (m): ");
+        scanf("%f", &lunghezzaMin);
+        for (i = 0; i < nRotoli; i++)
+        {
+            if (rotoli[i].lunghezza_totale > lunghezzaMin)
+            {
+                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
+                       rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
+                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
+                trovati++;
+            }
+        }
+        break;
+    default:
+        printf("OPZIONE NON VALIDA.\n");
         return -1;
     }
 
-    int visualizzaRotolo(t_Rotolo rotoli[], int nRotoli)
+    if (trovati == 0)
+        printf("NESSUN ROTOLO TROVATO.\n");
+    else
+        printf("TOTALE ROTOLI TROVATI: %d\n", trovati);
+
+    return trovati;
+}
+
+int SalvaRotoliSuFile(t_Rotolo rotoli[], int nRotoli)
+{
+    FILE *file = fopen(FNROTOLO, "wb");
+    if (file == NULL)
     {
-        int i;
-        printf("ELENCO ROTOLO:\n");
-        for (i = 0; i < nRotoli; i++)
-        {
-            printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA TOTALE: %.2f m, RESIDUO: %.2f cm, COSTO AL METRO: %.2f, FORNITORE: %s\n",
-                   rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                   rotoli[i].lunghezza_totale, rotoli[i].residuo,
-                   rotoli[i].costo_metro, rotoli[i].fornitore);
-        }
-        return 0;
+        printf("ERRORE NEL SALVATAGGIO DEI ROTOLO SUL FILE.\n");
+        return -1;
     }
-   int manuCercaRotoli()
+    fwrite(&nRotoli, sizeof(int), 1, file);
+    fwrite(rotoli, sizeof(t_Rotolo), nRotoli, file);
+    fclose(file);
+    printf("ROTOLO SALVATI CON SUCCESSO SUL FILE.\n");
+    return 0;
+}
+
+int CaricaRotoliDaFile(t_Rotolo rotoli[], int *nRotoli)
+{
+    FILE *file = fopen(FNROTOLO, "rb");
+    if (file == NULL)
     {
-        int scelta;
-        printf("\n--- RICERCA ROTOLO ---\n");
-        printf("1. Cerca per CODICE ROTOLO\n");
-        printf("2. Cerca per TIPO TESSUTO\n");
-        printf("3. Cerca per COLORE\n");
-        printf("4. Cerca per FORNITORE\n");
-        printf("5. Cerca per STATO\n");
-        printf("6. Cerca per DISPONIBILITA' MINIMA\n");
-        printf("SCELTA: ");
-        scanf("%d", &scelta);
-        return scelta;
+        printf("ERRORE NEL CARICAMENTO DEI ROTOLO DAL FILE.\n");
+        return -1;
     }
-    
-    int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
+    fread(nRotoli, sizeof(int), 1, file);
+    fread(rotoli, sizeof(t_Rotolo), *nRotoli, file);
+    fclose(file);
+    printf("ROTOLO CARICATI CON SUCCESSO DAL FILE.\n");
+    return 0;
+}
+
+int SalvaProgettiSuFile(t_Progetto progetti[], int nProgetti)
+{
+    FILE *file = fopen("progetti.dat", "wb");
+    if (file == NULL)
     {
-        int scelta, i, trovati = 0;
-        char ricerca[MAX_CARATTERI];
-        float lunghezzaMin;
-
-        scelta = menuRotoli();
-
-        switch (scelta)
-        {
-        case 1:
-            printf("INSERISCI IL CODICE ROTOLO: ");
-            scanf("%s", ricerca);
-            for (i = 0; i < nRotoli; i++)
-            {
-                if (strcmp(rotoli[i].id, ricerca) == 0)
-                {
-                    printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                           rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                           rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                    trovati++;
-                }
-            }
-            break;
-        case 2:
-            printf("INSERISCI IL TIPO TESSUTO: ");
-            scanf("%s", ricerca);
-            for (i = 0; i < nRotoli; i++)
-            {
-                if (strcmp(rotoli[i].tipo, ricerca) == 0)
-                {
-                    printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                           rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                           rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                    trovati++;
-                }
-            }
-            break;
-        case 3:
-            printf("INSERISCI IL COLORE: ");
-            scanf("%s", ricerca);
-            for (i = 0; i < nRotoli; i++)
-            {
-                if (strcmp(rotoli[i].colore, ricerca) == 0)
-                {
-                    printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                           rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                           rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                    trovati++;
-                }
-            }
-            break;
-        case 4:
-            printf("INSERISCI IL FORNITORE: ");
-            scanf("%s", ricerca);
-            for (i = 0; i < nRotoli; i++)
-            {
-                if (strcmp(rotoli[i].fornitore, ricerca) == 0)
-                {
-                    printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                           rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                           rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                    trovati++;
-                }
-            }
-            break;
-        case 5:
-            printf("INSERISCI LO STATO (NUOVO/IN USO/ESAURITO): ");
-            scanf("%s", ricerca);
-            for (i = 0; i < nRotoli; i++)
-            {
-                if (strcmp(rotoli[i].stato, ricerca) == 0)
-                {
-                    printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                           rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                           rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                    trovati++;
-                }
-            }
-            break;
-        case 6:
-            printf("INSERISCI LUNGHEZZA MINIMA (m): ");
-            scanf("%f", &lunghezzaMin);
-            for (i = 0; i < nRotoli; i++)
-            {
-                if (rotoli[i].lunghezza_totale > lunghezzaMin)
-                {
-                    printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, FORNITORE: %s, STATO: %s\n",
-                           rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                           rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].fornitore, rotoli[i].stato);
-                    trovati++;
-                }
-            }
-            break;
-        default:
-            printf("OPZIONE NON VALIDA.\n");
-            return -1;
-        }
-
-        if (trovati == 0)
-            printf("NESSUN ROTOLO TROVATO.\n");
-        else
-            printf("TOTALE ROTOLI TROVATI: %d\n", trovati);
-
-        return trovati;
+        printf("ERRORE NEL SALVATAGGIO DEI PROGETTI SUL FILE.\n");
+        return -1;
     }
+    fwrite(&nProgetti, sizeof(int), 1, file);
+    fwrite(progetti, sizeof(t_Progetto), nProgetti, file);
+    fclose(file);
+    printf("PROGETTI SALVATI CON SUCCESSO SUL FILE.\n");
+    return 0;
+}
 
-    int SalvaRotoliSuFile(t_Rotolo rotoli[], int nRotoli)
+int CaricaProgettiDaFile(t_Progetto progetti[], int *nProgetti)
+{
+    FILE *file = fopen("progetti.dat", "rb");
+    if (file == NULL)
     {
-        FILE *file = fopen(FNROTOLO, "wb");
-        if (file == NULL)
-        {
-            printf("ERRORE NEL SALVATAGGIO DEI ROTOLO SUL FILE.\n");
-            return -1;
-        }
-        fwrite(&nRotoli, sizeof(int), 1, file);
-        fwrite(rotoli, sizeof(t_Rotolo), nRotoli, file);
-        fclose(file);
-        printf("ROTOLO SALVATI CON SUCCESSO SUL FILE.\n");
-        return 0;
+        printf("ERRORE NEL CARICAMENTO DEI PROGETTI DAL FILE.\n");
+        return -1;
     }
+    fread(nProgetti, sizeof(int), 1, file);
+    fread(progetti, sizeof(t_Progetto), *nProgetti, file);
+    fclose(file);
+    printf("PROGETTI CARICATI CON SUCCESSO DAL FILE.\n");
+    return 0;
+}
 
-    int CaricaRotoliDaFile(t_Rotolo rotoli[], int *nRotoli)
+int SalvaFornitoriSuFile(t_Fornitore fornitori[], int nFornitori)
+{
+    FILE *file = fopen("fornitori.dat", "wb");
+    if (file == NULL)
     {
-        FILE *file = fopen(FNROTOLO, "rb");
-        if (file == NULL)
-        {
-            printf("ERRORE NEL CARICAMENTO DEI ROTOLO DAL FILE.\n");
-            return -1;
-        }
-        fread(nRotoli, sizeof(int), 1, file);
-        fread(rotoli, sizeof(t_Rotolo), *nRotoli, file);
-        fclose(file);
-        printf("ROTOLO CARICATI CON SUCCESSO DAL FILE.\n");
-        return 0;
+        printf("ERRORE NEL SALVATAGGIO DEI FORNITORI SUL FILE.\n");
+        return -1;
     }
+    fwrite(&nFornitori, sizeof(int), 1, file);
+    fwrite(fornitori, sizeof(t_Fornitore), nFornitori, file);
+    fclose(file);
+    printf("FORNITORI SALVATI CON SUCCESSO SUL FILE.\n");
+    return 0;
+}
 
-    int SalvaProgettiSuFile(t_Progetto progetti[], int nProgetti)
+int CaricaFornitoriDaFile(t_Fornitore fornitori[], int *nFornitori)
+{
+    FILE *file = fopen("fornitori.dat", "rb");
+    if (file == NULL)
     {
-        FILE *file = fopen("progetti.dat", "wb");
-        if (file == NULL)
-        {
-            printf("ERRORE NEL SALVATAGGIO DEI PROGETTI SUL FILE.\n");
-            return -1;
-        }
-        fwrite(&nProgetti, sizeof(int), 1, file);
-        fwrite(progetti, sizeof(t_Progetto), nProgetti, file);
-        fclose(file);
-        printf("PROGETTI SALVATI CON SUCCESSO SUL FILE.\n");
-        return 0;
+        printf("ERRORE NEL CARICAMENTO DEI FORNITORI DAL FILE.\n");
+        return -1;
     }
+    fread(nFornitori, sizeof(int), 1, file);
+    fread(fornitori, sizeof(t_Fornitore), *nFornitori, file);
+    fclose(file);
+    printf("FORNITORI CARICATI CON SUCCESSO DAL FILE.\n");
+    return 0;
+}
 
-    int CaricaProgettiDaFile(t_Progetto progetti[], int *nProgetti)
+int SalvaPrelieviSuFile(t_Prelievo prelievi[], int nPrelievi)
+{
+    FILE *file = fopen("prelievi.dat", "wb");
+    if (file == NULL)
     {
-        FILE *file = fopen("progetti.dat", "rb");
-        if (file == NULL)
-        {
-            printf("ERRORE NEL CARICAMENTO DEI PROGETTI DAL FILE.\n");
-            return -1;
-        }
-        fread(nProgetti, sizeof(int), 1, file);
-        fread(progetti, sizeof(t_Progetto), *nProgetti, file);
-        fclose(file);
-        printf("PROGETTI CARICATI CON SUCCESSO DAL FILE.\n");
-        return 0;
+        printf("ERRORE NEL SALVATAGGIO DEI PRELIEVI SUL FILE.\n");
+        return -1;
     }
+    fwrite(&nPrelievi, sizeof(int), 1, file);
+    fwrite(prelievi, sizeof(t_Prelievo), nPrelievi, file);
+    fclose(file);
+    printf("PRELIEVI SALVATI CON SUCCESSO SUL FILE.\n");
+    return 0;
+}
 
-    int SalvaFornitoriSuFile(t_Fornitore fornitori[], int nFornitori)
+int CaricaPrelieviDaFile(t_Prelievo prelievi[], int *nPrelievi)
+{
+    FILE *file = fopen("prelievi.dat", "rb");
+    if (file == NULL)
     {
-        FILE *file = fopen("fornitori.dat", "wb");
-        if (file == NULL)
-        {
-            printf("ERRORE NEL SALVATAGGIO DEI FORNITORI SUL FILE.\n");
-            return -1;
-        }
-        fwrite(&nFornitori, sizeof(int), 1, file);
-        fwrite(fornitori, sizeof(t_Fornitore), nFornitori, file);
-        fclose(file);
-        printf("FORNITORI SALVATI CON SUCCESSO SUL FILE.\n");
-        return 0;
+        printf("ERRORE NEL CARICAMENTO DEI PRELIEVI DAL FILE.\n");
+        return -1;
     }
+    fread(nPrelievi, sizeof(int), 1, file);
+    fread(prelievi, sizeof(t_Prelievo), *nPrelievi, file);
+    fclose(file);
+    printf("PRELIEVI CARICATI CON SUCCESSO DAL FILE.\n");
+    return 0;
+}
 
-    int CaricaFornitoriDaFile(t_Fornitore fornitori[], int *nFornitori)
+int SalvaRitagliSuFile(t_Ritaglio ritagli[], int nRitagli)
+{
+    FILE *file = fopen("ritagli.dat", "wb");
+    if (file == NULL)
     {
-        FILE *file = fopen("fornitori.dat", "rb");
-        if (file == NULL)
-        {
-            printf("ERRORE NEL CARICAMENTO DEI FORNITORI DAL FILE.\n");
-            return -1;
-        }
-        fread(nFornitori, sizeof(int), 1, file);
-        fread(fornitori, sizeof(t_Fornitore), *nFornitori, file);
-        fclose(file);
-        printf("FORNITORI CARICATI CON SUCCESSO DAL FILE.\n");
-        return 0;
+        printf("ERRORE NEL SALVATAGGIO DEI RITAGLI SUL FILE.\n");
+        return -1;
     }
+    fwrite(&nRitagli, sizeof(int), 1, file);
+    fwrite(ritagli, sizeof(t_Ritaglio), nRitagli, file);
+    fclose(file);
+    printf("RITAGLI SALVATI CON SUCCESSO SUL FILE.\n");
+    return 0;
+}
 
-    int SalvaPrelieviSuFile(t_Prelievo prelievi[], int nPrelievi)
+int CaricaRitagliDaFile(t_Ritaglio ritagli[], int *nRitagli)
+{
+    FILE *file = fopen("ritagli.dat", "rb");
+    if (file == NULL)
     {
-        FILE *file = fopen("prelievi.dat", "wb");
-        if (file == NULL)
-        {
-            printf("ERRORE NEL SALVATAGGIO DEI PRELIEVI SUL FILE.\n");
-            return -1;
-        }
-        fwrite(&nPrelievi, sizeof(int), 1, file);
-        fwrite(prelievi, sizeof(t_Prelievo), nPrelievi, file);
-        fclose(file);
-        printf("PRELIEVI SALVATI CON SUCCESSO SUL FILE.\n");
-        return 0;
+        printf("ERRORE NEL CARICAMENTO DEI RITAGLI DAL FILE.\n");
+        return -1;
     }
-
-    int CaricaPrelieviDaFile(t_Prelievo prelievi[], int *nPrelievi)
-    {
-        FILE *file = fopen("prelievi.dat", "rb");
-        if (file == NULL)
-        {
-            printf("ERRORE NEL CARICAMENTO DEI PRELIEVI DAL FILE.\n");
-            return -1;
-        }
-        fread(nPrelievi, sizeof(int), 1, file);
-        fread(prelievi, sizeof(t_Prelievo), *nPrelievi, file);
-        fclose(file);
-        printf("PRELIEVI CARICATI CON SUCCESSO DAL FILE.\n");
-        return 0;
-    }
-
-    int SalvaRitagliSuFile(t_Ritaglio ritagli[], int nRitagli)
-    {
-        FILE *file = fopen("ritagli.dat", "wb");
-        if (file == NULL)
-        {
-            printf("ERRORE NEL SALVATAGGIO DEI RITAGLI SUL FILE.\n");
-            return -1;
-        }
-        fwrite(&nRitagli, sizeof(int), 1, file);
-        fwrite(ritagli, sizeof(t_Ritaglio), nRitagli, file);
-        fclose(file);
-        printf("RITAGLI SALVATI CON SUCCESSO SUL FILE.\n");
-        return 0;
-    }
-
-    int CaricaRitagliDaFile(t_Ritaglio ritagli[], int *nRitagli)
-    {
-        FILE *file = fopen("ritagli.dat", "rb");
-        if (file == NULL)
-        {
-            printf("ERRORE NEL CARICAMENTO DEI RITAGLI DAL FILE.\n");
-            return -1;
-        }
-        fread(nRitagli, sizeof(int), 1, file);
-        fread(ritagli, sizeof(t_Ritaglio), *nRitagli, file);
-        fclose(file);
-        printf("RITAGLI CARICATI CON SUCCESSO DAL FILE.\n");
-        return 0;
-    }
+    fread(nRitagli, sizeof(int), 1, file);
+    fread(ritagli, sizeof(t_Ritaglio), *nRitagli, file);
+    fclose(file);
+    printf("RITAGLI CARICATI CON SUCCESSO DAL FILE.\n");
+    return 0;
+}
