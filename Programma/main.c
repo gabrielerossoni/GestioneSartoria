@@ -125,15 +125,15 @@ int cercaPrelievo(t_Prelievo[], int);
 
 // Funzioni di gestione FORNITORE
 int inserisciFornitore(t_Fornitore[], int);
-int modificaFornitore(t_Fornitore[], int, int);
-int eliminaFornitore(t_Fornitore[], int *);
+int modificaFornitore(t_Fornitore[], int, char[]);
+int eliminaFornitore(t_Fornitore[], int *, char[]);
 int visualizzaFornitore(t_Fornitore[], int);
 int cercaFornitore(t_Fornitore[], int);
 
 // Funzioni di gestione PROGETTO
 int inserisciProgetto(t_Progetto[], int);
-int modificaProgetto(t_Progetto[], int, int);
-int eliminaProgetto(t_Progetto[], int *);
+int modificaProgetto(t_Progetto[], int, char[]);
+int eliminaProgetto(t_Progetto[], int *, char[]);
 int visualizzaProgetto(t_Progetto[], int);
 int cercaProgetto(t_Progetto[], int);
 
@@ -575,7 +575,7 @@ int inserisciRotolo(t_Rotolo rotoli[], int nRotoli)
     return 0;
 }
 
-int modificaRotolo(t_Rotolo rotoli[], int nRotoli, char id)
+int modificaRotolo(t_Rotolo rotoli[], int nRotoli, char *id)
 {
     int i;
     for (i = 0; i < nRotoli; i++)
