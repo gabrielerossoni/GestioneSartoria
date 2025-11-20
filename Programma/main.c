@@ -17,12 +17,7 @@
 #define MAX_RITAGLI 1000
 
 // ---NOMI FILE---
-#define FNROTOLO "rotoli.dat"
-#define FNPRELIEVO "prelievi.dat"
-#define FNRITAGLIO "ritagli.dat"
-#define FNFORNITORE "fornitori.dat"
-#define FNPROGETTO "progetti.dat"
-#define FNMAGAZZINO "magazzino.dat"
+#define FNCOMPLETO "backup_sartoria.dat"
 
 // ---STRUTTURE DATI---
 typedef struct
@@ -158,7 +153,7 @@ int main()
     t_Ritaglio ritagli[MAX_RITAGLI];
     int nRotoli = 0, nProgetti = 0, nFornitori = 0, nPrelievi = 0, nRitagli = 0;
     int scelta, flag, nRotoli_count = 0, quit = 0, scelta_sub;
-    char id[MAX_CARATTERI];
+    char id[MAX_CARATTERI], ricerca_partita_iva[MAX_CARATTERI];
 
     // MENU PRINCIPALE
         /* contatori locali (non toccare le variabili già dichiarate sopra) */
@@ -357,7 +352,9 @@ int main()
                         visualizzaFornitore(fornitori, nFornitori);
                         break;
                     case 5:
-                        cercaFornitore(fornitori, nFornitori);
+                    printf("INSERISCI PARTITA IVA: ");
+                    scanf("%s", ricerca_partita_iva);
+                        cercaFornitore(fornitori, nFornitori, ricerca_partita_iva);
                         break;
                     case 7:
                         SalvaFornitoriSuFile(fornitori, nFornitori);
@@ -744,19 +741,7 @@ int cercaPrelievo(t_Prelievo prelievi[], int nPrelievi)
     float metraggioMin;
     t_Data dataRic;
 
-    printf("\n--- RICERCA PRELIEVO ---\n");
-    printf("1. Cerca per CODICE PRELIEVO\n");
-    printf("2. Cerca per CODICE ROTOLO\n");
-    printf("3. Cerca per OPERATORE\n");
-    printf("4. Cerca per DATA\n");
-    printf("5. Cerca per METRAGGIO MINIMO\n");
-    printf("SCELTA: ");
-    if (scanf("%d", &scelta) != 1)
-    {
-        printf("INPUT NON VALIDO.\n");
-        return -1;
-    }
-
+   scelta= menuCercaPrelievi();
     switch (scelta)
     {
     case 1: // Cerca per CODICE PRELIEVO
@@ -774,37 +759,7 @@ int cercaPrelievo(t_Prelievo prelievi[], int nPrelievi)
             }
         }
         break;
-    case 2: // Cerca per CODICE ROTOLO
-        printf("INSERISCI IL CODICE ROTOLO: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nPrelievi; i++)
-        {
-            if (strcmp(prelievi[i].id_rotolo, ricerca) == 0)
-            {
-                printf("ID: %s, ID_ROTOLO: %s, METRAGGIO: %.2f m, DATA: %02d/%02d/%04d, OPERATORE: %s\n",
-                       prelievi[i].id, prelievi[i].id_rotolo, prelievi[i].metraggio_prelevato,
-                       prelievi[i].data.giorno, prelievi[i].data.mese, prelievi[i].data.anno,
-                       prelievi[i].operatore);
-                trovati++;
-            }
-        }
-        break;
-    case 3: // Cerca per OPERATORE
-        printf("INSERISCI NOME OPERATORE: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nPrelievi; i++)
-        {
-            if (strcmp(prelievi[i].operatore, ricerca) == 0)
-            {
-                printf("ID: %s, ID_ROTOLO: %s, METRAGGIO: %.2f m, DATA: %02d/%02d/%04d, OPERATORE: %s\n",
-                       prelievi[i].id, prelievi[i].id_rotolo, prelievi[i].metraggio_prelevato,
-                       prelievi[i].data.giorno, prelievi[i].data.mese, prelievi[i].data.anno,
-                       prelievi[i].operatore);
-                trovati++;
-            }
-        }
-        break;
-    case 4: // Cerca per DATA
+    case 2: // Cerca per DATA
         printf("INSERISCI DATA (GG MM AAAA): ");
         if (scanf("%d %d %d", &dataRic.giorno, &dataRic.mese, &dataRic.anno) != 3)
         {
@@ -821,25 +776,6 @@ int cercaPrelievo(t_Prelievo prelievi[], int nPrelievi)
             if (prelievi[i].data.giorno == dataRic.giorno &&
                 prelievi[i].data.mese == dataRic.mese &&
                 prelievi[i].data.anno == dataRic.anno)
-            {
-                printf("ID: %s, ID_ROTOLO: %s, METRAGGIO: %.2f m, DATA: %02d/%02d/%04d, OPERATORE: %s\n",
-                       prelievi[i].id, prelievi[i].id_rotolo, prelievi[i].metraggio_prelevato,
-                       prelievi[i].data.giorno, prelievi[i].data.mese, prelievi[i].data.anno,
-                       prelievi[i].operatore);
-                trovati++;
-            }
-        }
-        break;
-    case 5: // Cerca per METRAGGIO MINIMO
-        printf("INSERISCI METRAGGIO MINIMO (m): ");
-        if (scanf("%f", &metraggioMin) != 1)
-        {
-            printf("INPUT NON VALIDO.\n");
-            return -1;
-        }
-        for (i = 0; i < nPrelievi; i++)
-        {
-            if (prelievi[i].metraggio_prelevato >= metraggioMin)
             {
                 printf("ID: %s, ID_ROTOLO: %s, METRAGGIO: %.2f m, DATA: %02d/%02d/%04d, OPERATORE: %s\n",
                        prelievi[i].id, prelievi[i].id_rotolo, prelievi[i].metraggio_prelevato,
@@ -867,16 +803,13 @@ int menuCercaPrelievo()
     int scelta;
     printf("\n--- RICERCA PRELIEVO ---\n");
     printf("1. Cerca per CODICE PRELIEVO\n");
-    printf("2. Cerca per CODICE ROTOLO\n");
-    printf("3. Cerca per OPERATORE\n");
-    printf("4. Cerca per DATA\n");
-    printf("5. Cerca per METRAGGIO MINIMO\n");
+    printf("2. Cerca per DATA\n");
     scanf("%d", &scelta);
     return scelta;
 }
 int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int nProgetti, t_Fornitore fornitori[], int nFornitori, t_Prelievo prelievi[], int nPrelievi, t_Ritaglio ritagli[], int nRitagli)
 {
-    FILE *file = fopen("dati_completi.dat", "wb");
+    FILE *file = fopen(FNCOMPLETO, "wb");
     if (file == NULL)
     {
         printf("ERRORE NEL SALVATAGGIO DEI DATI SUL FILE.\n");
@@ -905,7 +838,7 @@ int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int 
 
 int CaricaTuttoDaFile(t_Rotolo rotoli[], int *nRotoli, t_Progetto progetti[], int *nProgetti, t_Fornitore fornitori[], int *nFornitori, t_Prelievo prelievi[], int *nPrelievi, t_Ritaglio ritagli[], int *nRitagli)
 {
-    FILE *file = fopen("dati_completi.dat", "rb");
+    FILE *file = fopen(FNCOMPLETO, "rb");
     if (file == NULL)
     {
         printf("NESSUN FILE PRECEDENTE TROVATO. INIZIO CON DATI VUOTI.\n");
@@ -1210,17 +1143,10 @@ int visualizzaFornitore(t_Fornitore fornitori[], int nFornitori)
     return 0;
 }
 
-int cercaFornitore(t_Fornitore fornitori[], int nFornitori)
+int cercaFornitore(t_Fornitore fornitori[], int nFornitori, char *ricerca)
 {
     int scelta, i, trovati = 0;
     char ricerca[MAX_CARATTERI];
-
-    printf("\n--- RICERCA FORNITORE ---\n");
-    printf("1. Cerca per NOME\n");
-    printf("2. Cerca per PARTITA IVA\n");
-    printf("3. Cerca per EMAIL\n");
-    printf("SCELTA: ");
-    scanf("%d", &scelta);
 
     switch (scelta)
     {
@@ -1239,25 +1165,10 @@ int cercaFornitore(t_Fornitore fornitori[], int nFornitori)
         }
         break;
     case 2: // Cerca per PARTITA IVA
-        printf("INSERISCI PARTITA IVA: ");
-        scanf("%s", ricerca);
+        
         for (i = 0; i < nFornitori; i++)
         {
             if (strcmp(fornitori[i].partita_iva, ricerca) == 0)
-            {
-                printf("NOME: %s, PARTITA IVA: %s, INDIRIZZO: %s, TELEFONO: %s, EMAIL: %s\n",
-                       fornitori[i].nome, fornitori[i].partita_iva, fornitori[i].indirizzo,
-                       fornitori[i].telefono, fornitori[i].email);
-                trovati++;
-            }
-        }
-        break;
-    case 3: // Cerca per EMAIL
-        printf("INSERISCI EMAIL: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nFornitori; i++)
-        {
-            if (strcmp(fornitori[i].email, ricerca) == 0)
             {
                 printf("NOME: %s, PARTITA IVA: %s, INDIRIZZO: %s, TELEFONO: %s, EMAIL: %s\n",
                        fornitori[i].nome, fornitori[i].partita_iva, fornitori[i].indirizzo,
