@@ -17,9 +17,12 @@
 #define MAX_RITAGLI 1000
 
 // ---NOMI FILE---
-#define FNABITI "abiti.dat"
-#define FNINVENTARIO "inventario.dat"
 #define FNROTOLO "rotoli.dat"
+#define FNPRELEVIO "prelievi.dat"
+#define FNRITAGLIO "ritagli.dat"
+#define FNFORNITORE "fornitori.dat"
+#define FNPROGETTO "progetti.dat"
+#define FNMAGAZZINO "magazzino.dat"
 
 // ---STRUTTURE DATI---
 typedef struct
@@ -190,7 +193,7 @@ int main()
         int nRotoli_count = 0;
         int quit = 0;
         int scelta_sub;
-
+//TODO: caricare i dati da file all'avvio del programma
         do
         {
             scelta = menuGenerale();
@@ -903,5 +906,35 @@ int CaricaRitagliDaFile(t_Ritaglio ritagli[], int *nRitagli)
     fread(ritagli, sizeof(t_Ritaglio), *nRitagli, file);
     fclose(file);
     printf("RITAGLI CARICATI CON SUCCESSO DAL FILE.\n");
+    return 0;
+}
+
+int SalvaMagazzinoSuFile(t_Magazzino magazzino[], int nMagazzino)
+{
+    FILE *file = fopen("magazzino.dat", "wb");
+    if (file == NULL)
+    {
+        printf("ERRORE NEL SALVATAGGIO DEL MAGAZZINO SUL FILE.\n");
+        return -1;
+    }
+    fwrite(&nMagazzino, sizeof(int), 1, file);
+    fwrite(magazzino, sizeof(t_Magazzino), nMagazzino, file);
+    fclose(file);
+    printf("MAGAZZINO SALVATO CON SUCCESSO SUL FILE.\n");
+    return 0;
+}
+
+int CaricaMagazzinoDaFile(t_Magazzino magazzino[], int *nMagazzino)
+{
+    FILE *file = fopen("magazzino.dat", "rb");
+    if (file == NULL)
+    {
+        printf("ERRORE NEL CARICAMENTO DEL MAGAZZINO DAL FILE.\n");
+        return -1;
+    }
+    fread(nMagazzino, sizeof(int), 1, file);
+    fread(magazzino, sizeof(t_Magazzino), *nMagazzino, file);
+    fclose(file);
+    printf("MAGAZZINO CARICATO CON SUCCESSO DAL FILE.\n");
     return 0;
 }
