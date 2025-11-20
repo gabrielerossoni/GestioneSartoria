@@ -188,7 +188,32 @@ int main()
     {
         /* contatori locali (non toccare le variabili già dichiarate sopra) */
 
-        // TODO: caricare i dati da file all'avvio del programma
+        // Caricamento dati da file all'avvio del programma
+        if (CaricaRotoliDaFile(rotoli, &nRotoli_count) != 0)
+            printf("AVVERTENZA: Impossibile caricare i rotoli.\n");
+        else
+            printf("Rotoli caricati: %d\n", nRotoli_count);
+
+        if (CaricaProgettiDaFile(progetti, &nProgetti) != 0)
+            printf("AVVERTENZA: Impossibile caricare i progetti.\n");
+        else
+            printf("Progetti caricati: %d\n", nProgetti);
+
+        if (CaricaFornitoriDaFile(fornitori, &nFornitori) != 0)
+            printf("AVVERTENZA: Impossibile caricare i fornitori.\n");
+        else
+            printf("Fornitori caricati: %d\n", nFornitori);
+
+        if (CaricaPrelieviDaFile(prelievi, &nPrelievi) != 0)
+            printf("AVVERTENZA: Impossibile caricare i prelievi.\n");
+        else
+            printf("Prelievi caricati: %d\n", nPrelievi);
+
+        if (CaricaRitagliDaFile(ritagli, &nRitagli) != 0)
+            printf("AVVERTENZA: Impossibile caricare i ritagli.\n");
+        else
+            printf("Ritagli caricati: %d\n", nRitagli);
+            
         do
         {
             scelta = menuGenerale();
@@ -269,8 +294,7 @@ int main()
                         cercaPrelievo(prelievi, nPrelievi);
                         break;
                     case 3:
-                     visualizzaPrelievo(prelievi, nPrelievi);
-                        
+                        visualizzaPrelievo(prelievi, nPrelievi);  
                         break;
                     case 4:
                         SalvaPrelieviSuFile(prelievi, nPrelievi);
