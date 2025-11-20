@@ -268,8 +268,6 @@ int main()
                         eseguiPrelievo(prelievi, nPrelievi);
                         break;
                     case 2:
-                       
-                       
                         cercaPrelievo(prelievi, nPrelievi);
                         break;
                     case 3:
