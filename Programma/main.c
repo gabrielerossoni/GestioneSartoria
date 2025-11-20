@@ -152,14 +152,23 @@ int main()
     t_Prelievo prelievi[MAX_PRELIEVI];
     t_Ritaglio ritagli[MAX_RITAGLI];
     int nRotoli = 0, nProgetti = 0, nFornitori = 0, nPrelievi = 0, nRitagli = 0;
-    int scelta, flag, nRotoli_count = 0, quit = 0, scelta_sub;
+    int scelta, flag, nRotoli_count = 0, quit = 0, scelta_sub, ris;
     char id[MAX_CARATTERI], ricerca_partita_iva[MAX_CARATTERI];
 
     // MENU PRINCIPALE
-        /* contatori locali (non toccare le variabili già dichiarate sopra) */
-
         // Caricamento dati da file all'avvio del programma
-        CaricaTuttoDaFile(rotoli, &nRotoli_count, progetti, &nProgetti, fornitori, &nFornitori, prelievi, &nPrelievi, ritagli, &nRitagli);
+        {
+            ris = CaricaTuttoDaFile(rotoli, &nRotoli_count, progetti, &nProgetti, fornitori, &nFornitori, prelievi, &nPrelievi, ritagli, &nRitagli);
+            if (ris == 0)
+            {
+            printf("CARICAMENTO COMPLETATO: %d rotoli, %d progetti, %d fornitori, %d prelievi, %d ritagli\n",
+                   nRotoli_count, nProgetti, nFornitori, nPrelievi, nRitagli);
+            }
+            else
+            {
+            printf("NESSUN FILE DI BACKUP TROVATO. Inizio con dati vuoti.\n");
+            }
+        }
 
         do
         {
@@ -1145,41 +1154,17 @@ int visualizzaFornitore(t_Fornitore fornitori[], int nFornitori)
 
 int cercaFornitore(t_Fornitore fornitori[], int nFornitori, char *ricerca)
 {
-    int scelta, i, trovati = 0;
-    char ricerca[MAX_CARATTERI];
-
-    switch (scelta)
+    int i, trovati = 0;
+    char ricerca_local[MAX_CARATTERI];
+    for (i = 0; i < nFornitori; i++)
     {
-    case 1: // Cerca per NOME
-        printf("INSERISCI NOME FORNITORE: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nFornitori; i++)
+        if (strcmp(fornitori[i].partita_iva, ricerca) == 0)
         {
-            if (strcmp(fornitori[i].nome, ricerca) == 0)
-            {
-                printf("NOME: %s, PARTITA IVA: %s, INDIRIZZO: %s, TELEFONO: %s, EMAIL: %s\n",
-                       fornitori[i].nome, fornitori[i].partita_iva, fornitori[i].indirizzo,
-                       fornitori[i].telefono, fornitori[i].email);
-                trovati++;
-            }
+            printf("NOME: %s, PARTITA IVA: %s, INDIRIZZO: %s, TELEFONO: %s, EMAIL: %s\n",
+                   fornitori[i].nome, fornitori[i].partita_iva, fornitori[i].indirizzo,
+                   fornitori[i].telefono, fornitori[i].email);
+            trovati++;
         }
-        break;
-    case 2: // Cerca per PARTITA IVA
-        
-        for (i = 0; i < nFornitori; i++)
-        {
-            if (strcmp(fornitori[i].partita_iva, ricerca) == 0)
-            {
-                printf("NOME: %s, PARTITA IVA: %s, INDIRIZZO: %s, TELEFONO: %s, EMAIL: %s\n",
-                       fornitori[i].nome, fornitori[i].partita_iva, fornitori[i].indirizzo,
-                       fornitori[i].telefono, fornitori[i].email);
-                trovati++;
-            }
-        }
-        break;
-    default:
-        printf("OPZIONE NON VALIDA.\n");
-        return -1;
     }
 
     if (trovati == 0)
@@ -1234,10 +1219,11 @@ int visualizzaPrelievo(t_Prelievo prelievi[], int nPrelievi)
 
 int inserisciRitaglio(t_Ritaglio ritagli[], int nRitagli)
 {
+    int i;
     printf("NUMERO RITAGLI DA AGGIUNGERE: ");
     scanf("%d", &nRitagli);
 
-    for (int i = 0; i < nRitagli; i++)
+    for (i = 0; i < nRitagli; i++)
     {
         printf("Inserisci i dati per il ritaglio %d:\n", i + 1);
         printf("ID RITAGLIO: ");
@@ -1282,7 +1268,7 @@ int modificaRitaglio(t_Ritaglio ritagli[], int nRitagli, int indice)
 
 int eliminaRitaglio(t_Ritaglio ritagli[], int *nRitagli)
 {
-    int indice;
+    int indice, j;
     printf("INSERISCI L'INDICE DEL RITAGLIO DA ELIMINARE: ");
     scanf("%d", &indice);
 
@@ -1292,7 +1278,6 @@ int eliminaRitaglio(t_Ritaglio ritagli[], int *nRitagli)
         return -1;
     }
 
-    int j;
     for (j = indice; j < *nRitagli - 1; j++)
     {
         ritagli[j] = ritagli[j + 1];
