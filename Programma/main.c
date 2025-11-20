@@ -119,9 +119,7 @@ int cercaRitaglio(t_Ritaglio[], int);
 int menuCercaRitagli();
 
 // Funzioni di gestione PRELIEVO
-int inserisciPrelievo(t_Prelievo[], int);
-int modificaPrelievo(t_Prelievo[], int, int);
-int eliminaPrelievo(t_Prelievo[], int *);
+int eseguiPrelievo(t_Prelievo[], int);
 int visualizzaPrelievo(t_Prelievo[], int);
 int cercaPrelievo(t_Prelievo[], int);
 
@@ -701,6 +699,143 @@ int cercaRitaglio(t_Ritaglio ritagli[], int nRitagli)
     return trovati;
 }
 
+int cercaPrelievo(t_Prelievo prelievi[], int nPrelievi)
+{
+    int scelta, i, trovati = 0;
+    char ricerca[MAX_CARATTERI];
+    float metraggioMin;
+    t_Data dataRic;
+
+    printf("\n--- RICERCA PRELIEVO ---\n");
+    printf("1. Cerca per CODICE PRELIEVO\n");
+    printf("2. Cerca per CODICE ROTOLO\n");
+    printf("3. Cerca per OPERATORE\n");
+    printf("4. Cerca per DATA\n");
+    printf("5. Cerca per METRAGGIO MINIMO\n");
+    printf("SCELTA: ");
+    if (scanf("%d", &scelta) != 1)
+    {
+        printf("INPUT NON VALIDO.\n");
+        return -1;
+    }
+
+    switch (scelta)
+    {
+    case 1: // Cerca per CODICE PRELIEVO
+        printf("INSERISCI IL CODICE PRELIEVO: ");
+        scanf("%s", ricerca);
+        for (i = 0; i < nPrelievi; i++)
+        {
+            if (strcmp(prelievi[i].id, ricerca) == 0)
+            {
+                printf("ID: %s, ID_ROTOLO: %s, METRAGGIO: %.2f m, DATA: %02d/%02d/%04d, OPERATORE: %s\n",
+                       prelievi[i].id, prelievi[i].id_rotolo, prelievi[i].metraggio_prelevato,
+                       prelievi[i].data.giorno, prelievi[i].data.mese, prelievi[i].data.anno,
+                       prelievi[i].operatore);
+                trovati++;
+            }
+        }
+        break;
+    case 2: // Cerca per CODICE ROTOLO
+        printf("INSERISCI IL CODICE ROTOLO: ");
+        scanf("%s", ricerca);
+        for (i = 0; i < nPrelievi; i++)
+        {
+            if (strcmp(prelievi[i].id_rotolo, ricerca) == 0)
+            {
+                printf("ID: %s, ID_ROTOLO: %s, METRAGGIO: %.2f m, DATA: %02d/%02d/%04d, OPERATORE: %s\n",
+                       prelievi[i].id, prelievi[i].id_rotolo, prelievi[i].metraggio_prelevato,
+                       prelievi[i].data.giorno, prelievi[i].data.mese, prelievi[i].data.anno,
+                       prelievi[i].operatore);
+                trovati++;
+            }
+        }
+        break;
+    case 3: // Cerca per OPERATORE
+        printf("INSERISCI NOME OPERATORE: ");
+        scanf("%s", ricerca);
+        for (i = 0; i < nPrelievi; i++)
+        {
+            if (strcmp(prelievi[i].operatore, ricerca) == 0)
+            {
+                printf("ID: %s, ID_ROTOLO: %s, METRAGGIO: %.2f m, DATA: %02d/%02d/%04d, OPERATORE: %s\n",
+                       prelievi[i].id, prelievi[i].id_rotolo, prelievi[i].metraggio_prelevato,
+                       prelievi[i].data.giorno, prelievi[i].data.mese, prelievi[i].data.anno,
+                       prelievi[i].operatore);
+                trovati++;
+            }
+        }
+        break;
+    case 4: // Cerca per DATA
+        printf("INSERISCI DATA (GG MM AAAA): ");
+        if (scanf("%d %d %d", &dataRic.giorno, &dataRic.mese, &dataRic.anno) != 3)
+        {
+            printf("INPUT DATA NON VALIDO.\n");
+            return -1;
+        }
+        if (!controlloData(dataRic))
+        {
+            printf("DATA NON VALIDA.\n");
+            return -1;
+        }
+        for (i = 0; i < nPrelievi; i++)
+        {
+            if (prelievi[i].data.giorno == dataRic.giorno &&
+                prelievi[i].data.mese == dataRic.mese &&
+                prelievi[i].data.anno == dataRic.anno)
+            {
+                printf("ID: %s, ID_ROTOLO: %s, METRAGGIO: %.2f m, DATA: %02d/%02d/%04d, OPERATORE: %s\n",
+                       prelievi[i].id, prelievi[i].id_rotolo, prelievi[i].metraggio_prelevato,
+                       prelievi[i].data.giorno, prelievi[i].data.mese, prelievi[i].data.anno,
+                       prelievi[i].operatore);
+                trovati++;
+            }
+        }
+        break;
+    case 5: // Cerca per METRAGGIO MINIMO
+        printf("INSERISCI METRAGGIO MINIMO (m): ");
+        if (scanf("%f", &metraggioMin) != 1)
+        {
+            printf("INPUT NON VALIDO.\n");
+            return -1;
+        }
+        for (i = 0; i < nPrelievi; i++)
+        {
+            if (prelievi[i].metraggio_prelevato >= metraggioMin)
+            {
+                printf("ID: %s, ID_ROTOLO: %s, METRAGGIO: %.2f m, DATA: %02d/%02d/%04d, OPERATORE: %s\n",
+                       prelievi[i].id, prelievi[i].id_rotolo, prelievi[i].metraggio_prelevato,
+                       prelievi[i].data.giorno, prelievi[i].data.mese, prelievi[i].data.anno,
+                       prelievi[i].operatore);
+                trovati++;
+            }
+        }
+        break;
+    default:
+        printf("OPZIONE NON VALIDA.\n");
+        return -1;
+    }
+
+    if (trovati == 0)
+        printf("NESSUN PRELIEVO TROVATO.\n");
+    else
+        printf("TOTALE PRELIEVI TROVATI: %d\n", trovati);
+
+    return trovati;
+}
+
+int menuCercaPrelievo()
+{
+    int scelta;
+    printf("\n--- RICERCA PRELIEVO ---\n");
+    printf("1. Cerca per CODICE PRELIEVO\n");
+    printf("2. Cerca per CODICE ROTOLO\n");
+    printf("3. Cerca per OPERATORE\n");
+    printf("4. Cerca per DATA\n");
+    printf("5. Cerca per METRAGGIO MINIMO\n");
+    return scelta;
+}
+
 int SalvaRotoliSuFile(t_Rotolo rotoli[], int nRotoli)
 {
     FILE *file = fopen(FNROTOLO, "wb");
@@ -880,3 +1015,4 @@ int CaricaMagazzinoDaFile(t_Magazzino magazzino[], int *nMagazzino)
     printf("MAGAZZINO CARICATO CON SUCCESSO DAL FILE.\n");
     return 0;
 }
+
