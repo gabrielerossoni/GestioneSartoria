@@ -203,10 +203,6 @@ int main()
                     case 5: // CERCA ROTOLO
                         cercaRotolo(rotoli, nRotoli_count);
                         break;
-                    case 7: // SALVA E TERMINA
-                        SalvaRotoliSuFile(rotoli, nRotoli_count);
-                        quit = 1;
-                        break;
                     default:
                         printf("OPZIONE NON VALIDA. Riprova.\n");
                         break;
@@ -225,10 +221,6 @@ int main()
                         break;
                     case 2:
                         cercaRitaglio(ritagli, nRitagli);
-                        break;
-                    case 3:
-                        SalvaRitagliSuFile(ritagli, nRitagli);
-                        quit = 1;
                         break;
                     default:
                         printf("OPZIONE NON VALIDA. Riprova.\n");
@@ -251,10 +243,6 @@ int main()
                         break;
                     case 3:
                         visualizzaPrelievo(prelievi, nPrelievi);
-                        break;
-                    case 4:
-                        SalvaPrelieviSuFile(prelievi, nPrelievi);
-                        quit = 1;
                         break;
                     default:
                         printf("OPZIONE NON VALIDA. Riprova.\n");
@@ -293,10 +281,6 @@ int main()
                         flag=cercaProgetto(progetti, nProgetti, id);
                         if(flag==0)
                             printf("PROGETTO NON TROVATO.\n");
-                        break;
-                    case 7:
-                        SalvaProgettiSuFile(progetti, nProgetti);
-                        quit = 1;
                         break;
                     default:
                         printf("OPZIONE NON VALIDA. Riprova.\n");
@@ -354,10 +338,6 @@ int main()
                     scanf("%s", ricerca_partita_iva);
                         cercaFornitore(fornitori, nFornitori, ricerca_partita_iva);
                         break;
-                    case 7:
-                        SalvaFornitoriSuFile(fornitori, nFornitori);
-                        quit = 1;
-                        break;
                     default:
                         printf("OPZIONE NON VALIDA. Riprova.\n");
                         break;
@@ -366,11 +346,7 @@ int main()
                 break;
 
             case 7: // SALVA E TERMINA PROGRAMMA
-                SalvaRotoliSuFile(rotoli, nRotoli_count);
-                SalvaProgettiSuFile(progetti, nProgetti);
-                SalvaFornitoriSuFile(fornitori, nFornitori);
-                SalvaPrelieviSuFile(prelievi, nPrelievi);
-                SalvaRitagliSuFile(ritagli, nRitagli);
+                SalvaTuttoSuFile(rotoli, nRotoli_count, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli);
                 printf("SALVATAGGIO COMPLETATO. USCITA PROGRAMMA.\n");
                 quit = 1;
                 break;
@@ -408,7 +384,6 @@ int menuRotoli()
     printf("3. ELIMINA ROTOLO\n");
     printf("4. VISUALIZZA ROTOLO\n");
     printf("5. CERCA ROTOLO PER CATEGORIA\n");
-    printf("6. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -421,7 +396,6 @@ int menuPrelievi()
     printf("1. ESEGUI PRELIEVO\n");
     printf("2. CERCA PRELIEVO\n");
     printf("3. VISUALIZZA PRELIEVI\n");
-    printf("4. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -433,7 +407,6 @@ int menuRitagli()
     printf("\n--- MENU RITAGLI ---\n");
     printf("1. VISUALIZZA RITAGLI\n");
     printf("2. CERCA RITAGLIO\n");
-    printf("3. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -448,7 +421,6 @@ int menuFornitori()
     printf("3. ELIMINA FORNITORE\n");
     printf("4. VISUALIZZA FORNITORI\n");
     printf("5. CERCA FORNITORE\n");
-    printf("7. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -460,7 +432,6 @@ int menuMagazzino()
     printf("\n--- MENU MAGAZZINO ---\n");
     printf("1. CONTROLLO MAGAZZINO (valore/metraggio/numero rotoli)\n");
     printf("2. VISUALIZZA MAGAZZINO\n");
-    printf("3. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -879,7 +850,6 @@ int menuProgetti()
     printf("3. ELIMINA PROGETTO\n");
     printf("4. VISUALIZZA PROGETTI\n");
     printf("5. CERCA PROGETTO\n");
-    printf("7. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
