@@ -116,36 +116,37 @@ int cercaRotolo(t_Rotolo[], int);
 int menuCercaRotoli();
 
 // Funzioni di gestione RITAGLIO
-int visualizzaRitagli(t_Ritaglio[], int);
+void visualizzaRitagli(t_Ritaglio[], int);
 int cercaRitaglio(t_Ritaglio[], int);
-int creaRitaglioAutomatico(t_Ritaglio[], int*, t_Rotolo*);
+int creaRitaglioAutomatico(t_Ritaglio[], int *, t_Rotolo *);
 int menuCercaRitagli();
 
 // Funzioni di gestione PRELIEVO
-int eseguiPrelievo(t_Prelievo[], int*, t_Rotolo[], int, t_Ritaglio[], int*);
+int eseguiPrelievo(t_Prelievo[], int *, t_Rotolo[], int, t_Ritaglio[], int *);
 int visualizzaPrelievo(t_Prelievo[], int);
 int cercaPrelievo(t_Prelievo[], int);
+int menuCercaPrelievi();
 
 // Funzioni di gestione FORNITORE
 int inserisciFornitore(t_Fornitore[], int *);
 int modificaFornitore(t_Fornitore[], int, char[]);
 int eliminaFornitore(t_Fornitore[], int *, char[]);
 int visualizzaFornitore(t_Fornitore[], int);
-int cercaFornitore(t_Fornitore[], int);
+int cercaFornitore(t_Fornitore[], int, char *);
 
 // Funzioni di gestione PROGETTO
 int inserisciProgetto(t_Progetto[], int *);
 int modificaProgetto(t_Progetto[], int, char[]);
 int eliminaProgetto(t_Progetto[], int *, char[]);
 int visualizzaProgetto(t_Progetto[], int);
-int cercaProgetto(t_Progetto[], int);
+int cercaProgetto(t_Progetto[], int, char *);
 
 // Funzioni di gestione MAGAZZINO
 int inserisciRitaglio(t_Ritaglio[], int);
 int modificaRitaglio(t_Ritaglio[], int, int);
 int eliminaRitaglio(t_Ritaglio[], int *);
-int visualizzaRitagli(t_Ritaglio[], int);
 int cercaRitaglio(t_Ritaglio[], int);
+void controlloMagazzino(t_Rotolo[], int);
 
 // Funzione salvataggio unico di tutto il programma
 int SalvaTuttoSuFile(t_Rotolo[], int, t_Progetto[], int, t_Fornitore[], int, t_Prelievo[], int, t_Ritaglio[], int);
@@ -225,7 +226,7 @@ int main()
                 switch (scelta_sub)
                 {
                 case 1:
-                    visualizzaRitaglio(ritagli, nRitagli);
+                    visualizzaRitagli(ritagli, nRitagli);
                     break;
                 case 2:
                     cercaRitaglio(ritagli, nRitagli);
@@ -692,7 +693,7 @@ int cercaPrelievo(t_Prelievo prelievi[], int nPrelievi)
     float metraggioMin;
     t_Data dataRic;
 
-    scelta = menuCercaPrelievo();
+    scelta = menuCercaPrelievi();
     switch (scelta)
     {
     case 1: // Cerca per CODICE PRELIEVO
@@ -748,7 +749,7 @@ int cercaPrelievo(t_Prelievo prelievi[], int nPrelievi)
 
     return trovati;
 }
-int menuCercaPrelievo()
+int menuCercaPrelievi()
 {
     int scelta;
     printf("\n--- RICERCA PRELIEVO ---\n");
@@ -783,7 +784,7 @@ int menuRitagli()
     scanf("%d", &scelta);
     return scelta;
 }
-void visualizzaRitaglio(t_Ritaglio ritagli[], int nRitagli)
+void visualizzaRitagli(t_Ritaglio ritagli[], int nRitagli)
 {
     int i;
     printf("ELENCO RITAGLI:\n");
@@ -1067,24 +1068,25 @@ int controlloData(t_Data data)
 
 int creaRitaglioAutomatico(t_Ritaglio ritagli[], int *nRitagli, t_Rotolo *rotolo)
 {
-    if (*nRitagli >= MAX_RITAGLI) {
+    if (*nRitagli >= MAX_RITAGLI)
+    {
         printf("ERRORE: limite ritagli raggiunto.\n");
         return -1;
     }
-    
+
     sprintf(ritagli[*nRitagli].idRitaglio, "RIT%04d", *nRitagli + 1);
     strcpy(ritagli[*nRitagli].id_rotolo, rotolo->id);
     ritagli[*nRitagli].lunghezza = rotolo->lunghezza_attuale;
-    
+
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     ritagli[*nRitagli].data.giorno = tm.tm_mday;
     ritagli[*nRitagli].data.mese = tm.tm_mon + 1;
     ritagli[*nRitagli].data.anno = tm.tm_year + 1900;
-    
+
     (*nRitagli)++;
-    printf("Ritaglio %s creato automaticamente (%.2f m).\n", 
-           ritagli[*nRitagli - 1].idRitaglio, 
+    printf("Ritaglio %s creato automaticamente (%.2f m).\n",
+           ritagli[*nRitagli - 1].idRitaglio,
            ritagli[*nRitagli - 1].lunghezza);
     return 0;
 }
