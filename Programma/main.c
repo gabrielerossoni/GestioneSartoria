@@ -776,68 +776,6 @@ int menuCercaPrelievo()
     scanf("%d", &scelta);
     return scelta;
 }
-int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int nProgetti, t_Fornitore fornitori[], int nFornitori, t_Prelievo prelievi[], int nPrelievi, t_Ritaglio ritagli[], int nRitagli)
-{
-    FILE *file = fopen(FNCOMPLETO, "wb");
-    if (file == NULL)
-    {
-        printf("ERRORE NEL SALVATAGGIO DEI DATI SUL FILE.\n");
-        return -1;
-    }
-    
-    fwrite(&nRotoli, sizeof(int), 1, file);
-    fwrite(rotoli, sizeof(t_Rotolo), nRotoli, file);
-    
-    fwrite(&nProgetti, sizeof(int), 1, file);
-    fwrite(progetti, sizeof(t_Progetto), nProgetti, file);
-    
-    fwrite(&nFornitori, sizeof(int), 1, file);
-    fwrite(fornitori, sizeof(t_Fornitore), nFornitori, file);
-    
-    fwrite(&nPrelievi, sizeof(int), 1, file);
-    fwrite(prelievi, sizeof(t_Prelievo), nPrelievi, file);
-    
-    fwrite(&nRitagli, sizeof(int), 1, file);
-    fwrite(ritagli, sizeof(t_Ritaglio), nRitagli, file);
-    
-    fclose(file);
-    printf("TUTTI I DATI SALVATI CON SUCCESSO SUL FILE.\n");
-    return 0;
-}
-
-int CaricaTuttoDaFile(t_Rotolo rotoli[], int *nRotoli, t_Progetto progetti[], int *nProgetti, t_Fornitore fornitori[], int *nFornitori, t_Prelievo prelievi[], int *nPrelievi, t_Ritaglio ritagli[], int *nRitagli)
-{
-    FILE *file = fopen(FNCOMPLETO, "rb");
-    if (file == NULL)
-    {
-        printf("NESSUN FILE PRECEDENTE TROVATO. INIZIO CON DATI VUOTI.\n");
-        *nRotoli = 0;
-        *nProgetti = 0;
-        *nFornitori = 0;
-        *nPrelievi = 0;
-        *nRitagli = 0;
-        return -1;
-    }
-    
-    fread(nRotoli, sizeof(int), 1, file);
-    fread(rotoli, sizeof(t_Rotolo), *nRotoli, file);
-    
-    fread(nProgetti, sizeof(int), 1, file);
-    fread(progetti, sizeof(t_Progetto), *nProgetti, file);
-    
-    fread(nFornitori, sizeof(int), 1, file);
-    fread(fornitori, sizeof(t_Fornitore), *nFornitori, file);
-    
-    fread(nPrelievi, sizeof(int), 1, file);
-    fread(prelievi, sizeof(t_Prelievo), *nPrelievi, file);
-    
-    fread(nRitagli, sizeof(int), 1, file);
-    fread(ritagli, sizeof(t_Ritaglio), *nRitagli, file);
-    
-    fclose(file);
-    printf("TUTTI I DATI CARICATI CON SUCCESSO DAL FILE.\n");
-    return 0;
-}
 
 // ---FUNZIONI MANCANTI---
 
@@ -1118,74 +1056,6 @@ int visualizzaPrelievo(t_Prelievo prelievi[], int nPrelievi)
     return 0;
 }
 
-int inserisciRitaglio(t_Ritaglio ritagli[], int nRitagli)
-{
-    int i;
-    printf("NUMERO RITAGLI DA AGGIUNGERE: ");
-    scanf("%d", &nRitagli);
-
-    for (i = 0; i < nRitagli; i++)
-    {
-        printf("Inserisci i dati per il ritaglio %d:\n", i + 1);
-        printf("ID RITAGLIO: ");
-        scanf("%s", ritagli[i].idRitaglio);
-        printf("ID ROTOLO: ");
-        scanf("%s", ritagli[i].id_rotolo);
-        printf("LUNGHEZZA (m): ");
-        scanf("%f", &ritagli[i].lunghezza);
-        printf("DATA (GG MM AAAA): ");
-        scanf("%d %d %d", &ritagli[i].data.giorno, &ritagli[i].data.mese, &ritagli[i].data.anno);
-        if (!controlloData(ritagli[i].data))
-        {
-            printf("DATA NON VALIDA. Riprovare.\n");
-            i--;
-        }
-    }
-    return 0;
-}
-
-int modificaRitaglio(t_Ritaglio ritagli[], int nRitagli, int indice)
-{
-    if (indice < 0 || indice >= nRitagli)
-    {
-        printf("INDICE NON VALIDO.\n");
-        return -1;
-    }
-
-    printf("MODIFICA I DATI DEL RITAGLIO %s:\n", ritagli[indice].idRitaglio);
-    printf("ID ROTOLO: ");
-    scanf("%s", ritagli[indice].id_rotolo);
-    printf("LUNGHEZZA (m): ");
-    scanf("%f", &ritagli[indice].lunghezza);
-    printf("DATA (GG MM AAAA): ");
-    scanf("%d %d %d", &ritagli[indice].data.giorno, &ritagli[indice].data.mese, &ritagli[indice].data.anno);
-    if (!controlloData(ritagli[indice].data))
-    {
-        printf("DATA NON VALIDA.\n");
-        return -1;
-    }
-    return 0;
-}
-
-int eliminaRitaglio(t_Ritaglio ritagli[], int *nRitagli)
-{
-    int indice, j;
-    printf("INSERISCI L'INDICE DEL RITAGLIO DA ELIMINARE: ");
-    scanf("%d", &indice);
-
-    if (indice < 0 || indice >= *nRitagli)
-    {
-        printf("INDICE NON VALIDO.\n");
-        return -1;
-    }
-
-    for (j = indice; j < *nRitagli - 1; j++)
-    {
-        ritagli[j] = ritagli[j + 1];
-    }
-    (*nRitagli)--;
-    return 1;
-}
 // Funzione per controllare il magazzino
 void controlloMagazzino(t_Rotolo rotoli[], int nRotoli)
 {
@@ -1213,4 +1083,67 @@ void visualizzaMagazzino(t_Rotolo rotoli[], int nRotoli)
         printf("ID: %s, TIPO: %s, COLORE: %s, LUNGHEZZA TOTALE: %.2f m, COSTO AL METRO: %.2f\n",
                rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].lunghezza_totale, rotoli[i].costo_metro);
     }
+}
+
+int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int nProgetti, t_Fornitore fornitori[], int nFornitori, t_Prelievo prelievi[], int nPrelievi, t_Ritaglio ritagli[], int nRitagli)
+{
+    FILE *file = fopen(FNCOMPLETO, "wb");
+    if (file == NULL)
+    {
+        printf("ERRORE NEL SALVATAGGIO DEI DATI SUL FILE.\n");
+        return -1;
+    }
+    
+    fwrite(&nRotoli, sizeof(int), 1, file);
+    fwrite(rotoli, sizeof(t_Rotolo), nRotoli, file);
+    
+    fwrite(&nProgetti, sizeof(int), 1, file);
+    fwrite(progetti, sizeof(t_Progetto), nProgetti, file);
+    
+    fwrite(&nFornitori, sizeof(int), 1, file);
+    fwrite(fornitori, sizeof(t_Fornitore), nFornitori, file);
+    
+    fwrite(&nPrelievi, sizeof(int), 1, file);
+    fwrite(prelievi, sizeof(t_Prelievo), nPrelievi, file);
+    
+    fwrite(&nRitagli, sizeof(int), 1, file);
+    fwrite(ritagli, sizeof(t_Ritaglio), nRitagli, file);
+    
+    fclose(file);
+    printf("TUTTI I DATI SALVATI CON SUCCESSO SUL FILE.\n");
+    return 0;
+}
+
+int CaricaTuttoDaFile(t_Rotolo rotoli[], int *nRotoli, t_Progetto progetti[], int *nProgetti, t_Fornitore fornitori[], int *nFornitori, t_Prelievo prelievi[], int *nPrelievi, t_Ritaglio ritagli[], int *nRitagli)
+{
+    FILE *file = fopen(FNCOMPLETO, "rb");
+    if (file == NULL)
+    {
+        printf("NESSUN FILE PRECEDENTE TROVATO. INIZIO CON DATI VUOTI.\n");
+        *nRotoli = 0;
+        *nProgetti = 0;
+        *nFornitori = 0;
+        *nPrelievi = 0;
+        *nRitagli = 0;
+        return -1;
+    }
+    
+    fread(nRotoli, sizeof(int), 1, file);
+    fread(rotoli, sizeof(t_Rotolo), *nRotoli, file);
+    
+    fread(nProgetti, sizeof(int), 1, file);
+    fread(progetti, sizeof(t_Progetto), *nProgetti, file);
+    
+    fread(nFornitori, sizeof(int), 1, file);
+    fread(fornitori, sizeof(t_Fornitore), *nFornitori, file);
+    
+    fread(nPrelievi, sizeof(int), 1, file);
+    fread(prelievi, sizeof(t_Prelievo), *nPrelievi, file);
+    
+    fread(nRitagli, sizeof(int), 1, file);
+    fread(ritagli, sizeof(t_Ritaglio), *nRitagli, file);
+    
+    fclose(file);
+    printf("TUTTI I DATI CARICATI CON SUCCESSO DAL FILE.\n");
+    return 0;
 }
