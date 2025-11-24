@@ -80,29 +80,74 @@ Contiene la logica principale del programma:
 ## 🧱 Strutture dati principali (in C)
 
 ```c
-struct Rotolo {
-    char id[50];
-    char tipo[50];
-    char colore[50];
-    char fantasia[50];
-    float lunghezza_totale;
-    float residuo;
+typedef struct
+{
+    int giorno;
+    int mese;
+    int anno;
+} t_Data;
+typedef struct
+{
+    char id[MAX_CARATTERI]; // auto incrementale
+    char tipo[MAX_CARATTERI];
+    char colore[MAX_CARATTERI];
+    char fantasia[MAX_CARATTERI];
+    float lunghezza_totale;  /* metri */
+    float lunghezza_attuale; /* centimetri */
     float costo_metro;
-    struct Fornitore fornitore;
-    char lotto[50];
-    struct Data data_acquisto;
-    char stato[20];
+    char fornitore[MAX_CARATTERI];
+    char lotto[MAX_CARATTERI];
+    t_Data data;
+    char stato[MAX_CARATTERI];
     char noteAggiuntive[100];
-};
+} t_Rotolo;
+
+typedef struct
+{
+    char id[MAX_CARATTERI];
+    char id_rotolo[MAX_CARATTERI];
+    float metraggio_prelevato;
+    t_Data data;
+    char operatore[MAX_CARATTERI];
+} t_Prelievo;
+
+typedef struct
+{
+    char idRitaglio[MAX_CARATTERI];
+    char id_rotolo[MAX_CARATTERI];
+    float lunghezza;
+    t_Data data;
+} t_Ritaglio;
+typedef struct
+{
+    char nome[MAX_CARATTERI];
+    char partita_iva[MAX_CARATTERI];
+    char indirizzo[MAX_CARATTERI];
+    char telefono[MAX_CARATTERI];
+    char email[MAX_CARATTERI];
+} t_Fornitore;
+
+typedef struct
+{
+    char id[MAX_CARATTERI];
+    char idCliente[MAX_CARATTERI];
+    char tipo_capo[MAX_CARATTERI];
+    char idRotolo[MAX_CARATTERI];
+    char tessuto_usato[MAX_CARATTERI];
+    t_Data data;
+} t_Progetto;
+
+typedef struct
+{
+    t_Data data_controllo;
+    t_Rotolo rotoli[200];
+    float valoreTotale;
+    float metraggioTotale;
+    int numeroRotoli;
+    int priorita_utilizzo;
+} t_Magazzino;
+
 ```
-
-## 🧱 Le altre strutture principali
-
-- **Fornitore**
-- **Prelievo**
-- **Ritaglio**
-- **Progetto**
-- **Magazzino**
 
 Tutte sono pensate per essere **compatte**, **modulari** e facilmente **serializzabili in file binari**.
 
