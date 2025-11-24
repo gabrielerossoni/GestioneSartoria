@@ -24,7 +24,7 @@
 #define ANNO_MAX 2100
 
 // ---NOMI FILE---
-#define FNCOMPLETO "backup_sartoria.dat"
+#define FNCOMPLETO "/File/backup_sartoria.dat"
 
 // ---STRUTTURE DATI---
 typedef struct
