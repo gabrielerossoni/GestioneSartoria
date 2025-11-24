@@ -16,6 +16,9 @@
 #define MAX_PRELIEVI 1000
 #define MAX_RITAGLI 1000
 
+//---RITAGLIO---
+#define SOGLIA_RITAGLIO 0.5
+
 // ---DATA---
 #define ANNO_MIN 1900
 #define ANNO_MAX 2100
@@ -115,10 +118,11 @@ int menuCercaRotoli();
 // Funzioni di gestione RITAGLIO
 int visualizzaRitagli(t_Ritaglio[], int);
 int cercaRitaglio(t_Ritaglio[], int);
+int creaRitaglioAutomatico(t_Ritaglio[], int*, t_Rotolo*);
 int menuCercaRitagli();
 
 // Funzioni di gestione PRELIEVO
-int eseguiPrelievo(t_Prelievo[], int *, t_Rotolo[], int);
+int eseguiPrelievo(t_Prelievo[], int*, t_Rotolo[], int, t_Ritaglio[], int*);
 int visualizzaPrelievo(t_Prelievo[], int);
 int cercaPrelievo(t_Prelievo[], int);
 
@@ -240,7 +244,7 @@ int main()
                 switch (scelta_sub)
                 {
                 case 1:
-                    eseguiPrelievo(prelievi, &nPrelievi, rotoli, nRotoli_count);
+                    eseguiPrelievo(prelievi, &nPrelievi, rotoli, nRotoli_count, ritagli, &nRitagli);
                     break;
                 case 2:
                     cercaPrelievo(prelievi, nPrelievi);
@@ -598,7 +602,7 @@ int menuPrelievi()
     return scelta;
 }
 
-int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int nRotoli)
+int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int nRotoli, t_Ritaglio ritagli[], int *nRitagli)
 {
     int i, j, nuovi;
     printf("NUMERO PRELIEVI DA AGGIUNGERE: ");
@@ -656,9 +660,10 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
 
         // Aggiorna il lunghezza_attuale del rotolo
         rotoli[rotoloTrovato].lunghezza_attuale -= metraggioCm;
-        if (rotoli[rotoloTrovato].lunghezza_attuale <= 0)
+        if (rotoli[rotoloTrovato].lunghezza_attuale <= SOGLIA_RITAGLIO)
         {
-            strcpy(rotoli[rotoloTrovato].stato, "ESAURITO");
+            strcpy(rotoli[rotoloTrovato].stato, "RITAGLIO");
+            creaRitaglioAutomatico(ritagli, nRitagli, &rotoli[rotoloTrovato]);
         }
 
         printf("DATA (GG MM AAAA): ");
@@ -1058,6 +1063,30 @@ int controlloData(t_Data data)
             return 0;
     }
     return 1;
+}
+
+int creaRitaglioAutomatico(t_Ritaglio ritagli[], int *nRitagli, t_Rotolo *rotolo)
+{
+    if (*nRitagli >= MAX_RITAGLI) {
+        printf("ERRORE: limite ritagli raggiunto.\n");
+        return -1;
+    }
+    
+    sprintf(ritagli[*nRitagli].idRitaglio, "RIT%04d", *nRitagli + 1);
+    strcpy(ritagli[*nRitagli].id_rotolo, rotolo->id);
+    ritagli[*nRitagli].lunghezza = rotolo->lunghezza_attuale;
+    
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    ritagli[*nRitagli].data.giorno = tm.tm_mday;
+    ritagli[*nRitagli].data.mese = tm.tm_mon + 1;
+    ritagli[*nRitagli].data.anno = tm.tm_year + 1900;
+    
+    (*nRitagli)++;
+    printf("Ritaglio %s creato automaticamente (%.2f m).\n", 
+           ritagli[*nRitagli - 1].idRitaglio, 
+           ritagli[*nRitagli - 1].lunghezza);
+    return 0;
 }
 
 int menuProgetti()
