@@ -16,6 +16,10 @@
 #define MAX_PRELIEVI 1000
 #define MAX_RITAGLI 1000
 
+// ---DATA---
+#define ANNO_MIN 1900
+#define ANNO_MAX 2100
+
 // ---NOMI FILE---
 #define FNCOMPLETO "backup_sartoria.dat"
 
@@ -32,8 +36,8 @@ typedef struct
     char tipo[MAX_CARATTERI];
     char colore[MAX_CARATTERI];
     char fantasia[MAX_CARATTERI];
-    float lunghezza_totale; /* metri */
-    float residuo;          /* centimetri */
+    float lunghezza_totale;  /* metri */
+    float lunghezza_attuale; /* centimetri */
     float costo_metro;
     char fornitore[MAX_CARATTERI];
     char lotto[MAX_CARATTERI];
@@ -161,7 +165,7 @@ int main()
         ris = CaricaTuttoDaFile(rotoli, &nRotoli_count, progetti, &nProgetti, fornitori, &nFornitori, prelievi, &nPrelievi, ritagli, &nRitagli);
         if (ris == 0)
         {
-            printf("CARICAMENTO COMPLETATO: %d rotoli, %d progetti, %d fornitori, %d prelievi, %d ritagli\n",
+            printf("DATI CARICATI: %d rotoli, %d progetti, %d fornitori, %d prelievi, %d ritagli\n",
                    nRotoli_count, nProgetti, nFornitori, nPrelievi, nRitagli);
         }
         else
@@ -207,7 +211,7 @@ int main()
                     printf("OPZIONE NON VALIDA. Riprova.\n");
                     break;
                 }
-            } while (scelta_sub != 7 && !quit);
+            } while (scelta_sub != 6 && !quit);
             break;
 
         case 2: // RITAGLI
@@ -248,7 +252,7 @@ int main()
                     printf("OPZIONE NON VALIDA. Riprova.\n");
                     break;
                 }
-            } while (scelta_sub != 7 && !quit);
+            } while (scelta_sub != 4 && !quit);
             break;
 
         case 4: // PROGETTI
@@ -285,7 +289,7 @@ int main()
                     printf("OPZIONE NON VALIDA. Riprova.\n");
                     break;
                 }
-            } while (scelta_sub != 7 && !quit);
+            } while (scelta_sub != 6 && !quit);
             break;
 
         case 5: // MAGAZZINO
@@ -341,7 +345,7 @@ int main()
                     printf("OPZIONE NON VALIDA. Riprova.\n");
                     break;
                 }
-            } while (scelta_sub != 7 && !quit);
+            } while (scelta_sub != 6 && !quit);
             break;
 
         case 7: // SALVA E TERMINA PROGRAMMA
@@ -383,6 +387,7 @@ int menuRotoli()
     printf("3. ELIMINA ROTOLO\n");
     printf("4. VISUALIZZA ROTOLO\n");
     printf("5. CERCA ROTOLO PER CATEGORIA\n");
+    printf("6. TORNA AL MENU PRINCIPALE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -420,8 +425,8 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli)
         scanf("%49s", rotoli[idx].fantasia);
         printf("LUNGHEZZA TOTALE (m): ");
         scanf("%f", &rotoli[idx].lunghezza_totale);
-        rotoli[idx].residuo = rotoli[idx].lunghezza_totale * 100;
-        printf("RESIDUO: %.2f cm (calcolato automaticamente)\n", rotoli[idx].residuo);
+        rotoli[idx].lunghezza_attuale = rotoli[idx].lunghezza_totale * 100;
+        printf("LUNGHEZZA ATTUALE: %.2f cm (calcolato automaticamente)\n", rotoli[idx].lunghezza_attuale);
         printf("COSTO AL METRO: ");
         scanf("%f", &rotoli[idx].costo_metro);
         printf("FORNITORE: ");
@@ -461,8 +466,8 @@ int modificaRotolo(t_Rotolo rotoli[], int nRotoli, char *id)
             scanf("%49s", rotoli[i].fantasia);
             printf("LUNGHEZZA TOTALE (m): ");
             scanf("%f", &rotoli[i].lunghezza_totale);
-            printf("RESIDUO (cm): ");
-            scanf("%f", &rotoli[i].residuo);
+            printf("LUNGHEZZA ATTUALE (cm): ");
+            scanf("%f", &rotoli[i].lunghezza_attuale);
             printf("COSTO AL METRO: ");
             scanf("%f", &rotoli[i].costo_metro);
         }
@@ -494,9 +499,9 @@ int visualizzaRotolo(t_Rotolo rotoli[], int nRotoli)
     printf("ELENCO ROTOLO:\n");
     for (i = 0; i < nRotoli; i++)
     {
-        printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA TOTALE: %.2f m, RESIDUO: %.2f cm, COSTO AL METRO: %.2f, FORNITORE: %s\n",
+        printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA TOTALE: %.2f m, LUNGHEZZA ATTUALE: %.2f cm, COSTO AL METRO: %.2f, FORNITORE: %s\n",
                rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-               rotoli[i].lunghezza_totale, rotoli[i].residuo,
+               rotoli[i].lunghezza_totale, rotoli[i].lunghezza_attuale,
                rotoli[i].costo_metro, rotoli[i].fornitore);
     }
     return 0;
@@ -529,9 +534,9 @@ int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
         {
             if (strcmp(rotoli[i].id, ricerca) == 0)
             {
-                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, COSTO: %.2f, FORNITORE: %s, STATO: %s\n",
+                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, LUNGHEZZA ATTUALE: %.2f cm, COSTO: %.2f, FORNITORE: %s, STATO: %s\n",
                        rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].costo_metro,
+                       rotoli[i].lunghezza_totale, rotoli[i].lunghezza_attuale, rotoli[i].costo_metro,
                        rotoli[i].fornitore, rotoli[i].stato);
                 trovati++;
             }
@@ -544,9 +549,9 @@ int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
         {
             if (strcmp(rotoli[i].stato, ricerca) == 0)
             {
-                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, COSTO: %.2f, FORNITORE: %s, STATO: %s\n",
+                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, LUNGHEZZA ATTUALE: %.2f cm, COSTO: %.2f, FORNITORE: %s, STATO: %s\n",
                        rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].costo_metro,
+                       rotoli[i].lunghezza_totale, rotoli[i].lunghezza_attuale, rotoli[i].costo_metro,
                        rotoli[i].fornitore, rotoli[i].stato);
                 trovati++;
             }
@@ -559,9 +564,9 @@ int cercaRotolo(t_Rotolo rotoli[], int nRotoli)
         {
             if (rotoli[i].lunghezza_totale >= disponibilitaMin)
             {
-                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, RESIDUO: %.2f cm, COSTO: %.2f, FORNITORE: %s, STATO: %s\n",
+                printf("ID: %s, TIPO: %s, COLORE: %s, FANTASIA: %s, LUNGHEZZA: %.2f m, LUNGHEZZA ATTUALE: %.2f cm, COSTO: %.2f, FORNITORE: %s, STATO: %s\n",
                        rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].fantasia,
-                       rotoli[i].lunghezza_totale, rotoli[i].residuo, rotoli[i].costo_metro,
+                       rotoli[i].lunghezza_totale, rotoli[i].lunghezza_attuale, rotoli[i].costo_metro,
                        rotoli[i].fornitore, rotoli[i].stato);
                 trovati++;
             }
@@ -587,6 +592,7 @@ int menuPrelievi()
     printf("1. ESEGUI PRELIEVO\n");
     printf("2. CERCA PRELIEVO\n");
     printf("3. VISUALIZZA PRELIEVI\n");
+    printf("4. TORNA AL MENU PRINCIPALE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -641,16 +647,16 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
         scanf("%f", &prelievi[idx].metraggio_prelevato);
 
         float metraggioCm = prelievi[idx].metraggio_prelevato * 100;
-        if (metraggioCm > rotoli[rotoloTrovato].residuo)
+        if (metraggioCm > rotoli[rotoloTrovato].lunghezza_attuale)
         {
-            printf("ERRORE: metraggio insufficiente (disponibile: %.2f cm).\n", rotoli[rotoloTrovato].residuo);
+            printf("ERRORE: metraggio insufficiente (disponibile: %.2f cm).\n", rotoli[rotoloTrovato].lunghezza_attuale);
             i--;
             continue;
         }
 
-        // Aggiorna il residuo del rotolo
-        rotoli[rotoloTrovato].residuo -= metraggioCm;
-        if (rotoli[rotoloTrovato].residuo <= 0)
+        // Aggiorna il lunghezza_attuale del rotolo
+        rotoli[rotoloTrovato].lunghezza_attuale -= metraggioCm;
+        if (rotoli[rotoloTrovato].lunghezza_attuale <= 0)
         {
             strcpy(rotoli[rotoloTrovato].stato, "ESAURITO");
         }
@@ -660,14 +666,14 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
         if (!controlloData(prelievi[idx].data))
         {
             printf("DATA NON VALIDA. Riprovare.\n");
-            rotoli[rotoloTrovato].residuo += metraggioCm; // Ripristina
+            rotoli[rotoloTrovato].lunghezza_attuale += metraggioCm; // Ripristina
             i--;
             continue;
         }
         printf("OPERATORE: ");
         scanf("%49s", prelievi[idx].operatore);
 
-        printf("Prelievo registrato. Residuo rotolo: %.2f cm\n", rotoli[rotoloTrovato].residuo);
+        printf("Prelievo registrato. lunghezza attuale rotolo: %.2f cm\n", rotoli[rotoloTrovato].lunghezza_attuale);
     }
 
     *nPrelievi += nuovi;
@@ -767,6 +773,7 @@ int menuRitagli()
     printf("\n--- MENU RITAGLI ---\n");
     printf("1. VISUALIZZA RITAGLI\n");
     printf("2. CERCA RITAGLIO\n");
+    printf("3. TORNA AL MENU PRINCIPALE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -868,6 +875,7 @@ int menuFornitori()
     printf("3. ELIMINA FORNITORE\n");
     printf("4. VISUALIZZA FORNITORI\n");
     printf("5. CERCA FORNITORE\n");
+    printf("6. TORNA AL MENU PRINCIPALE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -992,6 +1000,7 @@ int menuMagazzino()
     printf("\n--- MENU MAGAZZINO ---\n");
     printf("1. CONTROLLO MAGAZZINO (valore/metraggio/numero rotoli)\n");
     printf("2. VISUALIZZA MAGAZZINO\n");
+    printf("3. TORNA AL MENU PRINCIPALE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -1028,7 +1037,7 @@ void visualizzaMagazzino(t_Rotolo rotoli[], int nRotoli)
 int controlloData(t_Data data)
 {
     int bisestile;
-    if (data.anno < 1900 || data.anno > 2100)
+    if (data.anno < ANNO_MIN || data.anno > ANNO_MAX)
         return 0;
     if (data.mese < 1 || data.mese > 12)
         return 0;
@@ -1060,6 +1069,7 @@ int menuProgetti()
     printf("3. ELIMINA PROGETTO\n");
     printf("4. VISUALIZZA PROGETTI\n");
     printf("5. CERCA PROGETTO\n");
+    printf("6. TORNA AL MENU PRINCIPALE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -1228,7 +1238,7 @@ int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int 
     fwrite(ritagli, sizeof(t_Ritaglio), nRitagli, file);
 
     fclose(file);
-    printf("TUTTI I DATI SALVATI CON SUCCESSO SUL FILE.\n");
+    printf("SALVATAGGIO COMPLETATO.\n");
     return 0;
 }
 
@@ -1237,7 +1247,7 @@ int CaricaTuttoDaFile(t_Rotolo rotoli[], int *nRotoli, t_Progetto progetti[], in
     FILE *file = fopen(FNCOMPLETO, "rb");
     if (file == NULL)
     {
-        printf("NESSUN FILE PRECEDENTE TROVATO. INIZIO CON DATI VUOTI.\n");
+        printf("NESSUN FILE TROVATO.\n");
         *nRotoli = 0;
         *nProgetti = 0;
         *nFornitori = 0;
@@ -1262,6 +1272,6 @@ int CaricaTuttoDaFile(t_Rotolo rotoli[], int *nRotoli, t_Progetto progetti[], in
     fread(ritagli, sizeof(t_Ritaglio), *nRitagli, file);
 
     fclose(file);
-    printf("TUTTI I DATI CARICATI CON SUCCESSO DAL FILE.\n");
+    printf("CARICAMENTO COMPLETATO.\n");
     return 0;
 }
