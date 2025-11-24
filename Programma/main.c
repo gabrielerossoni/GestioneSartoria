@@ -288,7 +288,11 @@ int main()
                         visualizzaProgetto(progetti, nProgetti);
                         break;
                     case 5:
-                        cercaProgetto(progetti, nProgetti);
+                        printf("INSERISCI L'ID DEL PROGETTO DA CERCARE: ");
+                        scanf("%s", id);
+                        flag=cercaProgetto(progetti, nProgetti, id);
+                        if(flag==0)
+                            printf("PROGETTO NON TROVATO.\n");
                         break;
                     case 7:
                         SalvaProgettiSuFile(progetti, nProgetti);
@@ -307,35 +311,20 @@ int main()
                     scelta_sub = menuMagazzino();
                     switch (scelta_sub)
                     {
-                    case 1:
-                        // esempio: controllo magazzino (puoi chiamare la funzione relativa)
-                        printf("Eseguo controllo magazzino...\n");
+                    case 1: // CONTROLLO MAGAZZINO (valore/metraggio/numero rotoli)
+                        controlloMagazzino(rotoli, nRotoli_count);
                         break;
-                    case 2:
-                        // aggiungi ritaglio in magazzino
-                        printf("Aggiungi ritaglio in magazzino...\n");
+                    case 2: // VISUALIZZA MAGAZZINO
+                        visualizzaRotolo(rotoli, nRotoli_count);
                         break;
-                    case 3:
-                        // rimuovi ritaglio
-                        printf("Rimuovi ritaglio da magazzino...\n");
-                        break;
-                    case 4:
-                        // visualizza magazzino
-                        printf("Visualizza magazzino...\n");
-                        break;
-                    case 5:
-                        // imposta priorita'
-                        printf("Imposta priorita' utilizzo...\n");
-                        break;
-                    case 7:
-                        SalvaMagazzinoSuFile(NULL, 0); // adattare i parametri se necessario
+                    case 3: // TERMINAZIONE (senza salvataggio)
                         quit = 1;
                         break;
                     default:
                         printf("OPZIONE NON VALIDA. Riprova.\n");
                         break;
                     }
-                } while (scelta_sub != 7 && !quit);
+                } while (scelta_sub != 3 && !quit);
                 break;
 
             case 6: // FORNITORI
@@ -419,6 +408,7 @@ int menuRotoli()
     printf("3. ELIMINA ROTOLO\n");
     printf("4. VISUALIZZA ROTOLO\n");
     printf("5. CERCA ROTOLO PER CATEGORIA\n");
+    printf("6. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -431,6 +421,7 @@ int menuPrelievi()
     printf("1. ESEGUI PRELIEVO\n");
     printf("2. CERCA PRELIEVO\n");
     printf("3. VISUALIZZA PRELIEVI\n");
+    printf("4. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -442,6 +433,7 @@ int menuRitagli()
     printf("\n--- MENU RITAGLI ---\n");
     printf("1. VISUALIZZA RITAGLI\n");
     printf("2. CERCA RITAGLIO\n");
+    printf("3. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -467,11 +459,8 @@ int menuMagazzino()
     int scelta;
     printf("\n--- MENU MAGAZZINO ---\n");
     printf("1. CONTROLLO MAGAZZINO (valore/metraggio/numero rotoli)\n");
-    printf("2. AGGIUNGI RITAGLIO IN MAGAZZINO\n");
-    printf("3. RIMUOVI RITAGLIO\n");
-    printf("4. VISUALIZZA MAGAZZINO\n");
-    printf("5. IMPOSTA PRIORITA' UTILIZZO\n");
-    printf("7. SALVATAGGIO E TERMINAZIONE\n");
+    printf("2. VISUALIZZA MAGAZZINO\n");
+    printf("3. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -985,92 +974,34 @@ int visualizzaProgetto(t_Progetto progetti[], int nProgetti)
     return 0;
 }
 
-int cercaProgetto(t_Progetto progetti[], int nProgetti)
+int cercaProgetto(t_Progetto progetti[], int nProgetti, char *id)
 {
-    int scelta, i, trovati = 0;
-    char ricerca[MAX_CARATTERI];
-    t_Data dataRic;
+    int i;
+    int trovati = 0;
 
-    scelta = menuProgetti();
-
-    switch (scelta)
+    if (id == NULL || id[0] == '\0')
     {
-    case 1: // Cerca per ID PROGETTO
-        printf("INSERISCI ID PROGETTO: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nProgetti; i++)
-        {
-            if (strcmp(progetti[i].id, ricerca) == 0)
-            {
-                printf("ID: %s, CLIENTE: %s, TIPO CAPO: %s, ROTOLO: %s, TESSUTO: %s, DATA: %02d/%02d/%04d\n",
-                       progetti[i].id, progetti[i].idCliente, progetti[i].tipo_capo,
-                       progetti[i].idRotolo, progetti[i].tessuto_usato,
-                       progetti[i].data.giorno, progetti[i].data.mese, progetti[i].data.anno);
-                trovati++;
-            }
-        }
-        break;
-    case 2: // Cerca per ID CLIENTE
-        printf("INSERISCI ID CLIENTE: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nProgetti; i++)
-        {
-            if (strcmp(progetti[i].idCliente, ricerca) == 0)
-            {
-                printf("ID: %s, CLIENTE: %s, TIPO CAPO: %s, ROTOLO: %s, TESSUTO: %s, DATA: %02d/%02d/%04d\n",
-                       progetti[i].id, progetti[i].idCliente, progetti[i].tipo_capo,
-                       progetti[i].idRotolo, progetti[i].tessuto_usato,
-                       progetti[i].data.giorno, progetti[i].data.mese, progetti[i].data.anno);
-                trovati++;
-            }
-        }
-        break;
-    case 3: // Cerca per TIPO CAPO
-        printf("INSERISCI TIPO CAPO: ");
-        scanf("%s", ricerca);
-        for (i = 0; i < nProgetti; i++)
-        {
-            if (strcmp(progetti[i].tipo_capo, ricerca) == 0)
-            {
-                printf("ID: %s, CLIENTE: %s, TIPO CAPO: %s, ROTOLO: %s, TESSUTO: %s, DATA: %02d/%02d/%04d\n",
-                       progetti[i].id, progetti[i].idCliente, progetti[i].tipo_capo,
-                       progetti[i].idRotolo, progetti[i].tessuto_usato,
-                       progetti[i].data.giorno, progetti[i].data.mese, progetti[i].data.anno);
-                trovati++;
-            }
-        }
-        break;
-    case 4: // Cerca per DATA
-        printf("INSERISCI DATA (GG MM AAAA): ");
-        scanf("%d %d %d", &dataRic.giorno, &dataRic.mese, &dataRic.anno);
-        if (!controlloData(dataRic))
-        {
-            printf("DATA NON VALIDA.\n");
-            return -1;
-        }
-        for (i = 0; i < nProgetti; i++)
-        {
-            if (progetti[i].data.giorno == dataRic.giorno &&
-                progetti[i].data.mese == dataRic.mese &&
-                progetti[i].data.anno == dataRic.anno)
-            {
-                printf("ID: %s, CLIENTE: %s, TIPO CAPO: %s, ROTOLO: %s, TESSUTO: %s, DATA: %02d/%02d/%04d\n",
-                       progetti[i].id, progetti[i].idCliente, progetti[i].tipo_capo,
-                       progetti[i].idRotolo, progetti[i].tessuto_usato,
-                       progetti[i].data.giorno, progetti[i].data.mese, progetti[i].data.anno);
-                trovati++;
-            }
-        }
-        break;
-    default:
-        printf("OPZIONE NON VALIDA.\n");
+        printf("ID non fornito.\n");
         return -1;
     }
 
+    for (i = 0; i < nProgetti; i++)
+    {
+        if (strcmp(progetti[i].id, id) == 0)
+        {
+            printf("ID: %s, CLIENTE: %s, TIPO CAPO: %s, ROTOLO: %s, TESSUTO: %s, DATA: %02d/%02d/%04d\n",
+                   progetti[i].id, progetti[i].idCliente, progetti[i].tipo_capo,
+                   progetti[i].idRotolo, progetti[i].tessuto_usato,
+                   progetti[i].data.giorno, progetti[i].data.mese, progetti[i].data.anno);
+            trovati++;
+            break; // stop after first match (ID should essere unico)
+        }
+    }
+
     if (trovati == 0)
-        printf("NESSUN PROGETTO TROVATO.\n");
+        printf("NESSUN PROGETTO TROVATO CON ID %s.\n", id);
     else
-        printf("TOTALE PROGETTI TROVATI: %d\n", trovati);
+        printf("PROGETTO TROVATO: %d\n", trovati);
 
     return trovati;
 }
@@ -1284,4 +1215,32 @@ int eliminaRitaglio(t_Ritaglio ritagli[], int *nRitagli)
     }
     (*nRitagli)--;
     return 1;
+}
+// Funzione per controllare il magazzino
+void controlloMagazzino(t_Rotolo rotoli[], int nRotoli)
+{
+    float valoreTotale = 0;
+    float metraggioTotale = 0;
+    int numeroRotoli = nRotoli;
+
+    for (int i = 0; i < nRotoli; i++)
+    {
+        valoreTotale += rotoli[i].lunghezza_totale * rotoli[i].costo_metro;
+        metraggioTotale += rotoli[i].lunghezza_totale;
+    }
+
+    printf("Valore Totale: %.2f\n", valoreTotale);
+    printf("Metraggio Totale: %.2f\n", metraggioTotale);
+    printf("Numero di Rotoli: %d\n", numeroRotoli);
+}
+
+// Funzione per visualizzare il magazzino
+void visualizzaMagazzino(t_Rotolo rotoli[], int nRotoli)
+{
+    printf("ELENCO ROTOLO:\n");
+    for (int i = 0; i < nRotoli; i++)
+    {
+        printf("ID: %s, TIPO: %s, COLORE: %s, LUNGHEZZA TOTALE: %.2f m, COSTO AL METRO: %.2f\n",
+               rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].lunghezza_totale, rotoli[i].costo_metro);
+    }
 }
