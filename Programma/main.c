@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <windows.h>
 #include <time.h>
 
 // ---COSTANTI---
@@ -958,6 +959,8 @@ int inserisciFornitore(t_Fornitore fornitori[], int *nFornitori)
         return -1;
     }
 
+    while (getchar() != '\n')
+        ;
     for (i = 0; i < nuovi; i++)
     {
         idx = *nFornitori + i;
@@ -1343,13 +1346,17 @@ int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int 
 // Funzione per aprire l'interfaccia web
 void apriInterfacciaWeb()
 {
+    printf("Avvio server web locale sulla porta 5500...\n");
+
 #ifdef _WIN32
-    system("start ../web/index.html");
-#elif __APPLE__
-    system("open ../web/index.html");
-#else
-    system("xdg-open web/index.html");
+    // Windows
+    system("start /B python -m http.server 5500 --directory ../web");
+    Sleep(1000); // Aspetta 1 secondo per il server
+    system("start http://localhost:5500");
 #endif
+
+    printf("Server avviato su http://localhost:5500\n");
+    getchar();
 }
 
 int CaricaTuttoDaFile(t_Rotolo rotoli[], int *nRotoli, t_Progetto progetti[], int *nProgetti, t_Fornitore fornitori[], int *nFornitori, t_Prelievo prelievi[], int *nPrelievi, t_Ritaglio ritagli[], int *nRitagli)
@@ -1423,7 +1430,7 @@ int EsportaDatiPerWeb(t_Rotolo rotoli[], int nRotoli,
         fprintf(file, "      \"colore\": \"%s\",\n", rotoli[i].colore);
         fprintf(file, "      \"fantasia\": \"%s\",\n", rotoli[i].fantasia);
         fprintf(file, "      \"lunghezza_totale\": %.2f,\n", rotoli[i].lunghezza_totale);
-        fprintf(file, "      \"lunghezza_attuale\": %.2f,\n", rotoli[i].lunghezza_attuale);
+        fprintf(file, "      \"lunghezza_attuale\": %.2f,\n", rotoli[i].lunghezza_attuale / 100.0);
         fprintf(file, "      \"costo_metro\": %.2f,\n", rotoli[i].costo_metro);
         fprintf(file, "      \"fornitore\": \"%s\",\n", rotoli[i].fornitore);
         fprintf(file, "      \"lotto\": \"%s\",\n", rotoli[i].lotto);

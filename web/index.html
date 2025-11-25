@@ -43,11 +43,9 @@
     <!-- ===== CONTENITORE PRINCIPALE ===== -->
     <!-- Contiene tutte le sezioni che vengono mostrate/nascoste -->
     <div class="container">
-
       <!-- ========== SEZIONE 1: ROTOLI ========== -->
       <!-- Gestisce l'aggiunta, visualizzazione e ricerca dei rotoli di tessuto -->
       <div id="sezione-rotoli" class="sezione active">
-        
         <!-- Card 1: Form per aggiungere un nuovo rotolo -->
         <div class="card">
           <h2>➕ Aggiungi Rotolo</h2>
@@ -167,7 +165,6 @@
       <!-- ========== SEZIONE 2: PRELIEVI ========== -->
       <!-- Registra i prelievi di tessuto dai rotoli (quanto tessuto è stato usato) -->
       <div id="sezione-prelievi" class="sezione">
-        
         <!-- Card 1: Form per registrare un nuovo prelievo -->
         <div class="card">
           <h2>✂️ Registra Prelievo</h2>
@@ -262,7 +259,7 @@
               <p class="stat-value" id="metraggio-recuperabile">0 m</p>
             </div>
           </div>
-          
+
           <!-- Contenitore scrollabile con elenco dei ritagli -->
           <div id="ritagli-container">
             <p class="loading">Caricamento in corso...</p>
@@ -273,7 +270,6 @@
       <!-- ========== SEZIONE 4: FORNITORI ========== -->
       <!-- Gestione dei fornitori di tessuto -->
       <div id="sezione-fornitori" class="sezione">
-        
         <!-- Card 1: Form per aggiungere un nuovo fornitore -->
         <div class="card">
           <h2>📦 Aggiungi Fornitore</h2>
@@ -313,7 +309,7 @@
             </div>
           </div>
           <!-- Pulsante per aggiungere il fornitore al sistema -->
-          <button class="btn-add" onclick="aggiungiForniore()">
+          <button class="btn-add" onclick="aggiungiFornitore()">
             📦 Aggiungi Fornitore
           </button>
         </div>
@@ -339,7 +335,7 @@
       <div id="sezione-inventario" class="sezione">
         <div class="card">
           <h2>📊 Riepilogo Inventario</h2>
-          
+
           <!-- Griglia di statistiche principali -->
           <div class="stats-grid">
             <!-- Stat 1: Numero totale di rotoli in magazzino -->
