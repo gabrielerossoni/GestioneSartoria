@@ -400,7 +400,7 @@ int menuRotoli()
 
 int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli)
 {
-    int i, nuovi;
+    int i, nuovi, idx;
     printf("NUMERO ROTOLI DA AGGIUNGERE: ");
     if (scanf("%d", &nuovi) != 1 || nuovi < 1)
     {
@@ -416,7 +416,7 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli)
 
     for (i = 0; i < nuovi; i++)
     {
-        int idx = *nRotoli + i;
+        idx = *nRotoli + i;
         printf("\n--- Rotolo %d di %d ---\n", i + 1, nuovi);
 
         sprintf(rotoli[idx].id, "R%04d", *nRotoli + i + 1);
@@ -605,7 +605,8 @@ int menuPrelievi()
 
 int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int nRotoli, t_Ritaglio ritagli[], int *nRitagli)
 {
-    int i, j, nuovi;
+    int i, j, nuovi, idx, rotoloTrovato;
+    float metraggioCm;
     printf("NUMERO PRELIEVI DA AGGIUNGERE: ");
     if (scanf("%d", &nuovi) != 1 || nuovi < 1)
     {
@@ -621,7 +622,7 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
 
     for (i = 0; i < nuovi; i++)
     {
-        int idx = *nPrelievi + i;
+        idx = *nPrelievi + i;
         printf("\n--- Prelievo %d di %d ---\n", i + 1, nuovi);
 
         sprintf(prelievi[idx].id, "P%04d", *nPrelievi + i + 1);
@@ -631,7 +632,7 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
         scanf("%49s", prelievi[idx].id_rotolo);
 
         // Verifica che il rotolo esista
-        int rotoloTrovato = -1;
+        rotoloTrovato = -1;
         for (j = 0; j < nRotoli; j++)
         {
             if (strcmp(rotoli[j].id, prelievi[idx].id_rotolo) == 0)
@@ -651,7 +652,7 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
         printf("METRAGGIO PRELEVATO (m): ");
         scanf("%f", &prelievi[idx].metraggio_prelevato);
 
-        float metraggioCm = prelievi[idx].metraggio_prelevato * 100;
+        metraggioCm = prelievi[idx].metraggio_prelevato * 100;
         if (metraggioCm > rotoli[rotoloTrovato].lunghezza_attuale)
         {
             printf("ERRORE: metraggio insufficiente (disponibile: %.2f cm).\n", rotoli[rotoloTrovato].lunghezza_attuale);
