@@ -13,6 +13,17 @@ Il software permette di **monitorare rotoli di tessuto**, **gestire prelievi**, 
 - Offrire un'interfaccia **moderna e intuitiva** per l'utilizzo da browser o smartphone.
 
 ---
+## 🌿 Branch principali
+
+- **main:** branch stabile, versione base finita del progetto. È la versione affidabile, pronta per l’uso e consegnata secondo le richieste must.
+- **master:** branch di sviluppo, contiene funzionalità aggiuntive, prove, estensioni e modifiche in corso. Qui si trovano tutte le feature extra e le sperimentazioni che non sono richieste obbligatorie, ma possono mostrare novità e idee avanzate.
+
+> Nella consegna dell'esercizio veniva richiesto di mantenere due versioni: **base** (base, stabile, finita) e l'**evolutiva** (estesa, sperimentale). Abbiamo lavorato su entrambi, usando **main** per la versione definitiva e **master** per tutto ciò che può andare oltre le richieste must.
+
+**Sintesi:**  
+- **main** è dedicato a una versione semplice e affidabile.  
+- **master** è utilizzato per miglioramenti, funzioni avanzate e sviluppi futuri.
+
 
 ## 🏗️ Architettura del sistema
 
@@ -29,9 +40,8 @@ Contiene la logica principale del programma:
 ### 🔹 Livello di persistenza
 
 - Salvataggio dei dati tramite **file binari locali**:
-  - `rotoli.dat` → archivio principale dei rotoli.
-  - `prelievi.dat` → registro dei tagli e dei prelievi.
-  - `inventario.dat` → stato generale del magazzino.
+  - `backup_sartoria` → Contiene il backup binario del Gestionale.
+  - `dati.json` → Disponibile solo nel branch Master per la comunicazione Web.
 - I dati restano disponibili tra le sessioni e sono salvati automaticamente.
 
 ### 🔹 Interfaccia web
@@ -99,7 +109,7 @@ typedef struct
     char lotto[MAX_CARATTERI];
     t_Data data;
     char stato[MAX_CARATTERI];
-    char noteAggiuntive[100];
+    char noteAggiuntive[MAX_CHAR_NOTEAGGIUNTIVE];
 } t_Rotolo;
 
 typedef struct
@@ -140,7 +150,7 @@ typedef struct
 typedef struct
 {
     t_Data data_controllo;
-    t_Rotolo rotoli[200];
+    t_Rotolo rotoli[MAX_ROTOLI];
     float valoreTotale;
     float metraggioTotale;
     int numeroRotoli;
@@ -157,7 +167,7 @@ Tutte sono pensate per essere **compatte**, **modulari** e facilmente **serializ
 
 - I dati vengono salvati e caricati automaticamente da **file binari**.
 - **Backup** e **integrità** assicurati da salvataggi periodici.
-- Possibile **sincronizzazione** con repository **GitHub**.
+- utlizzo e **sincronizzazione** con repository **GitHub**.
 - Struttura predisposta per l’estensione futura a un **database SQL**.
 
 ---
@@ -188,7 +198,7 @@ Tutte sono pensate per essere **compatte**, **modulari** e facilmente **serializ
 
 ### ⚙️ Strumenti
 
-- **Visual Studio** / **Visual Studio Code**
+- **Visual Studio Code** per scrittura e debug del codice
 - **GitHub** per controllo versione e collaborazione
 
 ---
@@ -215,14 +225,11 @@ Offre un approccio **professionale, modulare e facilmente estendibile**, applica
 SistemaGestioneSartoria/
 │
 ├── programma/
-│   ├── main.c
-│   ├── funzioni.c
-│   └── funzioni.h
+│   ├── dati.json
+│   └── main.c
 │
 ├── file/
-│   ├── rotoli.dat
-│   ├── prelievi.dat
-│   └── inventario.dat
+│   └── backup_sartoria.dat
 │
 ├── web/
 │   ├── index.html
@@ -230,6 +237,7 @@ SistemaGestioneSartoria/
 │   └── script.js
 │
 ├── README.md
+├── .gitignore
 └── LICENSE
 ```
 
