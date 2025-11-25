@@ -98,6 +98,8 @@ typedef struct
 // Sito integrato
 // Funzione per aprire l'interfaccia web
 void apriInterfacciaWeb();
+int EsportaDatiPerWeb(t_Rotolo[], int, t_Prelievo[], int, t_Ritaglio[], int, t_Fornitore[], int, t_Progetto[], int);
+int ImportaDatiDalWeb(t_Rotolo[], int *, t_Prelievo[], int *, t_Ritaglio[], int *, t_Fornitore[], int *, t_Progetto[], int *);
 
 // Funzioni di Menu
 int menuGenerale();
@@ -183,6 +185,27 @@ int main()
         }
     }
 
+    {
+        // Prova a caricare da file di backup principale
+        ris = CaricaTuttoDaFile(rotoli, &nRotoli, progetti, &nProgetti, fornitori, &nFornitori, prelievi, &nPrelievi, ritagli, &nRitagli);
+
+        // Se il backup non esiste, prova a importare dal web
+        if (ris != 0)
+        {
+            ris = ImportaDatiDalWeb(rotoli, &nRotoli, prelievi, &nPrelievi, ritagli, &nRitagli, fornitori, &nFornitori, progetti, &nProgetti);
+            if (ris != 0)
+            {
+                printf("NESSUN FILE TROVATO. Inizio con dati vuoti.\n");
+            }
+        }
+
+        printf("DATI CARICATI: %d rotoli, %d progetti, %d fornitori, %d prelievi, %d ritagli\n",
+               nRotoli, nProgetti, nFornitori, nPrelievi, nRitagli);
+
+        // SYNC INIZIALE CON WEB
+        EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
+    }
+
     do
     {
         scelta = menuGenerale();
@@ -196,20 +219,27 @@ int main()
                 {
                 case 1: // AGGIUNGI ROTOLO
                     inserisciRotolo(rotoli, &nRotoli);
+                    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                     break;
                 case 2: // MODIFICA ROTOLO
                     printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
                     scanf("%s", id);
                     modificaRotolo(rotoli, nRotoli, id);
+                    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                     break;
                 case 3: // ELIMINA ROTOLO
                     printf("INSERISCI L'ID DEL ROTOLO DA ELIMINARE: ");
                     scanf("%s", id);
                     if (eliminaRotolo(rotoli, &nRotoli, id) == 1)
+                    {
                         printf("ROTOLO ELIMINATO CON SUCCESSO.\n");
+                        EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
+                    }
                     else
+                    {
                         printf("ROTOLO NON TROVATO.\n");
-                    break;
+                        break;
+                    }
                 case 4: // VISUALIZZA ROTOLO
                     visualizzaRotolo(rotoli, nRotoli);
                     break;
@@ -254,6 +284,7 @@ int main()
                 {
                 case 1:
                     eseguiPrelievo(prelievi, &nPrelievi, rotoli, nRotoli, ritagli, &nRitagli);
+                    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                     break;
                 case 2:
                     cercaPrelievo(prelievi, nPrelievi);
@@ -279,16 +310,19 @@ int main()
                 {
                 case 1:
                     inserisciProgetto(progetti, &nProgetti);
+                    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                     break;
                 case 2:
                     printf("INSERISCI L'ID DEL PROGETTO DA MODIFICARE: ");
                     scanf("%s", id);
                     modificaProgetto(progetti, nProgetti, id);
+                    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                     break;
                 case 3:
                     printf("INSERISCI L'ID DEL PROGETTO DA ELIMINARE: ");
                     scanf("%s", id);
                     eliminaProgetto(progetti, &nProgetti, id);
+                    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                     break;
                 case 4:
                     visualizzaProgetto(progetti, nProgetti);
@@ -338,16 +372,19 @@ int main()
                 {
                 case 1:
                     inserisciFornitore(fornitori, &nFornitori);
+                    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                     break;
                 case 2:
                     printf("INSERISCI L'ID DEL FORNITORE DA MODIFICARE: ");
                     scanf("%s", id);
                     modificaFornitore(fornitori, nFornitori, id);
+                    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                     break;
                 case 3:
                     printf("INSERISCI L'ID DEL FORNITORE DA ELIMINARE: ");
                     scanf("%s", id);
                     eliminaFornitore(fornitori, &nFornitori, id);
+                    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                     break;
                 case 4:
                     visualizzaFornitore(fornitori, nFornitori);
@@ -372,6 +409,7 @@ int main()
             if (SalvaTuttoSuFile(rotoli, nRotoli, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli))
             {
                 printf("SALVATAGGIO COMPLETATO. USCITA PROGRAMMA.\n");
+                EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                 quit = 1;
             }
             {
@@ -1342,5 +1380,79 @@ int CaricaTuttoDaFile(t_Rotolo rotoli[], int *nRotoli, t_Progetto progetti[], in
 
     fclose(file);
     printf("CARICAMENTO COMPLETATO.\n");
+    return 0;
+}
+
+// Aggiungi questa funzione in main.c dopo SalvaTuttoSuFile()
+
+/**
+ * ESPORTA I DATI IN FORMATO BINARIO LEGGIBILE DAL WEB
+ * File: ../web/data.bin
+ * Utilizzato per la sincronizzazione bidirezionale
+ */
+int EsportaDatiPerWeb(t_Rotolo rotoli[], int nRotoli,
+                      t_Prelievo prelievi[], int nPrelievi,
+                      t_Ritaglio ritagli[], int nRitagli,
+                      t_Fornitore fornitori[], int nFornitori,
+                      t_Progetto progetti[], int nProgetti)
+{
+    FILE *file = fopen("../web/data.bin", "wb");
+    if (file == NULL)
+    {
+        printf("❌ Errore: impossibile creare file di sincronizzazione web.\n");
+        return -1;
+    }
+
+    // Scrivi tutti i contatori
+    fwrite(&nRotoli, sizeof(int), 1, file);
+    fwrite(&nPrelievi, sizeof(int), 1, file);
+    fwrite(&nRitagli, sizeof(int), 1, file);
+    fwrite(&nFornitori, sizeof(int), 1, file);
+    fwrite(&nProgetti, sizeof(int), 1, file);
+
+    // Scrivi i dati
+    fwrite(rotoli, sizeof(t_Rotolo), nRotoli, file);
+    fwrite(prelievi, sizeof(t_Prelievo), nPrelievi, file);
+    fwrite(ritagli, sizeof(t_Ritaglio), nRitagli, file);
+    fwrite(fornitori, sizeof(t_Fornitore), nFornitori, file);
+    fwrite(progetti, sizeof(t_Progetto), nProgetti, file);
+
+    fclose(file);
+    printf("✅ Dati sincronizzati con il web.\n");
+    return 0;
+}
+
+/**
+ * IMPORTA DATI MODIFICATI DAL WEB
+ * Legge il file data.bin modificato dalla web interface
+ */
+int ImportaDatiDalWeb(t_Rotolo rotoli[], int *nRotoli,
+                      t_Prelievo prelievi[], int *nPrelievi,
+                      t_Ritaglio ritagli[], int *nRitagli,
+                      t_Fornitore fornitori[], int *nFornitori,
+                      t_Progetto progetti[], int *nProgetti)
+{
+    FILE *file = fopen("../web/data.bin", "rb");
+    if (file == NULL)
+    {
+        return -1; // File non esiste, non è stato modificato dal web
+    }
+
+    // Leggi i contatori
+    fread(nRotoli, sizeof(int), 1, file);
+    fread(nPrelievi, sizeof(int), 1, file);
+    fread(nRitagli, sizeof(int), 1, file);
+    fread(nFornitori, sizeof(int), 1, file);
+    fread(nProgetti, sizeof(int), 1, file);
+
+    // Leggi i dati
+    fread(rotoli, sizeof(t_Rotolo), *nRotoli, file);
+    fread(prelievi, sizeof(t_Prelievo), *nPrelievi, file);
+    fread(ritagli, sizeof(t_Ritaglio), *nRitagli, file);
+    fread(fornitori, sizeof(t_Fornitore), *nFornitori, file);
+    fread(progetti, sizeof(t_Progetto), *nProgetti, file);
+
+    fclose(file);
+    printf("✅ Dati importati dal web.\n");
     return 0;
 }
