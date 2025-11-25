@@ -12,12 +12,16 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- ===== HEADER PRINCIPALE ===== -->
+    <!-- Intestazione con titolo e descrizione dell'app -->
     <div class="header">
       <h1>🧵 Sistema di Gestione Sartoria</h1>
       <p>Gestione professionale rotoli tessuto e inventario</p>
     </div>
 
-    <!-- Barra navigazione -->
+    <!-- ===== BARRA DI NAVIGAZIONE ===== -->
+    <!-- Tab navigation per passare tra le diverse sezioni -->
+    <!-- Ogni pulsante chiama mostraSezione() per mostrare/nascondere le sezioni -->
     <nav class="nav-tabs">
       <button class="tab-btn active" onclick="mostraSezione('rotoli')">
         📋 Rotoli
@@ -36,12 +40,20 @@
       </button>
     </nav>
 
+    <!-- ===== CONTENITORE PRINCIPALE ===== -->
+    <!-- Contiene tutte le sezioni che vengono mostrate/nascoste -->
     <div class="container">
-      <!-- SEZIONE ROTOLI -->
+
+      <!-- ========== SEZIONE 1: ROTOLI ========== -->
+      <!-- Gestisce l'aggiunta, visualizzazione e ricerca dei rotoli di tessuto -->
       <div id="sezione-rotoli" class="sezione active">
+        
+        <!-- Card 1: Form per aggiungere un nuovo rotolo -->
         <div class="card">
           <h2>➕ Aggiungi Rotolo</h2>
+          <!-- Griglia di form con campi di input per i dati del rotolo -->
           <div class="form-grid">
+            <!-- Campo 1: Tipo di tessuto (es. Cotone, Seta) -->
             <div class="form-group">
               <label>Tipo Tessuto:</label>
               <input
@@ -50,6 +62,7 @@
                 placeholder="es. Cotone, Seta, Lino, Lana..."
               />
             </div>
+            <!-- Campo 2: Colore del tessuto -->
             <div class="form-group">
               <label>Colore:</label>
               <input
@@ -58,6 +71,7 @@
                 placeholder="es. Blu Navy, Rosso Bordeaux..."
               />
             </div>
+            <!-- Campo 3: Fantasia/Pattern -->
             <div class="form-group">
               <label>Fantasia:</label>
               <input
@@ -66,6 +80,7 @@
                 placeholder="es. Rigato, Tinta Unita, Floreale..."
               />
             </div>
+            <!-- Campo 4: Lunghezza totale in metri -->
             <div class="form-group">
               <label>Lunghezza Totale (m):</label>
               <input
@@ -76,6 +91,7 @@
                 placeholder="es. 50.0"
               />
             </div>
+            <!-- Campo 5: Costo al metro in euro -->
             <div class="form-group">
               <label>Costo €/metro:</label>
               <input
@@ -86,14 +102,17 @@
                 placeholder="es. 15.50"
               />
             </div>
+            <!-- Campo 6: Nome del fornitore -->
             <div class="form-group">
               <label>Fornitore:</label>
               <input type="text" id="fornitore" placeholder="Nome fornitore" />
             </div>
+            <!-- Campo 7: Codice lotto/partita -->
             <div class="form-group">
               <label>Lotto:</label>
               <input type="text" id="lotto" placeholder="Codice lotto" />
             </div>
+            <!-- Campo 8: Dropdown per lo stato del rotolo -->
             <div class="form-group">
               <label>Stato:</label>
               <select id="stato">
@@ -103,6 +122,7 @@
                 <option value="Riservato">Riservato</option>
               </select>
             </div>
+            <!-- Campo 9: Note aggiuntive (a larghezza piena) -->
             <div class="form-group full-width">
               <label>Note Aggiuntive:</label>
               <textarea
@@ -112,37 +132,47 @@
               ></textarea>
             </div>
           </div>
+          <!-- Pulsante per inviare il form e aggiungere il rotolo al database -->
           <button class="btn-add" onclick="aggiungiRotolo()">
             ➕ Aggiungi Rotolo
           </button>
         </div>
 
+        <!-- Card 2: Elenco rotoli con ricerca e filtro -->
         <div class="card">
+          <!-- Header con titolo, barra di ricerca e pulsante di aggiornamento -->
           <div class="card-header">
             <h2>📋 Elenco Rotoli</h2>
             <div class="actions">
+              <!-- Input di ricerca che filtra i rotoli in tempo reale -->
               <input
                 type="text"
                 id="ricerca-rotoli"
                 placeholder="🔍 Cerca per tipo, colore, fornitore..."
                 onkeyup="filtraRotoli()"
               />
+              <!-- Pulsante per ricaricare la lista dei rotoli dal database -->
               <button class="btn-refresh" onclick="caricaRotoli()">
                 🔄 Aggiorna
               </button>
             </div>
           </div>
+          <!-- Contenitore scrollabile dove vengono visualizzati i rotoli -->
           <div id="rotoli-container">
             <p class="loading">Caricamento in corso...</p>
           </div>
         </div>
       </div>
 
-      <!-- SEZIONE PRELIEVI -->
+      <!-- ========== SEZIONE 2: PRELIEVI ========== -->
+      <!-- Registra i prelievi di tessuto dai rotoli (quanto tessuto è stato usato) -->
       <div id="sezione-prelievi" class="sezione">
+        
+        <!-- Card 1: Form per registrare un nuovo prelievo -->
         <div class="card">
           <h2>✂️ Registra Prelievo</h2>
           <div class="form-grid">
+            <!-- Campo 1: ID del rotolo da cui si preleva tessuto -->
             <div class="form-group">
               <label>ID Rotolo:</label>
               <input
@@ -151,6 +181,7 @@
                 placeholder="Inserisci ID rotolo"
               />
             </div>
+            <!-- Campo 2: Quantità di tessuto prelevato in metri -->
             <div class="form-group">
               <label>Metraggio Prelevato (m):</label>
               <input
@@ -161,10 +192,12 @@
                 placeholder="es. 2.5"
               />
             </div>
+            <!-- Campo 3: Chi ha effettuato il prelievo -->
             <div class="form-group">
               <label>Operatore:</label>
               <input type="text" id="operatore" placeholder="Nome operatore" />
             </div>
+            <!-- Campo 4: Cliente/Progetto per cui si usa il tessuto -->
             <div class="form-group">
               <label>Cliente/Progetto:</label>
               <input
@@ -174,29 +207,35 @@
               />
             </div>
           </div>
+          <!-- Pulsante per registrare il prelievo nel sistema -->
           <button class="btn-add" onclick="registraPrelievo()">
             ✂️ Registra Prelievo
           </button>
         </div>
 
+        <!-- Card 2: Storico di tutti i prelievi effettuati -->
         <div class="card">
           <div class="card-header">
             <h2>📜 Storico Prelievi</h2>
+            <!-- Pulsante per ricaricare lo storico -->
             <button class="btn-refresh" onclick="caricaPrelievi()">
               🔄 Aggiorna
             </button>
           </div>
+          <!-- Contenitore scrollabile con l'elenco dei prelievi -->
           <div id="prelievi-container">
             <p class="loading">Caricamento in corso...</p>
           </div>
         </div>
       </div>
 
-      <!-- SEZIONE RITAGLI -->
+      <!-- ========== SEZIONE 3: RITAGLI ========== -->
+      <!-- Gestione degli scarti di tessuto (parti piccole rimaste dopo i prelievi) -->
       <div id="sezione-ritagli" class="sezione">
         <div class="card">
           <div class="card-header">
             <h2>🧶 Gestione Ritagli</h2>
+            <!-- Box informativo con la legenda delle categorie di ritagli -->
             <div class="info-box">
               <p>
                 <strong>Riutilizzabili:</strong> ≥ 0.50 m |
@@ -204,31 +243,42 @@
               </p>
             </div>
           </div>
+
+          <!-- Griglia di statistiche sui ritagli -->
           <div class="stats-grid">
+            <!-- Stat 1: Numero di ritagli riutilizzabili -->
             <div class="stat-card">
               <h3>Ritagli Riutilizzabili</h3>
               <p class="stat-value" id="ritagli-riutilizzabili">0</p>
             </div>
+            <!-- Stat 2: Numero di scarti da eliminare -->
             <div class="stat-card">
               <h3>Scarti da Eliminare</h3>
               <p class="stat-value" id="scarti-totali">0</p>
             </div>
+            <!-- Stat 3: Metraggio totale recuperabile -->
             <div class="stat-card">
               <h3>Metraggio Recuperabile</h3>
               <p class="stat-value" id="metraggio-recuperabile">0 m</p>
             </div>
           </div>
+          
+          <!-- Contenitore scrollabile con elenco dei ritagli -->
           <div id="ritagli-container">
             <p class="loading">Caricamento in corso...</p>
           </div>
         </div>
       </div>
 
-      <!-- SEZIONE FORNITORI -->
+      <!-- ========== SEZIONE 4: FORNITORI ========== -->
+      <!-- Gestione dei fornitori di tessuto -->
       <div id="sezione-fornitori" class="sezione">
+        
+        <!-- Card 1: Form per aggiungere un nuovo fornitore -->
         <div class="card">
           <h2>📦 Aggiungi Fornitore</h2>
           <div class="form-grid">
+            <!-- Campo 1: Nome completo del fornitore -->
             <div class="form-group">
               <label>Nome Fornitore:</label>
               <input
@@ -237,14 +287,17 @@
                 placeholder="Nome completo"
               />
             </div>
+            <!-- Campo 2: Partita IVA -->
             <div class="form-group">
               <label>Partita IVA:</label>
               <input type="text" id="piva" placeholder="IT00000000000" />
             </div>
+            <!-- Campo 3: Numero di telefono -->
             <div class="form-group">
               <label>Telefono:</label>
               <input type="tel" id="telefono" placeholder="+39 000 0000000" />
             </div>
+            <!-- Campo 4: Email del fornitore -->
             <div class="form-group">
               <label>Email:</label>
               <input
@@ -253,64 +306,82 @@
                 placeholder="email@fornitore.it"
               />
             </div>
+            <!-- Campo 5: Indirizzo completo (a larghezza piena) -->
             <div class="form-group full-width">
               <label>Indirizzo:</label>
               <input type="text" id="indirizzo" placeholder="Via, Città, CAP" />
             </div>
           </div>
+          <!-- Pulsante per aggiungere il fornitore al sistema -->
           <button class="btn-add" onclick="aggiungiForniore()">
             📦 Aggiungi Fornitore
           </button>
         </div>
 
+        <!-- Card 2: Elenco di tutti i fornitori -->
         <div class="card">
           <div class="card-header">
             <h2>📋 Elenco Fornitori</h2>
+            <!-- Pulsante per ricaricare la lista dei fornitori -->
             <button class="btn-refresh" onclick="caricaFornitori()">
               🔄 Aggiorna
             </button>
           </div>
+          <!-- Contenitore scrollabile con l'elenco dei fornitori -->
           <div id="fornitori-container">
             <p class="loading">Caricamento in corso...</p>
           </div>
         </div>
       </div>
 
-      <!-- SEZIONE INVENTARIO -->
+      <!-- ========== SEZIONE 5: INVENTARIO ===== -->
+      <!-- Dashboard con riepilogo e statistiche generali dell'inventario -->
       <div id="sezione-inventario" class="sezione">
         <div class="card">
           <h2>📊 Riepilogo Inventario</h2>
+          
+          <!-- Griglia di statistiche principali -->
           <div class="stats-grid">
+            <!-- Stat 1: Numero totale di rotoli in magazzino -->
             <div class="stat-card">
               <h3>Totale Rotoli</h3>
               <p class="stat-value" id="totale-rotoli">0</p>
             </div>
+            <!-- Stat 2: Metraggio totale di tessuto disponibile -->
             <div class="stat-card">
               <h3>Metraggio Totale</h3>
               <p class="stat-value" id="metraggio-totale">0 m</p>
             </div>
+            <!-- Stat 3: Valore economico totale dell'inventario -->
             <div class="stat-card">
               <h3>Valore Totale</h3>
               <p class="stat-value" id="valore-totale">€ 0.00</p>
             </div>
+            <!-- Stat 4: Numero di rotoli pronti per l'uso -->
             <div class="stat-card">
               <h3>Rotoli Disponibili</h3>
               <p class="stat-value" id="rotoli-disponibili">0</p>
             </div>
           </div>
 
+          <!-- Grafico per visualizzare la distribuzione dei tessuti per tipo -->
           <div class="chart-container">
             <h3>📈 Distribuzione per Tipo</h3>
+            <!-- Canvas dove Chart.js disegnerà il grafico -->
             <canvas id="chart-tipi"></canvas>
           </div>
 
+          <!-- Sezione di esportazione dati con tre opzioni -->
           <div class="export-section">
+            <!-- Pulsante per esportare l'inventario in formato CSV -->
             <button class="btn-export" onclick="esportaCSV()">
               📄 Esporta CSV
             </button>
+            <!-- Pulsante per stampare un report dell'inventario -->
             <button class="btn-export" onclick="stampaReport()">
               🖨️ Stampa Report
             </button>
+            <!-- Pulsante per fare un backup dei dati -->
             <button class="btn-export" onclick="backupDati()">
               💾 Backup Dati
             </button>
@@ -319,6 +390,8 @@
       </div>
     </div>
 
+    <!-- ===== FOOTER ===== -->
+    <!-- Piè di pagina con informazioni di copyright e sviluppatori -->
     <footer class="footer">
       <p>
         Sistema di Gestione Sartoria v1.0 | Sviluppato da
@@ -326,6 +399,8 @@
       </p>
     </footer>
 
+    <!-- ===== SCRIPT PRINCIPALE ===== -->
+    <!-- Carica il file JavaScript con tutta la logica dell'applicazione -->
     <script src="app.js"></script>
   </body>
 </html>
