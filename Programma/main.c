@@ -167,12 +167,8 @@ int main()
     t_Fornitore fornitori[MAX_FORNITORI];
     t_Prelievo prelievi[MAX_PRELIEVI];
     t_Ritaglio ritagli[MAX_RITAGLI];
-    int nRotoli = 0, nProgetti = 0, nFornitori = 0, nPrelievi = 0, nRitagli = 0;
-    int scelta, flag, quit = 0, scelta_sub, ris, ris2, caricato1 = 0, caricato2 = 0;
+    int nRotoli = 0, nProgetti = 0, nFornitori = 0, nPrelievi = 0, nRitagli = 0, scelta, flag, quit = 0, scelta_sub, ris, ris2, caricato1 = 0, caricato2 = 0;
     char id[MAX_CARATTERI], ricerca_partita_iva[MAX_CARATTERI];
-
-    // MENU PRINCIPALE
-    // Caricamento dati da file all'avvio del programma
 
     // PROVA PRIMA IL JSON (più recente)
     if (ImportaDatiDalWeb(rotoli, &nRotoli, prelievi, &nPrelievi, ritagli, &nRitagli, fornitori, &nFornitori, progetti, &nProgetti) == 0)
@@ -181,7 +177,7 @@ int main()
         caricato2 = 1;
     }
 
-    // FALLBACK: Se JSON non esiste, carica il binario
+    // Se JSON non esiste, carica il binario
     if (!caricato2)
     {
         if (CaricaTuttoDaFile(rotoli, &nRotoli, progetti, &nProgetti, fornitori, &nFornitori, prelievi, &nPrelievi, ritagli, &nRitagli) == 0)
