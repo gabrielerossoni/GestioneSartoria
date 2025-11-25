@@ -185,26 +185,8 @@ int main()
         }
     }
 
-    {
-        // Prova a caricare da file di backup principale
-        ris = CaricaTuttoDaFile(rotoli, &nRotoli, progetti, &nProgetti, fornitori, &nFornitori, prelievi, &nPrelievi, ritagli, &nRitagli);
-
-        // Se il backup non esiste, prova a importare dal web
-        if (ris != 0)
-        {
-            ris = ImportaDatiDalWeb(rotoli, &nRotoli, prelievi, &nPrelievi, ritagli, &nRitagli, fornitori, &nFornitori, progetti, &nProgetti);
-            if (ris != 0)
-            {
-                printf("NESSUN FILE TROVATO. Inizio con dati vuoti.\n");
-            }
-        }
-
-        printf("DATI CARICATI: %d rotoli, %d progetti, %d fornitori, %d prelievi, %d ritagli\n",
-               nRotoli, nProgetti, nFornitori, nPrelievi, nRitagli);
-
-        // SYNC INIZIALE CON WEB
-        EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
-    }
+    // SYNC INIZIALE CON WEB
+    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
 
     do
     {
@@ -406,12 +388,14 @@ int main()
             apriInterfacciaWeb();
             break;
         case 8: // SALVA E TERMINA PROGRAMMA
-            if (SalvaTuttoSuFile(rotoli, nRotoli, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli))
+            ris = SalvaTuttoSuFile(rotoli, nRotoli, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli);
+            if (ris == 0)
             {
                 printf("SALVATAGGIO COMPLETATO. USCITA PROGRAMMA.\n");
                 EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
                 quit = 1;
             }
+            else
             {
                 printf("ERRORE NEL SALVATAGGIO. Riprovare.\n");
             }
@@ -473,6 +457,8 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli)
         return -1;
     }
 
+    while (getchar() != '\n')
+        ;
     for (i = 0; i < nuovi; i++)
     {
         idx = *nRotoli + i;
@@ -482,11 +468,14 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli)
         printf("ID: %s (generato automaticamente)\n", rotoli[idx].id);
 
         printf("TIPO: ");
-        scanf("%49s", rotoli[idx].tipo);
+        fgets(rotoli[idx].tipo, 50, stdin);
+        rotoli[idx].tipo[strcspn(rotoli[idx].tipo, "\n")] = 0;
         printf("COLORE: ");
-        scanf("%49s", rotoli[idx].colore);
+        fgets(rotoli[idx].colore, 50, stdin);
+        rotoli[idx].colore[strcspn(rotoli[idx].colore, "\n")] = 0;
         printf("FANTASIA: ");
-        scanf("%49s", rotoli[idx].fantasia);
+        fgets(rotoli[idx].fantasia, MAX_CARATTERI, stdin);
+        rotoli[idx].fantasia[strcspn(rotoli[idx].fantasia, "\n")] = 0; // RIMUOVI \n
         printf("LUNGHEZZA TOTALE (m): ");
         scanf("%f", &rotoli[idx].lunghezza_totale);
         rotoli[idx].lunghezza_attuale = rotoli[idx].lunghezza_totale * 100;
@@ -494,7 +483,8 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli)
         printf("COSTO AL METRO: ");
         scanf("%f", &rotoli[idx].costo_metro);
         printf("FORNITORE: ");
-        scanf("%49s", rotoli[idx].fornitore);
+        fgets(rotoli[idx].fornitore, MAX_CARATTERI, stdin);
+        rotoli[idx].fornitore[strcspn(rotoli[idx].fornitore, "\n")] = 0; // RIMUOVI \n
         printf("LOTTO: ");
         scanf("%49s", rotoli[idx].lotto);
         printf("DATA (GG MM AAAA): ");
@@ -517,17 +507,22 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli)
 int modificaRotolo(t_Rotolo rotoli[], int nRotoli, char *id)
 {
     int i;
+    while (getchar() != '\n')
+        ;
     for (i = 0; i < nRotoli; i++)
     {
         if (strcmp(rotoli[i].id, id) == 0)
         {
             printf("MODIFICA I DATI DEL ROTOLO %s:\n", id);
             printf("TIPO: ");
-            scanf("%49s", rotoli[i].tipo);
+            fgets(rotoli[i].tipo, 50, stdin);
+            rotoli[i].tipo[strcspn(rotoli[i].tipo, "\n")] = 0;
             printf("COLORE: ");
-            scanf("%49s", rotoli[i].colore);
+            fgets(rotoli[i].colore, 50, stdin);
+            rotoli[i].colore[strcspn(rotoli[i].colore, "\n")] = 0;
             printf("FANTASIA: ");
-            scanf("%49s", rotoli[i].fantasia);
+            fgets(rotoli[i].fantasia, MAX_CARATTERI, stdin);
+            rotoli[i].fantasia[strcspn(rotoli[i].fantasia, "\n")] = 0;
             printf("LUNGHEZZA TOTALE (m): ");
             scanf("%f", &rotoli[i].lunghezza_totale);
             printf("LUNGHEZZA ATTUALE (cm): ");
@@ -967,16 +962,23 @@ int inserisciFornitore(t_Fornitore fornitori[], int *nFornitori)
     {
         idx = *nFornitori + i;
         printf("\n--- Fornitore %d di %d ---\n", i + 1, nuovi);
-        getchar();
+        getchar(); // Consuma newline residuo
+
         printf("NOME: ");
-        fgets(fornitori[idx].nome, 100, stdin);
+        fgets(fornitori[idx].nome, MAX_CARATTERI, stdin);
+        fornitori[idx].nome[strcspn(fornitori[idx].nome, "\n")] = 0; // RIMUOVI \n
+
         printf("PARTITA IVA: ");
         scanf("%49s", fornitori[idx].partita_iva);
         getchar();
+
         printf("INDIRIZZO: ");
-        fgets(fornitori[idx].indirizzo, 100, stdin);
+        fgets(fornitori[idx].indirizzo, MAX_CARATTERI, stdin);
+        fornitori[idx].indirizzo[strcspn(fornitori[idx].indirizzo, "\n")] = 0; // RIMUOVI \n
+
         printf("TELEFONO: ");
         scanf("%49s", fornitori[idx].telefono);
+
         printf("EMAIL: ");
         scanf("%49s", fornitori[idx].email);
     }
@@ -999,7 +1001,8 @@ int modificaFornitore(t_Fornitore fornitori[], int nFornitori, char *nome)
             scanf("%49s", fornitori[i].partita_iva);
             getchar();
             printf("INDIRIZZO: ");
-            fgets(fornitori[i].indirizzo, 100, stdin);
+            fgets(fornitori[i].indirizzo, MAX_CARATTERI, stdin);
+            fornitori[i].indirizzo[strcspn(fornitori[i].indirizzo, "\n")] = 0;
             printf("TELEFONO: ");
             scanf("%49s", fornitori[i].telefono);
             printf("EMAIL: ");
@@ -1385,74 +1388,156 @@ int CaricaTuttoDaFile(t_Rotolo rotoli[], int *nRotoli, t_Progetto progetti[], in
 
 // Aggiungi questa funzione in main.c dopo SalvaTuttoSuFile()
 
-/**
- * ESPORTA I DATI IN FORMATO BINARIO LEGGIBILE DAL WEB
- * File: ../web/data.bin
- * Utilizzato per la sincronizzazione bidirezionale
- */
 int EsportaDatiPerWeb(t_Rotolo rotoli[], int nRotoli,
                       t_Prelievo prelievi[], int nPrelievi,
                       t_Ritaglio ritagli[], int nRitagli,
                       t_Fornitore fornitori[], int nFornitori,
                       t_Progetto progetti[], int nProgetti)
 {
-    FILE *file = fopen("../web/data.bin", "wb");
+    FILE *file;
+    int i, j, k; /* ✅ DICHIARAZIONE VARIABILI ALL'INIZIO */
+    char note_pulite[100];
+    char nome_pulito[MAX_CARATTERI];
+    char indirizzo_pulito[MAX_CARATTERI];
+
+    file = fopen("../web/dati.json", "w");
     if (file == NULL)
     {
-        printf("❌ Errore: impossibile creare file di sincronizzazione web.\n");
-        return -1;
+        file = fopen("web/dati.json", "w");
+        if (file == NULL)
+        {
+            printf("Errore: impossibile creare file di sincronizzazione web.\n");
+            return -1;
+        }
     }
 
-    // Scrivi tutti i contatori
-    fwrite(&nRotoli, sizeof(int), 1, file);
-    fwrite(&nPrelievi, sizeof(int), 1, file);
-    fwrite(&nRitagli, sizeof(int), 1, file);
-    fwrite(&nFornitori, sizeof(int), 1, file);
-    fwrite(&nProgetti, sizeof(int), 1, file);
+    fprintf(file, "{\n");
 
-    // Scrivi i dati
-    fwrite(rotoli, sizeof(t_Rotolo), nRotoli, file);
-    fwrite(prelievi, sizeof(t_Prelievo), nPrelievi, file);
-    fwrite(ritagli, sizeof(t_Ritaglio), nRitagli, file);
-    fwrite(fornitori, sizeof(t_Fornitore), nFornitori, file);
-    fwrite(progetti, sizeof(t_Progetto), nProgetti, file);
+    /* ========== ROTOLI ========== */
+    fprintf(file, "  \"rotoli\": [\n");
+    for (i = 0; i < nRotoli; i++) /* ✅ USA i DICHIARATO SOPRA */
+    {
+        fprintf(file, "    {\n");
+        fprintf(file, "      \"id\": \"%s\",\n", rotoli[i].id);
+        fprintf(file, "      \"tipo\": \"%s\",\n", rotoli[i].tipo);
+        fprintf(file, "      \"colore\": \"%s\",\n", rotoli[i].colore);
+        fprintf(file, "      \"fantasia\": \"%s\",\n", rotoli[i].fantasia);
+        fprintf(file, "      \"lunghezza_totale\": %.2f,\n", rotoli[i].lunghezza_totale);
+        fprintf(file, "      \"lunghezza_attuale\": %.2f,\n", rotoli[i].lunghezza_attuale);
+        fprintf(file, "      \"costo_metro\": %.2f,\n", rotoli[i].costo_metro);
+        fprintf(file, "      \"fornitore\": \"%s\",\n", rotoli[i].fornitore);
+        fprintf(file, "      \"lotto\": \"%s\",\n", rotoli[i].lotto);
+        fprintf(file, "      \"stato\": \"%s\",\n", rotoli[i].stato);
+        fprintf(file, "      \"data\": {\"giorno\": %d, \"mese\": %d, \"anno\": %d},\n",
+                rotoli[i].data.giorno, rotoli[i].data.mese, rotoli[i].data.anno);
 
+        /* Rimuovi newline dalle note */
+        k = 0;
+        for (j = 0; rotoli[i].noteAggiuntive[j] != '\0' && k < 99; j++)
+        {
+            if (rotoli[i].noteAggiuntive[j] != '\n' && rotoli[i].noteAggiuntive[j] != '\r')
+            {
+                note_pulite[k++] = rotoli[i].noteAggiuntive[j];
+            }
+        }
+        note_pulite[k] = '\0';
+
+        fprintf(file, "      \"noteAggiuntive\": \"%s\"\n", note_pulite);
+        fprintf(file, "    }%s\n", (i < nRotoli - 1) ? "," : "");
+    }
+    fprintf(file, "  ],\n");
+
+    /* ========== PRELIEVI ========== */
+    fprintf(file, "  \"prelievi\": [\n");
+    for (i = 0; i < nPrelievi; i++)
+    {
+        fprintf(file, "    {\n");
+        fprintf(file, "      \"id\": \"%s\",\n", prelievi[i].id);
+        fprintf(file, "      \"id_rotolo\": \"%s\",\n", prelievi[i].id_rotolo);
+        fprintf(file, "      \"metraggio_prelevato\": %.2f,\n", prelievi[i].metraggio_prelevato);
+        fprintf(file, "      \"operatore\": \"%s\",\n", prelievi[i].operatore);
+        fprintf(file, "      \"data\": {\"giorno\": %d, \"mese\": %d, \"anno\": %d}\n",
+                prelievi[i].data.giorno, prelievi[i].data.mese, prelievi[i].data.anno);
+        fprintf(file, "    }%s\n", (i < nPrelievi - 1) ? "," : "");
+    }
+    fprintf(file, "  ],\n");
+
+    /* ========== RITAGLI ========== */
+    fprintf(file, "  \"ritagli\": [\n");
+    for (i = 0; i < nRitagli; i++)
+    {
+        fprintf(file, "    {\n");
+        fprintf(file, "      \"idRitaglio\": \"%s\",\n", ritagli[i].idRitaglio);
+        fprintf(file, "      \"id_rotolo\": \"%s\",\n", ritagli[i].id_rotolo);
+        fprintf(file, "      \"lunghezza\": %.2f,\n", ritagli[i].lunghezza);
+        fprintf(file, "      \"data\": {\"giorno\": %d, \"mese\": %d, \"anno\": %d}\n",
+                ritagli[i].data.giorno, ritagli[i].data.mese, ritagli[i].data.anno);
+        fprintf(file, "    }%s\n", (i < nRitagli - 1) ? "," : "");
+    }
+    fprintf(file, "  ],\n");
+
+    /* ========== FORNITORI ========== */
+    fprintf(file, "  \"fornitori\": [\n");
+    for (i = 0; i < nFornitori; i++)
+    {
+        /* Pulisci nome */
+        k = 0;
+        for (j = 0; fornitori[i].nome[j] != '\0' && k < MAX_CARATTERI - 1; j++)
+        {
+            if (fornitori[i].nome[j] != '\n' && fornitori[i].nome[j] != '\r')
+                nome_pulito[k++] = fornitori[i].nome[j];
+        }
+        nome_pulito[k] = '\0';
+
+        /* Pulisci indirizzo */
+        k = 0;
+        for (j = 0; fornitori[i].indirizzo[j] != '\0' && k < MAX_CARATTERI - 1; j++)
+        {
+            if (fornitori[i].indirizzo[j] != '\n' && fornitori[i].indirizzo[j] != '\r')
+                indirizzo_pulito[k++] = fornitori[i].indirizzo[j];
+        }
+        indirizzo_pulito[k] = '\0';
+
+        fprintf(file, "    {\n");
+        fprintf(file, "      \"nome\": \"%s\",\n", nome_pulito);
+        fprintf(file, "      \"partita_iva\": \"%s\",\n", fornitori[i].partita_iva);
+        fprintf(file, "      \"indirizzo\": \"%s\",\n", indirizzo_pulito);
+        fprintf(file, "      \"telefono\": \"%s\",\n", fornitori[i].telefono);
+        fprintf(file, "      \"email\": \"%s\"\n", fornitori[i].email);
+        fprintf(file, "    }%s\n", (i < nFornitori - 1) ? "," : "");
+    }
+    fprintf(file, "  ],\n");
+
+    /* ========== PROGETTI ========== */
+    fprintf(file, "  \"progetti\": [\n");
+    for (i = 0; i < nProgetti; i++)
+    {
+        fprintf(file, "    {\n");
+        fprintf(file, "      \"id\": \"%s\",\n", progetti[i].id);
+        fprintf(file, "      \"idCliente\": \"%s\",\n", progetti[i].idCliente);
+        fprintf(file, "      \"tipo_capo\": \"%s\",\n", progetti[i].tipo_capo);
+        fprintf(file, "      \"idRotolo\": \"%s\",\n", progetti[i].idRotolo);
+        fprintf(file, "      \"tessuto_usato\": \"%s\",\n", progetti[i].tessuto_usato);
+        fprintf(file, "      \"data\": {\"giorno\": %d, \"mese\": %d, \"anno\": %d}\n",
+                progetti[i].data.giorno, progetti[i].data.mese, progetti[i].data.anno);
+        fprintf(file, "    }%s\n", (i < nProgetti - 1) ? "," : "");
+    }
+    fprintf(file, "  ]\n");
+
+    fprintf(file, "}\n");
     fclose(file);
-    printf("✅ Dati sincronizzati con il web.\n");
     return 0;
 }
 
-/**
- * IMPORTA DATI MODIFICATI DAL WEB
- * Legge il file data.bin modificato dalla web interface
- */
 int ImportaDatiDalWeb(t_Rotolo rotoli[], int *nRotoli,
                       t_Prelievo prelievi[], int *nPrelievi,
                       t_Ritaglio ritagli[], int *nRitagli,
                       t_Fornitore fornitori[], int *nFornitori,
                       t_Progetto progetti[], int *nProgetti)
 {
-    FILE *file = fopen("../web/data.bin", "rb");
-    if (file == NULL)
-    {
-        return -1; // File non esiste, non è stato modificato dal web
-    }
-
-    // Leggi i contatori
-    fread(nRotoli, sizeof(int), 1, file);
-    fread(nPrelievi, sizeof(int), 1, file);
-    fread(nRitagli, sizeof(int), 1, file);
-    fread(nFornitori, sizeof(int), 1, file);
-    fread(nProgetti, sizeof(int), 1, file);
-
-    // Leggi i dati
-    fread(rotoli, sizeof(t_Rotolo), *nRotoli, file);
-    fread(prelievi, sizeof(t_Prelievo), *nPrelievi, file);
-    fread(ritagli, sizeof(t_Ritaglio), *nRitagli, file);
-    fread(fornitori, sizeof(t_Fornitore), *nFornitori, file);
-    fread(progetti, sizeof(t_Progetto), *nProgetti, file);
-
-    fclose(file);
-    printf("✅ Dati importati dal web.\n");
-    return 0;
+    /* NOTA: Questa funzione è un placeholder per futuri sviluppi */
+    /* Per ora l'interfaccia web è in sola lettura */
+    /* In futuro si potrebbe implementare il parsing JSON per importare modifiche */
+    printf("⚠️ Import JSON non disponibile. Usa il file binario di backup.\n");
+    return -1;
 }

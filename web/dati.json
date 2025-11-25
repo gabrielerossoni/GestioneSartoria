@@ -1,0 +1,40 @@
+{
+  "rotoli": [
+    {
+      "id": "R0001",
+      "tipo": "cotone",
+      "colore": "rosso",
+      "fantasia": "tinta",
+      "lunghezza_totale": 0.00,
+      "lunghezza_attuale": 0.00,
+      "costo_metro": 0.00,
+      "fornitore": "unita",
+      "lotto": "4r",
+      "stato": "DISPONIBILE",
+      "data": {"giorno": 12, "mese": 12, "anno": 2025},
+      "noteAggiuntive": ""
+    },
+    {
+      "id": "R0002",
+      "tipo": "lana",
+      "colore": "blu acceso",
+      "fantasia": "tinta unita",
+      "lunghezza_totale": 3.00,
+      "lunghezza_attuale": 300.00,
+      "costo_metro": 2.00,
+      "fornitore": "amazon",
+      "lotto": "4rt6",
+      "stato": "DISPONIBILE",
+      "data": {"giorno": 12, "mese": 12, "anno": 2025},
+      "noteAggiuntive": ""
+    }
+  ],
+  "prelievi": [
+  ],
+  "ritagli": [
+  ],
+  "fornitori": [
+  ],
+  "progetti": [
+  ]
+}
