@@ -114,61 +114,74 @@ void cmdAdd(char *tipo, char *colore, float lunghezza, float costo)
     }
 }
 
-void cmdDelete(char *id) {
+void cmdDelete(char *id)
+{
     t_Rotolo rotoli[MAX_ROTOLI];
     int nRotoli;
-    
+
     caricaRotoli(rotoli, &nRotoli);
-    
+
     int trovato = -1;
-    for (int i = 0; i < nRotoli; i++) {
-        if (strcmp(rotoli[i].id, id) == 0) {
+    for (int i = 0; i < nRotoli; i++)
+    {
+        if (strcmp(rotoli[i].id, id) == 0)
+        {
             trovato = i;
             break;
         }
     }
-    
-    if (trovato == -1) {
+
+    if (trovato == -1)
+    {
         printf("{\"status\":\"error\",\"message\":\"Rotolo non trovato\"}\n");
         return;
     }
-    
+
     // Sposta tutti gli elementi successivi indietro
-    for (int i = trovato; i < nRotoli - 1; i++) {
+    for (int i = trovato; i < nRotoli - 1; i++)
+    {
         rotoli[i] = rotoli[i + 1];
     }
     nRotoli--;
-    
-    if (salvaRotoli(rotoli, nRotoli) == 0) {
+
+    if (salvaRotoli(rotoli, nRotoli) == 0)
+    {
         printf("{\"status\":\"ok\",\"message\":\"Rotolo eliminato\"}\n");
-    } else {
+    }
+    else
+    {
         printf("{\"status\":\"error\",\"message\":\"Errore salvataggio\"}\n");
     }
 }
 
-int main(int argc, char *argv[]) {
-    if (argc < 2) {
+int main(int argc, char *argv[])
+{
+    if (argc < 2)
+    {
         printf("{\"status\":\"error\",\"message\":\"Comando mancante\"}\n");
         return 1;
     }
-    
-    if (strcmp(argv[1], "list") == 0) {
+
+    if (strcmp(argv[1], "list") == 0)
+    {
         cmdList();
     }
-    else if (strcmp(argv[1], "add") == 0 && argc == 6) {
+    else if (strcmp(argv[1], "add") == 0 && argc == 6)
+    {
         float lunghezza = atof(argv[4]);
         float costo = atof(argv[5]);
         cmdAdd(argv[2], argv[3], lunghezza, costo);
     }
-    else if (strcmp(argv[1], "delete") == 0 && argc == 3) {
+    else if (strcmp(argv[1], "delete") == 0 && argc == 3)
+    {
         // AGGIUNGI QUESTA PARTE
         cmdDelete(argv[2]);
     }
-    else {
+    else
+    {
         printf("{\"status\":\"error\",\"message\":\"Comando non riconosciuto\"}\n");
         return 1;
     }
-    
+
     return 0;
 }
-
