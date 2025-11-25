@@ -317,7 +317,7 @@ int main()
                 case 2: // VISUALIZZA MAGAZZINO
                     visualizzaRotolo(rotoli, nRotoli);
                     break;
-                case 3: // TERMINAZIONE (senza salvataggio)
+                case 3:
                     break;
                 default:
                     printf("OPZIONE NON VALIDA. Riprova.\n");
@@ -363,11 +363,15 @@ int main()
             break;
 
         case 7: // SALVA E TERMINA PROGRAMMA
-            SalvaTuttoSuFile(rotoli, nRotoli, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli);
-            printf("SALVATAGGIO COMPLETATO. USCITA PROGRAMMA.\n");
-            quit = 1;
+            if (SalvaTuttoSuFile(rotoli, nRotoli, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli))
+            {
+                printf("SALVATAGGIO COMPLETATO. USCITA PROGRAMMA.\n");
+                quit = 1;
+            }
+            {
+                printf("ERRORE NEL SALVATAGGIO. Riprovare.\n");
+            }
             break;
-
         default:
             printf("OPZIONE NON VALIDA. Riprova.\n");
             break;
@@ -1266,7 +1270,6 @@ int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int 
     FILE *file = fopen(FNCOMPLETO, "wb");
     if (file == NULL)
     {
-        printf("ERRORE NEL SALVATAGGIO DEI DATI SUL FILE.\n");
         return -1;
     }
 
@@ -1286,7 +1289,6 @@ int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int 
     fwrite(ritagli, sizeof(t_Ritaglio), nRitagli, file);
 
     fclose(file);
-    printf("SALVATAGGIO COMPLETATO.\n");
     return 0;
 }
 
