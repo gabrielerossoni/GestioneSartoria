@@ -95,6 +95,10 @@ typedef struct
 } t_Magazzino;
 
 // ---PROTOTIPI FUNZIONI---
+// Sito integrato
+// Funzione per aprire l'interfaccia web
+void apriInterfacciaWeb();
+
 // Funzioni di Menu
 int menuGenerale();
 int menuRotoli();
@@ -361,8 +365,10 @@ int main()
                 }
             } while (scelta_sub != 6);
             break;
-
-        case 7: // SALVA E TERMINA PROGRAMMA
+        case 7: // INTERFACCIA WEB
+            apriInterfacciaWeb();
+            break;
+        case 8: // SALVA E TERMINA PROGRAMMA
             if (SalvaTuttoSuFile(rotoli, nRotoli, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli))
             {
                 printf("SALVATAGGIO COMPLETATO. USCITA PROGRAMMA.\n");
@@ -391,7 +397,8 @@ int menuGenerale()
     printf("4. PROGETTI\n");
     printf("5. MAGAZZINO\n");
     printf("6. FORNITORI\n");
-    printf("7. SALVATAGGIO E TERMINAZIONE\n");
+    printf("7. INTERFACCIA WEB\n");
+    printf("8. SALVATAGGIO E TERMINAZIONE\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
     return scelta;
@@ -1290,6 +1297,18 @@ int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int 
 
     fclose(file);
     return 0;
+}
+
+// Funzione per aprire l'interfaccia web
+void apriInterfacciaWeb()
+{
+#ifdef _WIN32
+    system("start ../web/index.html");
+#elif __APPLE__
+    system("open ../web/index.html");
+#else
+    system("xdg-open web/index.html");
+#endif
 }
 
 int CaricaTuttoDaFile(t_Rotolo rotoli[], int *nRotoli, t_Progetto progetti[], int *nProgetti, t_Fornitore fornitori[], int *nFornitori, t_Prelievo prelievi[], int *nPrelievi, t_Ritaglio ritagli[], int *nRitagli)
