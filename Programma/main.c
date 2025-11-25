@@ -968,8 +968,7 @@ int menuMagazzino(){
 }
 
 // Funzione per controllare il magazzino
-void controlloMagazzino(t_Rotolo rotoli[], int nRotoli)
-{
+void controlloMagazzino(t_Rotolo rotoli[], int nRotoli){
     float valoreTotale = 0,  metraggioTotale = 0;
     int numeroRotoli = nRotoli;
     int i;
