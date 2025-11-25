@@ -13,6 +13,7 @@ Il software permette di **monitorare rotoli di tessuto**, **gestire prelievi**, 
 - Offrire un'interfaccia **moderna e intuitiva** per l'utilizzo da browser o smartphone.
 
 ---
+
 ## 🌿 Branch principali
 
 - **main:** branch stabile, versione base finita del progetto. È la versione affidabile, pronta per l’uso e consegnata secondo le richieste must.
@@ -21,9 +22,10 @@ Il software permette di **monitorare rotoli di tessuto**, **gestire prelievi**, 
 > Nella consegna dell'esercizio veniva richiesto di mantenere due versioni: **base** (base, stabile, finita) e l'**evolutiva** (estesa, sperimentale). Abbiamo lavorato su entrambi, usando **main** per la versione definitiva e **master** per tutto ciò che può andare oltre le richieste must.
 
 **Sintesi:**  
-- **main** è dedicato a una versione semplice e affidabile.  
-- **master** è utilizzato per miglioramenti, funzioni avanzate e sviluppi futuri.
 
+- **main** è dedicato a una versione semplice e affidabile.  
+
+- **master** è utilizzato per miglioramenti, funzioni avanzate e sviluppi futuri.
 
 ## 🏗️ Architettura del sistema
 
