@@ -168,26 +168,36 @@ int main()
     t_Prelievo prelievi[MAX_PRELIEVI];
     t_Ritaglio ritagli[MAX_RITAGLI];
     int nRotoli = 0, nProgetti = 0, nFornitori = 0, nPrelievi = 0, nRitagli = 0;
-    int scelta, flag, quit = 0, scelta_sub, ris;
+    int scelta, flag, quit = 0, scelta_sub, ris, ris2, caricato1 = 0, caricato2 = 0;
     char id[MAX_CARATTERI], ricerca_partita_iva[MAX_CARATTERI];
 
     // MENU PRINCIPALE
     // Caricamento dati da file all'avvio del programma
+
+    // PROVA PRIMA IL JSON (più recente)
+    if (ImportaDatiDalWeb(rotoli, &nRotoli, prelievi, &nPrelievi, ritagli, &nRitagli, fornitori, &nFornitori, progetti, &nProgetti) == 0)
     {
-        ris = CaricaTuttoDaFile(rotoli, &nRotoli, progetti, &nProgetti, fornitori, &nFornitori, prelievi, &nPrelievi, ritagli, &nRitagli);
-        if (ris == 0)
+        printf("Dati caricati d JSON\n");
+        caricato2 = 1;
+    }
+
+    // FALLBACK: Se JSON non esiste, carica il binario
+    if (!caricato2)
+    {
+        if (CaricaTuttoDaFile(rotoli, &nRotoli, progetti, &nProgetti, fornitori, &nFornitori, prelievi, &nPrelievi, ritagli, &nRitagli) == 0)
         {
-            printf("DATI CARICATI: %d rotoli, %d progetti, %d fornitori, %d prelievi, %d ritagli\n",
-                   nRotoli, nProgetti, nFornitori, nPrelievi, nRitagli);
-        }
-        else
-        {
-            printf("NESSUN FILE DI BACKUP TROVATO. Inizio con dati vuoti.\n");
+            printf("✅ Dati caricati da backup binario\n");
+            caricato1 = 1;
+
+            // Esporta subito su JSON per sincronizzare
+            EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
         }
     }
 
-    // SYNC INIZIALE CON WEB
-    EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
+    if (!caricato2 && !caricato1)
+    {
+        printf("Nessun dato trovato. Inizializzazione senza dati.\n");
+    }
 
     do
     {
@@ -390,15 +400,15 @@ int main()
             break;
         case 8: // SALVA E TERMINA PROGRAMMA
             ris = SalvaTuttoSuFile(rotoli, nRotoli, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli);
-            if (ris == 0)
+            ris2 = EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
+            if (ris == 0 && ris2 == 0)
             {
-                printf("SALVATAGGIO COMPLETATO. USCITA PROGRAMMA.\n");
-                EsportaDatiPerWeb(rotoli, nRotoli, prelievi, nPrelievi, ritagli, nRitagli, fornitori, nFornitori, progetti, nProgetti);
+                printf("DATI SALVATI (binario + JSON)\n");
                 quit = 1;
             }
             else
             {
-                printf("ERRORE NEL SALVATAGGIO. Riprovare.\n");
+                printf("ERRORE NEL SALVATAGGIO\n");
             }
             break;
         default:
@@ -1542,9 +1552,154 @@ int ImportaDatiDalWeb(t_Rotolo rotoli[], int *nRotoli,
                       t_Fornitore fornitori[], int *nFornitori,
                       t_Progetto progetti[], int *nProgetti)
 {
-    /* NOTA: Questa funzione è un placeholder per futuri sviluppi */
-    /* Per ora l'interfaccia web è in sola lettura */
-    /* In futuro si potrebbe implementare il parsing JSON per importare modifiche */
-    printf("⚠️ Import JSON non disponibile. Usa il file binario di backup.\n");
-    return -1;
+    FILE *f = fopen("../web/dati.json", "r");
+    if (!f)
+        f = fopen("web/dati.json", "r");
+    if (!f)
+        return -1;
+
+    char buf[50000], *p, *end;
+    fread(buf, 1, 50000, f);
+    fclose(f);
+
+    *nRotoli = *nPrelievi = *nRitagli = *nFornitori = *nProgetti = 0;
+
+    // ROTOLI
+    if ((p = strstr(buf, "\"rotoli\":")))
+    {
+        while ((p = strchr(p, '{')) && *nRotoli < MAX_ROTOLI)
+        {
+            end = strchr(p, '}');
+            if (!end)
+                break;
+
+            if (strstr(p, "\"id\":") < end)
+                sscanf(strstr(p, "\"id\":"), "\"id\": \"%[^\"]\"", rotoli[*nRotoli].id);
+            if (strstr(p, "\"tipo\":") < end)
+                sscanf(strstr(p, "\"tipo\":"), "\"tipo\": \"%[^\"]\"", rotoli[*nRotoli].tipo);
+            if (strstr(p, "\"colore\":") < end)
+                sscanf(strstr(p, "\"colore\":"), "\"colore\": \"%[^\"]\"", rotoli[*nRotoli].colore);
+            if (strstr(p, "\"fantasia\":") < end)
+                sscanf(strstr(p, "\"fantasia\":"), "\"fantasia\": \"%[^\"]\"", rotoli[*nRotoli].fantasia);
+            if (strstr(p, "\"lunghezza_totale\":") < end)
+                sscanf(strstr(p, "\"lunghezza_totale\":"), "\"lunghezza_totale\": %f", &rotoli[*nRotoli].lunghezza_totale);
+            if (strstr(p, "\"lunghezza_attuale\":") < end)
+                sscanf(strstr(p, "\"lunghezza_attuale\":"), "\"lunghezza_attuale\": %f", &rotoli[*nRotoli].lunghezza_attuale);
+            if (strstr(p, "\"costo_metro\":") < end)
+                sscanf(strstr(p, "\"costo_metro\":"), "\"costo_metro\": %f", &rotoli[*nRotoli].costo_metro);
+            if (strstr(p, "\"fornitore\":") < end)
+                sscanf(strstr(p, "\"fornitore\":"), "\"fornitore\": \"%[^\"]\"", rotoli[*nRotoli].fornitore);
+            if (strstr(p, "\"lotto\":") < end)
+                sscanf(strstr(p, "\"lotto\":"), "\"lotto\": \"%[^\"]\"", rotoli[*nRotoli].lotto);
+            if (strstr(p, "\"stato\":") < end)
+                sscanf(strstr(p, "\"stato\":"), "\"stato\": \"%[^\"]\"", rotoli[*nRotoli].stato);
+
+            (*nRotoli)++;
+            p = end;
+            if (strstr(p, "\"prelievi\":"))
+                break;
+        }
+    }
+
+    // PRELIEVI
+    if ((p = strstr(buf, "\"prelievi\":")))
+    {
+        while ((p = strchr(p, '{')) && *nPrelievi < MAX_PRELIEVI)
+        {
+            end = strchr(p, '}');
+            if (!end)
+                break;
+
+            if (strstr(p, "\"id\":") < end)
+                sscanf(strstr(p, "\"id\":"), "\"id\": \"%[^\"]\"", prelievi[*nPrelievi].id);
+            if (strstr(p, "\"id_rotolo\":") < end)
+                sscanf(strstr(p, "\"id_rotolo\":"), "\"id_rotolo\": \"%[^\"]\"", prelievi[*nPrelievi].id_rotolo);
+            if (strstr(p, "\"metraggio_prelevato\":") < end)
+                sscanf(strstr(p, "\"metraggio_prelevato\":"), "\"metraggio_prelevato\": %f", &prelievi[*nPrelievi].metraggio_prelevato);
+            if (strstr(p, "\"operatore\":") < end)
+                sscanf(strstr(p, "\"operatore\":"), "\"operatore\": \"%[^\"]\"", prelievi[*nPrelievi].operatore);
+
+            (*nPrelievi)++;
+            p = end;
+            if (strstr(p, "\"ritagli\":"))
+                break;
+        }
+    }
+
+    // RITAGLI
+    if ((p = strstr(buf, "\"ritagli\":")))
+    {
+        while ((p = strchr(p, '{')) && *nRitagli < MAX_RITAGLI)
+        {
+            end = strchr(p, '}');
+            if (!end)
+                break;
+
+            if (strstr(p, "\"idRitaglio\":") < end)
+                sscanf(strstr(p, "\"idRitaglio\":"), "\"idRitaglio\": \"%[^\"]\"", ritagli[*nRitagli].idRitaglio);
+            if (strstr(p, "\"id_rotolo\":") < end)
+                sscanf(strstr(p, "\"id_rotolo\":"), "\"id_rotolo\": \"%[^\"]\"", ritagli[*nRitagli].id_rotolo);
+            if (strstr(p, "\"lunghezza\":") < end)
+                sscanf(strstr(p, "\"lunghezza\":"), "\"lunghezza\": %f", &ritagli[*nRitagli].lunghezza);
+
+            (*nRitagli)++;
+            p = end;
+            if (strstr(p, "\"fornitori\":"))
+                break;
+        }
+    }
+
+    // FORNITORI
+    if ((p = strstr(buf, "\"fornitori\":")))
+    {
+        while ((p = strchr(p, '{')) && *nFornitori < MAX_FORNITORI)
+        {
+            end = strchr(p, '}');
+            if (!end)
+                break;
+
+            if (strstr(p, "\"nome\":") < end)
+                sscanf(strstr(p, "\"nome\":"), "\"nome\": \"%[^\"]\"", fornitori[*nFornitori].nome);
+            if (strstr(p, "\"partita_iva\":") < end)
+                sscanf(strstr(p, "\"partita_iva\":"), "\"partita_iva\": \"%[^\"]\"", fornitori[*nFornitori].partita_iva);
+            if (strstr(p, "\"telefono\":") < end)
+                sscanf(strstr(p, "\"telefono\":"), "\"telefono\": \"%[^\"]\"", fornitori[*nFornitori].telefono);
+            if (strstr(p, "\"email\":") < end)
+                sscanf(strstr(p, "\"email\":"), "\"email\": \"%[^\"]\"", fornitori[*nFornitori].email);
+            if (strstr(p, "\"indirizzo\":") < end)
+                sscanf(strstr(p, "\"indirizzo\":"), "\"indirizzo\": \"%[^\"]\"", fornitori[*nFornitori].indirizzo);
+
+            (*nFornitori)++;
+            p = end;
+            if (strstr(p, "\"progetti\":"))
+                break;
+        }
+    }
+
+    // PROGETTI
+    if ((p = strstr(buf, "\"progetti\":")))
+    {
+        while ((p = strchr(p, '{')) && *nProgetti < MAX_PROGETTI)
+        {
+            end = strchr(p, '}');
+            if (!end)
+                break;
+
+            if (strstr(p, "\"id\":") < end)
+                sscanf(strstr(p, "\"id\":"), "\"id\": \"%[^\"]\"", progetti[*nProgetti].id);
+            if (strstr(p, "\"idCliente\":") < end)
+                sscanf(strstr(p, "\"idCliente\":"), "\"idCliente\": \"%[^\"]\"", progetti[*nProgetti].idCliente);
+            if (strstr(p, "\"tipo_capo\":") < end)
+                sscanf(strstr(p, "\"tipo_capo\":"), "\"tipo_capo\": \"%[^\"]\"", progetti[*nProgetti].tipo_capo);
+            if (strstr(p, "\"idRotolo\":") < end)
+                sscanf(strstr(p, "\"idRotolo\":"), "\"idRotolo\": \"%[^\"]\"", progetti[*nProgetti].idRotolo);
+            if (strstr(p, "\"tessuto_usato\":") < end)
+                sscanf(strstr(p, "\"tessuto_usato\":"), "\"tessuto_usato\": \"%[^\"]\"", progetti[*nProgetti].tessuto_usato);
+
+            (*nProgetti)++;
+            p = end;
+        }
+    }
+
+    return 0;
 }
