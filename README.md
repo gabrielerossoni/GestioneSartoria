@@ -92,12 +92,6 @@ Contiene la logica principale del programma:
 ```c
 typedef struct
 {
-    int giorno;
-    int mese;
-    int anno;
-} t_Data;
-typedef struct
-{
     char id[MAX_CARATTERI]; // auto incrementale
     char tipo[MAX_CARATTERI];
     char colore[MAX_CARATTERI];
