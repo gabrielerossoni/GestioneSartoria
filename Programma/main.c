@@ -24,7 +24,7 @@
 #define ANNO_MAX 2100
 
 // ---NOMI FILE---
-#define FNCOMPLETO "/File/backup_sartoria.dat"
+#define FNCOMPLETO "../File/backup_sartoria.dat"
 
 // ---STRUTTURE DATI---
 typedef struct
@@ -161,17 +161,17 @@ int main()
     t_Prelievo prelievi[MAX_PRELIEVI];
     t_Ritaglio ritagli[MAX_RITAGLI];
     int nRotoli = 0, nProgetti = 0, nFornitori = 0, nPrelievi = 0, nRitagli = 0;
-    int scelta, flag, nRotoli_count = 0, quit = 0, scelta_sub, ris;
+    int scelta, flag, quit = 0, scelta_sub, ris;
     char id[MAX_CARATTERI], ricerca_partita_iva[MAX_CARATTERI];
 
     // MENU PRINCIPALE
     // Caricamento dati da file all'avvio del programma
     {
-        ris = CaricaTuttoDaFile(rotoli, &nRotoli_count, progetti, &nProgetti, fornitori, &nFornitori, prelievi, &nPrelievi, ritagli, &nRitagli);
+        ris = CaricaTuttoDaFile(rotoli, &nRotoli, progetti, &nProgetti, fornitori, &nFornitori, prelievi, &nPrelievi, ritagli, &nRitagli);
         if (ris == 0)
         {
             printf("DATI CARICATI: %d rotoli, %d progetti, %d fornitori, %d prelievi, %d ritagli\n",
-                   nRotoli_count, nProgetti, nFornitori, nPrelievi, nRitagli);
+                   nRotoli, nProgetti, nFornitori, nPrelievi, nRitagli);
         }
         else
         {
@@ -191,32 +191,34 @@ int main()
                 switch (scelta_sub)
                 {
                 case 1: // AGGIUNGI ROTOLO
-                    inserisciRotolo(rotoli, &nRotoli_count);
+                    inserisciRotolo(rotoli, &nRotoli);
                     break;
                 case 2: // MODIFICA ROTOLO
                     printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
                     scanf("%s", id);
-                    modificaRotolo(rotoli, nRotoli_count, id);
+                    modificaRotolo(rotoli, nRotoli, id);
                     break;
                 case 3: // ELIMINA ROTOLO
                     printf("INSERISCI L'ID DEL ROTOLO DA ELIMINARE: ");
                     scanf("%s", id);
-                    if (eliminaRotolo(rotoli, &nRotoli_count, id) == 1)
+                    if (eliminaRotolo(rotoli, &nRotoli, id) == 1)
                         printf("ROTOLO ELIMINATO CON SUCCESSO.\n");
                     else
                         printf("ROTOLO NON TROVATO.\n");
                     break;
                 case 4: // VISUALIZZA ROTOLO
-                    visualizzaRotolo(rotoli, nRotoli_count);
+                    visualizzaRotolo(rotoli, nRotoli);
                     break;
                 case 5: // CERCA ROTOLO
-                    cercaRotolo(rotoli, nRotoli_count);
+                    cercaRotolo(rotoli, nRotoli);
+                    break;
+                case 6: // TORNA AL MENU PRINCIPALE
                     break;
                 default:
                     printf("OPZIONE NON VALIDA. Riprova.\n");
                     break;
                 }
-            } while (scelta_sub != 6 && !quit);
+            } while (scelta_sub != 6);
             break;
 
         case 2: // RITAGLI
@@ -231,11 +233,13 @@ int main()
                 case 2:
                     cercaRitaglio(ritagli, nRitagli);
                     break;
+                case 3: // TORNA AL MENU PRINCIPALE
+                    break;
                 default:
                     printf("OPZIONE NON VALIDA. Riprova.\n");
                     break;
                 }
-            } while (scelta_sub != 3 && !quit);
+            } while (scelta_sub != 3);
             break;
 
         case 3: // PRELIEVI
@@ -245,7 +249,7 @@ int main()
                 switch (scelta_sub)
                 {
                 case 1:
-                    eseguiPrelievo(prelievi, &nPrelievi, rotoli, nRotoli_count, ritagli, &nRitagli);
+                    eseguiPrelievo(prelievi, &nPrelievi, rotoli, nRotoli, ritagli, &nRitagli);
                     break;
                 case 2:
                     cercaPrelievo(prelievi, nPrelievi);
@@ -253,11 +257,13 @@ int main()
                 case 3:
                     visualizzaPrelievo(prelievi, nPrelievi);
                     break;
+                case 4: // TORNA AL MENU PRINCIPALE
+                    break;
                 default:
                     printf("OPZIONE NON VALIDA. Riprova.\n");
                     break;
                 }
-            } while (scelta_sub != 4 && !quit);
+            } while (scelta_sub != 4);
             break;
 
         case 4: // PROGETTI
@@ -290,11 +296,13 @@ int main()
                     if (flag == 0)
                         printf("PROGETTO NON TROVATO.\n");
                     break;
+                case 6: // TORNA AL MENU PRINCIPALE
+                    break;
                 default:
                     printf("OPZIONE NON VALIDA. Riprova.\n");
                     break;
                 }
-            } while (scelta_sub != 6 && !quit);
+            } while (scelta_sub != 6);
             break;
 
         case 5: // MAGAZZINO
@@ -304,19 +312,18 @@ int main()
                 switch (scelta_sub)
                 {
                 case 1: // CONTROLLO MAGAZZINO (valore/metraggio/numero rotoli)
-                    controlloMagazzino(rotoli, nRotoli_count);
+                    controlloMagazzino(rotoli, nRotoli);
                     break;
                 case 2: // VISUALIZZA MAGAZZINO
-                    visualizzaRotolo(rotoli, nRotoli_count);
+                    visualizzaRotolo(rotoli, nRotoli);
                     break;
                 case 3: // TERMINAZIONE (senza salvataggio)
-                    quit = 1;
                     break;
                 default:
                     printf("OPZIONE NON VALIDA. Riprova.\n");
                     break;
                 }
-            } while (scelta_sub != 3 && !quit);
+            } while (scelta_sub != 3);
             break;
 
         case 6: // FORNITORI
@@ -346,15 +353,17 @@ int main()
                     scanf("%s", ricerca_partita_iva);
                     cercaFornitore(fornitori, nFornitori, ricerca_partita_iva);
                     break;
+                case 6: // TORNA AL MENU PRINCIPALE
+                    break;
                 default:
                     printf("OPZIONE NON VALIDA. Riprova.\n");
                     break;
                 }
-            } while (scelta_sub != 6 && !quit);
+            } while (scelta_sub != 6);
             break;
 
         case 7: // SALVA E TERMINA PROGRAMMA
-            SalvaTuttoSuFile(rotoli, nRotoli_count, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli);
+            SalvaTuttoSuFile(rotoli, nRotoli, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli);
             printf("SALVATAGGIO COMPLETATO. USCITA PROGRAMMA.\n");
             quit = 1;
             break;
@@ -364,6 +373,7 @@ int main()
             break;
         }
     } while (!quit);
+    return 0;
 }
 
 //---FUNZIONI---
@@ -890,7 +900,7 @@ int menuFornitori()
 
 int inserisciFornitore(t_Fornitore fornitori[], int *nFornitori)
 {
-    int i, nuovi;
+    int i, nuovi, idx;
     printf("NUMERO FORNITORI DA AGGIUNGERE: ");
     if (scanf("%d", &nuovi) != 1 || nuovi < 1)
     {
@@ -906,14 +916,16 @@ int inserisciFornitore(t_Fornitore fornitori[], int *nFornitori)
 
     for (i = 0; i < nuovi; i++)
     {
-        int idx = *nFornitori + i;
+        idx = *nFornitori + i;
         printf("\n--- Fornitore %d di %d ---\n", i + 1, nuovi);
+        getchar();
         printf("NOME: ");
-        scanf(" %49[^\n]", fornitori[idx].nome);
+        fgets(fornitori[idx].nome, 100, stdin);
         printf("PARTITA IVA: ");
         scanf("%49s", fornitori[idx].partita_iva);
+        getchar();
         printf("INDIRIZZO: ");
-        scanf(" %99[^\n]", fornitori[idx].indirizzo);
+        fgets(fornitori[idx].indirizzo, 100, stdin);
         printf("TELEFONO: ");
         scanf("%49s", fornitori[idx].telefono);
         printf("EMAIL: ");
@@ -933,10 +945,12 @@ int modificaFornitore(t_Fornitore fornitori[], int nFornitori, char *nome)
         if (strcmp(fornitori[i].nome, nome) == 0)
         {
             printf("MODIFICA I DATI DEL FORNITORE %s:\n", nome);
+            getchar();
             printf("PARTITA IVA: ");
             scanf("%49s", fornitori[i].partita_iva);
+            getchar();
             printf("INDIRIZZO: ");
-            scanf(" %99[^\n]", fornitori[i].indirizzo);
+            fgets(fornitori[i].indirizzo, 100, stdin);
             printf("TELEFONO: ");
             scanf("%49s", fornitori[i].telefono);
             printf("EMAIL: ");
@@ -1018,8 +1032,9 @@ void controlloMagazzino(t_Rotolo rotoli[], int nRotoli)
     float valoreTotale = 0;
     float metraggioTotale = 0;
     int numeroRotoli = nRotoli;
+    int i;
 
-    for (int i = 0; i < nRotoli; i++)
+    for (i = 0; i < nRotoli; i++)
     {
         valoreTotale += rotoli[i].lunghezza_totale * rotoli[i].costo_metro;
         metraggioTotale += rotoli[i].lunghezza_totale;
@@ -1033,8 +1048,9 @@ void controlloMagazzino(t_Rotolo rotoli[], int nRotoli)
 // Funzione per visualizzare il magazzino
 void visualizzaMagazzino(t_Rotolo rotoli[], int nRotoli)
 {
+    int i;
     printf("ELENCO ROTOLO:\n");
-    for (int i = 0; i < nRotoli; i++)
+    for (i = 0; i < nRotoli; i++)
     {
         printf("ID: %s, TIPO: %s, COLORE: %s, LUNGHEZZA TOTALE: %.2f m, COSTO AL METRO: %.2f\n",
                rotoli[i].id, rotoli[i].tipo, rotoli[i].colore, rotoli[i].lunghezza_totale, rotoli[i].costo_metro);
@@ -1109,7 +1125,7 @@ int menuProgetti()
 
 int inserisciProgetto(t_Progetto progetti[], int *nProgetti)
 {
-    int i, nuovi;
+    int i, nuovi, idx;
     printf("NUMERO PROGETTI DA AGGIUNGERE: ");
     if (scanf("%d", &nuovi) != 1 || nuovi < 1)
     {
@@ -1125,7 +1141,7 @@ int inserisciProgetto(t_Progetto progetti[], int *nProgetti)
 
     for (i = 0; i < nuovi; i++)
     {
-        int idx = *nProgetti + i;
+        idx = *nProgetti + i;
         printf("\n--- Progetto %d di %d ---\n", i + 1, nuovi);
 
         sprintf(progetti[idx].id, "PRJ%04d", *nProgetti + i + 1);
