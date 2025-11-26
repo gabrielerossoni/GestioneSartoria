@@ -703,8 +703,6 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
 
         // Aggiorna il lunghezza_attuale del rotolo
         rotoli[rotoloTrovato].lunghezza_attuale -= metraggioCm;
-        rotoli[rotoloTrovato].lunghezza_attuale -= metraggioCm;
-
         // NUOVA LOGICA: elimina automaticamente se < 30cm
         if (rotoli[rotoloTrovato].lunghezza_attuale <= 0){
             strcpy(rotoli[rotoloTrovato].stato, "ESAURITO");
