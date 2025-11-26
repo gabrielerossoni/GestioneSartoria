@@ -827,8 +827,9 @@ int cercaRitaglio(t_Ritaglio ritagli[], int nRitagli){
     case 3: // Cerca per LUNGHEZZA MINIMA
         printf("INSERISCI LUNGHEZZA MINIMA (cm): ");
         scanf("%f", &lunghezzaMin);
+        lunghezzaMin = lunghezzaMin / 100.0;
         for (i = 0; i < nRitagli; i++){
-            if (ritagli[i].lunghezza > lunghezzaMin){
+            if (ritagli[i].lunghezza >= lunghezzaMin){
                 printf("IDRITAGLIO: %s, ID_ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
                        ritagli[i].idRitaglio, ritagli[i].id_rotolo, ritagli[i].lunghezza,
                        ritagli[i].data.giorno, ritagli[i].data.mese, ritagli[i].data.anno);
@@ -991,7 +992,7 @@ void controlloMagazzino(t_Rotolo rotoli[], int nRotoli){
     int i;
 
     for (i = 0; i < nRotoli; i++){
-        valoreTotale += rotoli[i].lunghezza_attuale * rotoli[i].costo_metro;
+        valoreTotale += (rotoli[i].lunghezza_attuale / 100.0) * rotoli[i].costo_metro;
         metraggioTotale += rotoli[i].lunghezza_attuale;
     }
     printf("Valore Totale: %.2f\n", valoreTotale);
