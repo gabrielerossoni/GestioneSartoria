@@ -99,6 +99,7 @@ typedef struct
     int mese;
     int anno;
 } t_Data;
+
 typedef struct
 {
     char id[MAX_CARATTERI]; // auto incrementale
