@@ -24,8 +24,9 @@ Il software permette di **monitorare rotoli di tessuto**, **gestire prelievi**, 
 **Sintesi:**  
 
 - **main** è dedicato a una versione semplice e affidabile.  
-
 - **master** è utilizzato per miglioramenti, funzioni avanzate e sviluppi futuri.
+
+---
 
 ## 🏗️ Architettura del sistema
 
@@ -92,6 +93,13 @@ Contiene la logica principale del programma:
 ## 🧱 Strutture dati principali (in C)
 
 ```c
+typedef struct
+{
+    int giorno;
+    int mese;
+    int anno;
+} t_Data;
+
 typedef struct
 {
     char id[MAX_CARATTERI]; // auto incrementale
@@ -236,6 +244,8 @@ SistemaGestioneSartoria/
 ├── .gitignore
 └── LICENSE
 ```
+
+---
 
 ## 👨‍💻 Autori
 
