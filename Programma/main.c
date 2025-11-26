@@ -439,6 +439,7 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli){
 
         printf("LOTTO: ");
         scanf("%49s", rotoli[idx].lotto);
+        while (getchar() != '\n');
         printf("DATA (GG MM AAAA): ");
         scanf("%d %d %d", &rotoli[idx].data.giorno, &rotoli[idx].data.mese, &rotoli[idx].data.anno);
         if (!controlloData(rotoli[idx].data)){
@@ -463,16 +464,21 @@ int modificaRotolo(t_Rotolo rotoli[], int nRotoli, char *id){
             printf("TIPO: ");
             fgets(rotoli[i].tipo, 50, stdin);
             rotoli[i].tipo[strcspn(rotoli[i].tipo, "\n")] = 0;
+
             printf("COLORE: ");
             fgets(rotoli[i].colore, 50, stdin);
             rotoli[i].colore[strcspn(rotoli[i].colore, "\n")] = 0;
+
             printf("FANTASIA: ");
             fgets(rotoli[i].fantasia, MAX_CARATTERI, stdin);
             rotoli[i].fantasia[strcspn(rotoli[i].fantasia, "\n")] = 0;
+
             printf("LUNGHEZZA TOTALE (m): ");
             scanf("%f", &rotoli[i].lunghezza_totale);
-            printf("LUNGHEZZA ATTUALE (cm): ");
-            scanf("%f", &rotoli[i].lunghezza_attuale);
+
+            rotoli[i].lunghezza_attuale = rotoli[i].lunghezza_totale * 100;
+            printf("LUNGHEZZA ATTUALE: %.2f cm (calcolato automaticamente)\n", rotoli[i].lunghezza_attuale);
+
             printf("COSTO AL METRO: ");
             scanf("%f", &rotoli[i].costo_metro);
         }
@@ -525,8 +531,8 @@ int cercaRotolo(t_Rotolo rotoli[], int nRotoli){
     scelta = menuCercaRotoli();
 
     switch (scelta){
-    case 1: // Cerca per CODICE ROTOLO
-        printf("INSERISCI IL CODICE ROTOLO: ");
+    case 1: // Cerca per ID ROTOLO
+        printf("INSERISCI L'ID DEL ROTOLO: ");
         scanf("%s", ricerca);
         for (i = 0; i < nRotoli; i++){
             if (strcmp(rotoli[i].id, ricerca) == 0){
@@ -661,8 +667,8 @@ int cercaPrelievo(t_Prelievo prelievi[], int nPrelievi){
 
     scelta = menuCercaPrelievi();
     switch (scelta){
-    case 1: // Cerca per CODICE PRELIEVO
-        printf("INSERISCI IL CODICE PRELIEVO: ");
+    case 1: // Cerca per ID PRELIEVO
+        printf("INSERISCI L'ID DEL PRELIEVO: ");
         scanf("%s", ricerca);
         for (i = 0; i < nPrelievi; i++){
             if (strcmp(prelievi[i].id, ricerca) == 0){
@@ -708,7 +714,7 @@ int cercaPrelievo(t_Prelievo prelievi[], int nPrelievi){
 int menuCercaPrelievi(){
     int scelta;
     printf("\n--- RICERCA PRELIEVO ---\n");
-    printf("1. Cerca per CODICE PRELIEVO\n");
+    printf("1. Cerca per ID PRELIEVO\n");
     printf("2. Cerca per DATA\n");
     scanf("%d", &scelta);
     return scelta;
@@ -742,7 +748,7 @@ void visualizzaRitagli(t_Ritaglio ritagli[], int nRitagli){
     printf("ELENCO RITAGLI:\n");
     for (i = 0; i < nRitagli; i++)
     {
-        printf("IDRITAGLIO: %s, ID_ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
+        printf("ID_RITAGLIO: %s, ID_ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
                ritagli[i].idRitaglio, ritagli[i].id_rotolo, ritagli[i].lunghezza,
                ritagli[i].data.giorno, ritagli[i].data.mese, ritagli[i].data.anno);
     }
@@ -751,8 +757,8 @@ void visualizzaRitagli(t_Ritaglio ritagli[], int nRitagli){
 int menuCercaRitagli(){
     int scelta;
     printf("\n--- RICERCA RITAGLI ---\n");
-    printf("1. Cerca per CODICE RITAGLIO\n");
-    printf("2. Cerca per CODICE ROTOLO\n");
+    printf("1. Cerca per ID RITAGLIO\n");
+    printf("2. Cerca per ID ROTOLO\n");
     printf("3. Cerca per LUNGHEZZA MINIMA\n");
     printf("SCELTA: ");
     scanf("%d", &scelta);
@@ -768,11 +774,11 @@ int cercaRitaglio(t_Ritaglio ritagli[], int nRitagli){
 
     switch (scelta){
     case 1: // Cerca per CODICE RITAGLIO
-        printf("INSERISCI IL CODICE RITAGLIO: ");
+        printf("INSERISCI l'ID DEL RITAGLIO: ");
         scanf("%s", ricerca);
         for (i = 0; i < nRitagli; i++){
             if (strcmp(ritagli[i].idRitaglio, ricerca) == 0){
-                printf("IDRITAGLIO: %s, ID_ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
+                printf("ID_RITAGLIO: %s, ID_ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
                        ritagli[i].idRitaglio, ritagli[i].id_rotolo, ritagli[i].lunghezza,
                        ritagli[i].data.giorno, ritagli[i].data.mese, ritagli[i].data.anno);
                 trovati++;
@@ -780,7 +786,7 @@ int cercaRitaglio(t_Ritaglio ritagli[], int nRitagli){
         }
         break;
     case 2: // Cerca per CODICE ROTOLO
-        printf("INSERISCI IL CODICE ROTOLO: ");
+        printf("INSERISCI L'ID DEL ROTOLO: ");
         scanf("%s", ricerca);
         for (i = 0; i < nRitagli; i++){
             if (strcmp(ritagli[i].id_rotolo, ricerca) == 0){
@@ -872,14 +878,18 @@ int modificaFornitore(t_Fornitore fornitori[], int nFornitori, char *nome){
         if (strcmp(fornitori[i].nome, nome) == 0){
             printf("MODIFICA I DATI DEL FORNITORE %s:\n", nome);
             getchar();
+
             printf("PARTITA IVA: ");
             scanf("%49s", fornitori[i].partita_iva);
             getchar();
+
             printf("INDIRIZZO: ");
             fgets(fornitori[i].indirizzo, MAX_CARATTERI, stdin);
             fornitori[i].indirizzo[strcspn(fornitori[i].indirizzo, "\n")] = 0;
+
             printf("TELEFONO: ");
             scanf("%49s", fornitori[i].telefono);
+
             printf("EMAIL: ");
             scanf("%49s", fornitori[i].email);
             return 0;
@@ -1034,14 +1044,19 @@ int inserisciProgetto(t_Progetto progetti[], int *nProgetti){
         printf("\n--- Progetto %d di %d ---\n", i + 1, nuovi);
         sprintf(progetti[idx].id, "PRJ%04d", *nProgetti + i + 1);
         printf("ID PROGETTO: %s (auto)\n", progetti[idx].id);
+
         printf("ID CLIENTE: ");
         scanf("%49s", progetti[idx].idCliente);
+
         printf("TIPO CAPO: ");
         scanf("%49s", progetti[idx].tipo_capo);
+
         printf("ID ROTOLO: ");
         scanf("%49s", progetti[idx].idRotolo);
+
         printf("TESSUTO USATO: ");
         scanf("%49s", progetti[idx].tessuto_usato);
+
         printf("DATA (GG MM AAAA): ");
         scanf("%d %d %d", &progetti[idx].data.giorno, &progetti[idx].data.mese, &progetti[idx].data.anno);
         if (!controlloData(progetti[idx].data)){
@@ -1062,12 +1077,16 @@ int modificaProgetto(t_Progetto progetti[], int nProgetti, char *id){
             printf("MODIFICA I DATI DEL PROGETTO %s:\n", id);
             printf("ID CLIENTE: ");
             scanf("%49s", progetti[i].idCliente);
+
             printf("TIPO CAPO: ");
             scanf("%49s", progetti[i].tipo_capo);
+
             printf("ID ROTOLO: ");
             scanf("%49s", progetti[i].idRotolo);
+
             printf("TESSUTO USATO: ");
             scanf("%49s", progetti[i].tessuto_usato);
+
             printf("DATA (GG MM AAAA): ");
             scanf("%d %d %d", &progetti[i].data.giorno, &progetti[i].data.mese, &progetti[i].data.anno);
             if (!controlloData(progetti[i].data)) printf("DATA NON VALIDA.\n");
@@ -1118,7 +1137,7 @@ int cercaProgetto(t_Progetto progetti[], int nProgetti, char *id){
                    progetti[i].idRotolo, progetti[i].tessuto_usato,
                    progetti[i].data.giorno, progetti[i].data.mese, progetti[i].data.anno);
             trovati++;
-            break; // stop after first match (ID should essere unico)
+            break;
         }
     }
 
