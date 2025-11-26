@@ -188,7 +188,11 @@ int main(){
                 case 2: // MODIFICA ROTOLO
                     printf("INSERISCI L'ID DEL ROTOLO DA MODIFICARE: ");
                     scanf("%s", id);
-                    modificaRotolo(rotoli, nRotoli, id);
+                    flag=modificaRotolo(rotoli, nRotoli, id);
+                    if(flag==0)
+                        printf("ROTOLO MODIFICATO CON SUCCESSO.\n");
+                    else
+                        printf("ROTOLO NON TROVATO.\n");
                     break;
                 case 3: // ELIMINA ROTOLO
                     printf("INSERISCI L'ID DEL ROTOLO DA ELIMINARE: ");
@@ -272,7 +276,11 @@ int main(){
                 case 3:
                     printf("INSERISCI L'ID DEL PROGETTO DA ELIMINARE: ");
                     scanf("%s", id);
-                    eliminaProgetto(progetti, &nProgetti, id);
+                    flag=eliminaProgetto(progetti, &nProgetti, id);
+                    if (flag == 1)
+                        printf("PROGETTO ELIMINATO CON SUCCESSO.\n");
+                    else
+                        printf("PROGETTO NON TROVATO.\n");
                     break;
                 case 4:
                     visualizzaProgetto(progetti, nProgetti);
@@ -324,12 +332,20 @@ int main(){
                 case 2:
                     printf("INSERIRE NOME DEL FORNITORE DA MODIFICARE: ");
                     scanf("%s", nome);
-                    modificaFornitore(fornitori, nFornitori, nome);
+                    flag=modificaFornitore(fornitori, nFornitori, nome);
+                    if(flag==0)
+                        printf("FORNITORE MODIFICATO CON SUCCESSO.\n");
+                    else
+                        printf("FORNITORE NON TROVATO.\n");
                     break;
                 case 3:
                     printf("INSERIRE NOME DEL FORNITORE DA ELIMINARE: ");
                     scanf("%s", nome);
-                    eliminaFornitore(fornitori, &nFornitori, nome);
+                    flag=eliminaFornitore(fornitori, &nFornitori, nome);
+                    if (flag == 1)
+                        printf("FORNITORE ELIMINATO CON SUCCESSO.\n");
+                    else
+                        printf("FORNITORE NON TROVATO.\n");
                     break;
                 case 4:
                     visualizzaFornitore(fornitori, nFornitori);
@@ -463,7 +479,7 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli){
 }
 
 int modificaRotolo(t_Rotolo rotoli[], int nRotoli, char *id){
-    int i;
+    int i, flag= -1;
     while (getchar() != '\n');
     for (i = 0; i < nRotoli; i++){
         if (strcmp(rotoli[i].id, id) == 0){
@@ -488,9 +504,10 @@ int modificaRotolo(t_Rotolo rotoli[], int nRotoli, char *id){
 
             printf("COSTO AL METRO: ");
             scanf("%f", &rotoli[i].costo_metro);
+            flag=0;
         }
     }
-    return 0;
+    return flag;
 }
 
 int eliminaRotolo(t_Rotolo rotoli[], int *nRotoli, char *id){
@@ -895,14 +912,15 @@ int modificaFornitore(t_Fornitore fornitori[], int nFornitori, char *nome){
             fornitori[i].indirizzo[strcspn(fornitori[i].indirizzo, "\n")] = 0;
 
             printf("TELEFONO: ");
-            scanf("%49s", fornitori[i].telefono);
+            fgets(fornitori[i].telefono, 50, stdin);
+            fornitori[i].telefono[strcspn(fornitori[i].telefono, "\n")] = 0;
 
             printf("EMAIL: ");
-            scanf("%49s", fornitori[i].email);
+            fgets(fornitori[i].email, 50, stdin);
+            fornitori[i].email[strcspn(fornitori[i].email, "\n")] = 0;
             return 0;
         }
     }
-    printf("FORNITORE NON TROVATO.\n");
     return -1;
 }
 
@@ -1100,7 +1118,6 @@ int modificaProgetto(t_Progetto progetti[], int nProgetti, char *id){
             return 0;
         }
     }
-    printf("PROGETTO NON TROVATO.\n");
     return -1;
 }
 
@@ -1148,8 +1165,11 @@ int cercaProgetto(t_Progetto progetti[], int nProgetti, char *id){
         }
     }
 
-    if (trovati == 0) printf("NESSUN PROGETTO TROVATO CON ID %s.\n", id);
-    else printf("PROGETTO TROVATO: %d\n", trovati);
+    if (trovati == 0){
+        printf("NESSUN PROGETTO TROVATO CON ID %s.\n", id);
+    }else{
+        printf("PROGETTO TROVATO: %d\n", trovati);
+    } 
     return trovati;
 }
 
