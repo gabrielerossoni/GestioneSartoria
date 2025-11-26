@@ -364,7 +364,8 @@ int main(){
             } while (scelta_sub != 6);
             break;
         case 7: // SALVA E TERMINA PROGRAMMA
-            if (SalvaTuttoSuFile(rotoli, nRotoli, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli)){
+            flag=SalvaTuttoSuFile(rotoli, nRotoli, progetti, nProgetti, fornitori, nFornitori, prelievi, nPrelievi, ritagli, nRitagli);
+            if (flag == 0){
                 printf("SALVATAGGIO COMPLETATO. USCITA PROGRAMMA.\n");
                 quit = 1;
             }else{
