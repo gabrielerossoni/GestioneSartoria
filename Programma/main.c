@@ -430,7 +430,7 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli){
     for (i = 0; i < nuovi; i++){
         idx = *nRotoli + i;
         printf("\n--- Rotolo %d di %d ---\n", i + 1, nuovi);
-        // "RIT" → parte fissa del codice %04d → numero intero (d), lungo 4 cifre, con zeri davanti se necessario
+        // "R" parte fissa del codice %04d → numero intero (d), lungo 4 cifre, con zeri davanti se necessario
         sprintf(rotoli[idx].id, "R%04d", *nRotoli + i + 1); // Genera ID automatico
         printf("ID: %s (generato automaticamente)\n", rotoli[idx].id);
 
@@ -623,7 +623,7 @@ int menuPrelievi(){
 }
 
 int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int nRotoli, t_Ritaglio ritagli[], int *nRitagli){
-    int i, j, k, nuovi, idx, rotoloTrovato;
+    int i, j, k, nuovi, idx, rotoloTrovato, ok;
     float metraggioCm;
     printf("NUMERO PRELIEVI DA AGGIUNGERE: ");
     if (scanf("%d", &nuovi) != 1 || nuovi < 1){
@@ -689,13 +689,16 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
             // DISPONIBILE: > 50 cm
             strcpy(rotoli[rotoloTrovato].stato, "DISPONIBILE");
         }
-        printf("DATA (GG MM AAAA): ");
-        scanf("%d %d %d", &prelievi[idx].data.giorno, &prelievi[idx].data.mese, &prelievi[idx].data.anno);
-        if (!controlloData(prelievi[idx].data)){
+        
+        while (1){  // ciclo infinito che continua fino a data valida
+            printf("DATA (GG MM AAAA): ");
+            ok = scanf("%d %d %d", &prelievi[idx].data.giorno, &prelievi[idx].data.mese, &prelievi[idx].data.anno);
+                    while (getchar() != '\n'); // svuota sempre
+
+            if (ok == 3 && controlloData(prelievi[idx].data))
+                break;
+
             printf("DATA NON VALIDA. Riprovare.\n");
-            rotoli[rotoloTrovato].lunghezza_attuale += metraggioCm; // Ripristina
-            i--;
-            continue;
         }
         printf("OPERATORE: ");
         scanf("%49s", prelievi[idx].operatore);
@@ -927,15 +930,15 @@ int modificaFornitore(t_Fornitore fornitori[], int nFornitori, char *nome){
     for (i = 0; i < nFornitori; i++){
         if (strcmp(fornitori[i].nome, nome) == 0){
             printf("MODIFICA I DATI DEL FORNITORE %s:\n", nome);
-            getchar();
+            getchar();  // svuota il buffer
 
             printf("PARTITA IVA: ");
             scanf("%49s", fornitori[i].partita_iva);
-            getchar();
+            getchar();  
 
             printf("INDIRIZZO: ");
             fgets(fornitori[i].indirizzo, MAX_CARATTERI, stdin);
-            fornitori[i].indirizzo[strcspn(fornitori[i].indirizzo, "\n")] = 0;
+            fornitori[i].indirizzo[strcspn(fornitori[i].indirizzo, "\n")] = 0;  
 
             printf("TELEFONO: ");
             fgets(fornitori[i].telefono, 50, stdin);
@@ -1050,13 +1053,15 @@ int creaRitaglioAutomatico(t_Ritaglio ritagli[], int *nRitagli, t_Rotolo *rotolo
         return -1;
     }
     sprintf(ritagli[*nRitagli].idRitaglio, "RIT%04d", *nRitagli + 1);   // Genera ID ritaglio
-    strcpy(ritagli[*nRitagli].id_rotolo, rotolo->id);
+    strcpy(ritagli[*nRitagli].id_rotolo, rotolo->id);                     // Copia ID rotolo
     ritagli[*nRitagli].lunghezza = rotolo->lunghezza_attuale / 100.0; // Converti cm in m
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    ritagli[*nRitagli].data.giorno = tm.tm_mday;
-    ritagli[*nRitagli].data.mese = tm.tm_mon + 1;
-    ritagli[*nRitagli].data.anno = tm.tm_year + 1900;
+    time_t t = time(NULL);  // Ottieni tempo corrente, time_t è tipo di dato usato per rappresentare il tempo in secondi dal 1° gennaio 1970
+    // time(NULL) restituisce il tempo corrente in secondi, cioè che ore sono adesso, ma come numero.
+    struct tm tm = *localtime(&t);  // Converti in struttura tm, localtime converte il time_t in una struttura tm che contiene informazioni più dettagliate come anno, mese, giorno, ora, minuto, secondo.
+    // localtime restituisce un puntatore a una struttura tm che rappresenta il tempo locale
+    ritagli[*nRitagli].data.giorno = tm.tm_mday;    // Giorno
+    ritagli[*nRitagli].data.mese = tm.tm_mon + 1; // Mese (0-11 + 1)
+    ritagli[*nRitagli].data.anno = tm.tm_year + 1900; // Anno (dal 1900)
 
     (*nRitagli)++;
     printf("Ritaglio %s creato automaticamente (%.2f m).\n", ritagli[*nRitagli - 1].idRitaglio, ritagli[*nRitagli - 1].lunghezza);
@@ -1078,7 +1083,7 @@ int menuProgetti(){
 }
 
 int inserisciProgetto(t_Progetto progetti[], int *nProgetti){
-    int i, nuovi, idx;
+    int i, nuovi, idx, ok;
     printf("NUMERO PROGETTI DA AGGIUNGERE: ");
     if (scanf("%d", &nuovi) != 1 || nuovi < 1){
         printf("INPUT NON VALIDO.\n");
@@ -1105,13 +1110,16 @@ int inserisciProgetto(t_Progetto progetti[], int *nProgetti){
 
         printf("TESSUTO USATO: ");
         scanf("%49s", progetti[idx].tessuto_usato);
+        
+        while (1){  // ciclo infinito che continua fino a data valida
+            printf("DATA (GG MM AAAA): ");
+            ok = scanf("%d %d %d", &progetti[idx].data.giorno, &progetti[idx].data.mese, &progetti[idx].data.anno);
+                    while (getchar() != '\n'); // svuota sempre
 
-        printf("DATA (GG MM AAAA): ");
-        scanf("%d %d %d", &progetti[idx].data.giorno, &progetti[idx].data.mese, &progetti[idx].data.anno);
-        if (!controlloData(progetti[idx].data)){
+            if (ok == 3 && controlloData(progetti[idx].data))
+                break;
+
             printf("DATA NON VALIDA. Riprovare.\n");
-            i--;
-            continue;
         }
     }
     *nProgetti += nuovi;
