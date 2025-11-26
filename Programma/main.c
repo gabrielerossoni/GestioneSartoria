@@ -2,20 +2,22 @@
 // LINK PROGETTO GITHUB: https://github.com/gabrielerossoni/GestioneSartoria
 
 // ---LIBRERIE---
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
+#include <stdio.h>      // Libreria standard per input/output (printf, scanf, fopen, fclose, ecc.)
+#include <stdlib.h>     // Libreria standard per funzioni di utilità (malloc, free, exit, ecc.)
+#include <string.h>     // Libreria per manipolazione stringhe (strcmp, strcpy, strlen, strcspn, ecc.)
+#include <ctype.h>      // Libreria per funzioni di classificazione caratteri (isdigit, isalpha, toupper, ecc.)
+#include <time.h>       // Libreria per gestione data e ora (time, localtime, ecc)
+
 
 // ---COSTANTI---
-#define MAX_CARATTERI 50
-#define MAX_ROTOLI 500
-#define MAX_PROGETTI 500
-#define MAX_FORNITORI 200
-#define MAX_PRELIEVI 1000
-#define MAX_RITAGLI 1000
-#define MAX_CHAR_NOTEAGGIUNTIVE 100
+#define MAX_CARATTERI 50                // Lunghezza massima per stringhe generiche (ID, nomi, colori, ecc.)
+#define MAX_ROTOLI 500                  // Numero massimo di rotoli gestibili nel sistema
+#define MAX_PROGETTI 500                // Numero massimo di progetti gestibili nel sistema
+#define MAX_FORNITORI 200               // Numero massimo di fornitori gestibili nel sistema
+#define MAX_PRELIEVI 1000               // Numero massimo di prelievi registrabili nel sistema
+#define MAX_RITAGLI 1000                // Numero massimo di ritagli gestibili nel sistema
+#define MAX_CHAR_NOTEAGGIUNTIVE 100     // Lunghezza massima per il campo note aggiuntive dei rotoli
+
 
 //---RITAGLIO---
 #define SOGLIA_RITAGLIO 0.5
@@ -148,6 +150,7 @@ int modificaRitaglio(t_Ritaglio[], int, int);
 int eliminaRitaglio(t_Ritaglio[], int *);
 int cercaRitaglio(t_Ritaglio[], int);
 void controlloMagazzino(t_Rotolo[], int);
+void visualizzaMagazzino(t_Rotolo[], int);
 
 // Funzione salvataggio unico di tutto il programma
 int SalvaTuttoSuFile(t_Rotolo[], int, t_Progetto[], int, t_Fornitore[], int, t_Prelievo[], int, t_Ritaglio[], int);
@@ -995,14 +998,13 @@ void controlloMagazzino(t_Rotolo rotoli[], int nRotoli){
         valoreTotale += (rotoli[i].lunghezza_attuale / 100.0) * rotoli[i].costo_metro;
         metraggioTotale += rotoli[i].lunghezza_attuale / 100.0; // ← FIX: converti in metri
     }
-    printf("Valore Totale: %.2f €\n", valoreTotale);
+    printf("Valore Totale: %.2f Euro\n", valoreTotale);
     printf("Metraggio Totale: %.2f m\n", metraggioTotale); // ← Aggiungi unità "m"
     printf("Numero di Rotoli: %d\n", numeroRotoli);
 }
 
 // Funzione per visualizzare il magazzino
-void visualizzaMagazzino(t_Rotolo rotoli[], int nRotoli)
-{
+void visualizzaMagazzino(t_Rotolo rotoli[], int nRotoli){
     int i;
     printf("ELENCO ROTOLO:\n");
     for (i = 0; i < nRotoli; i++){
@@ -1011,8 +1013,7 @@ void visualizzaMagazzino(t_Rotolo rotoli[], int nRotoli)
     }
 }
 
-int controlloData(t_Data data)
-{
+int controlloData(t_Data data){
     int bisestile;
     if (data.anno < ANNO_MIN || data.anno > ANNO_MAX) return 0;
     if (data.mese < 1 || data.mese > 12) return 0;
