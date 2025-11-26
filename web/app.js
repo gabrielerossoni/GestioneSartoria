@@ -1,18 +1,18 @@
 // app.js - Frontend JavaScript completo per GestioneSartoria
-// Versione: 3.0 - Con File System Access API per scrittura diretta
+// Versione: 3.1 - CORRETTO - Conversione cm/m gestita correttamente
 
 // ===== CONFIGURAZIONE =====
-const DATA_FILE = "dati.json"; // File JSON locale generato dal C
+const DATA_FILE = "dati.json";
 
 // ===== VARIABILI GLOBALI =====
 let datiCache = null;
-let fileHandle = null; // Handle per il file dati.json
+let fileHandle = null;
 
 // ===== INIZIALIZZAZIONE PAGINA =====
 window.onload = function () {
   console.log("✅ Pagina caricata");
-  caricaDati(); // Carica tutti i dati all'avvio
-  mostraSezione("rotoli"); // Mostra la sezione rotoli di default
+  caricaDati();
+  mostraSezione("rotoli");
 };
 
 /* ========================================
@@ -27,8 +27,24 @@ async function caricaDati() {
       throw new Error(`Errore HTTP: ${response.status}`);
     }
 
-    datiCache = await response.json();
-    console.log("✅ Dati caricati:", datiCache);
+    const datiGrezzi = await response.json();
+    
+    // ✅ FIX: Converti cm → metri per l'interfaccia web
+    datiCache = {
+      rotoli: (datiGrezzi.rotoli || []).map(r => ({
+        ...r,
+        lunghezza_attuale: (r.lunghezza_attuale || 0) / 100 // cm → m
+      })),
+      prelievi: datiGrezzi.prelievi || [],
+      ritagli: (datiGrezzi.ritagli || []).map(rit => ({
+        ...rit,
+        lunghezza: (rit.lunghezza || 0) / 100 // cm → m  
+      })),
+      fornitori: datiGrezzi.fornitori || [],
+      progetti: datiGrezzi.progetti || []
+    };
+    
+    console.log("✅ Dati caricati e convertiti:", datiCache);
     return datiCache;
   } catch (error) {
     console.error("❌ Errore caricamento dati:", error);
@@ -48,13 +64,11 @@ async function caricaDati() {
 ======================================== */
 async function salvaDati(nuoviDati) {
   try {
-    // Verifica se il browser supporta File System Access API
     if (!window.showSaveFilePicker) {
       console.warn("⚠️ Browser non supporta File System Access API");
-      return salvaDatiDownload(nuoviDati); // Fallback al download
+      return salvaDatiDownload(nuoviDati);
     }
 
-    // Se non abbiamo ancora un handle, chiedi all'utente di selezionare il file
     if (!fileHandle) {
       try {
         fileHandle = await window.showSaveFilePicker({
@@ -75,29 +89,31 @@ async function salvaDati(nuoviDati) {
       }
     }
 
-    // Prepara i dati per il C (converti lunghezza_attuale in centimetri)
-    const datiPerC = JSON.parse(JSON.stringify(nuoviDati));
-    datiPerC.rotoli.forEach((r) => {
-      r.lunghezza_attuale = r.lunghezza_attuale * 100; // Metri → CM
-    });
+    // ✅ FIX: Crea nuova copia convertendo metri → cm
+    const datiPerC = {
+      rotoli: nuoviDati.rotoli.map(r => ({
+        ...r,
+        lunghezza_attuale: (r.lunghezza_attuale || 0) * 100 // m → cm
+      })),
+      prelievi: nuoviDati.prelievi,
+      ritagli: nuoviDati.ritagli.map(rit => ({
+        ...rit,
+        lunghezza: (rit.lunghezza || 0) * 100 // m → cm
+      })),
+      fornitori: nuoviDati.fornitori,
+      progetti: nuoviDati.progetti
+    };
 
-    // Ottieni permesso di scrittura
     const writable = await fileHandle.createWritable();
-
-    // Scrivi il JSON formattato
     await writable.write(JSON.stringify(datiPerC, null, 2));
     await writable.close();
 
     console.log("✅ Dati salvati direttamente su file!");
-
-    // Aggiorna cache locale (mantieni in metri per il web)
     datiCache = nuoviDati;
-
     return true;
   } catch (error) {
     console.error("❌ Errore salvataggio diretto:", error);
     
-    // Fallback al download se qualcosa va storto
     if (confirm("⚠️ Errore nel salvataggio diretto. Vuoi scaricare il file manualmente?")) {
       return salvaDatiDownload(nuoviDati);
     }
@@ -110,11 +126,20 @@ async function salvaDati(nuoviDati) {
 ======================================== */
 function salvaDatiDownload(nuoviDati) {
   try {
-    // Prepara i dati per il C (converti lunghezza_attuale in centimetri)
-    const datiPerC = JSON.parse(JSON.stringify(nuoviDati));
-    datiPerC.rotoli.forEach((r) => {
-      r.lunghezza_attuale = r.lunghezza_attuale * 100; // Metri → CM
-    });
+    // ✅ FIX: Crea nuova copia convertendo metri → cm
+    const datiPerC = {
+      rotoli: nuoviDati.rotoli.map(r => ({
+        ...r,
+        lunghezza_attuale: (r.lunghezza_attuale || 0) * 100 // m → cm
+      })),
+      prelievi: nuoviDati.prelievi,
+      ritagli: nuoviDati.ritagli.map(rit => ({
+        ...rit,
+        lunghezza: (rit.lunghezza || 0) * 100 // m → cm
+      })),
+      fornitori: nuoviDati.fornitori,
+      progetti: nuoviDati.progetti
+    };
 
     const jsonString = JSON.stringify(datiPerC, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
@@ -140,7 +165,7 @@ function salvaDatiDownload(nuoviDati) {
 }
 
 /* ========================================
-   RESETTA HANDLE FILE (per cambiare file)
+   RESETTA HANDLE FILE
 ======================================== */
 function resetFileHandle() {
   fileHandle = null;
@@ -324,7 +349,6 @@ async function aggiungiRotolo() {
   if (await salvaDati(dati)) {
     alert(`✅ Rotolo ${nuovoId} aggiunto e salvato con successo!`);
     
-    // Pulisci form
     document.getElementById("tipo").value = "";
     document.getElementById("colore").value = "";
     document.getElementById("fantasia").value = "";
@@ -392,7 +416,7 @@ async function caricaPrelievi() {
 }
 
 /* ========================================
-   REGISTRA PRELIEVO
+   REGISTRA PRELIEVO (VERSIONE CORRETTA)
 ======================================== */
 async function registraPrelievo() {
   const id_rotolo = document.getElementById("prelievo-rotolo").value;
@@ -434,21 +458,41 @@ async function registraPrelievo() {
 
   rotolo.lunghezza_attuale -= metraggio;
 
-  if (rotolo.lunghezza_attuale <= 0.5) {
-    rotolo.stato = "RITAGLIO";
+  // ✅ FIX: Gestione ritagli senza duplicati
+  if (rotolo.lunghezza_attuale <= 0.5 && rotolo.lunghezza_attuale > 0) {
+    // Cambia stato solo se non è già RITAGLIO o ESAURITO
+    if (rotolo.stato !== "RITAGLIO" && rotolo.stato !== "ESAURITO") {
+      rotolo.stato = "RITAGLIO";
 
-    const nuovoIdRitaglio = `RIT${String(dati.ritagli.length + 1).padStart(4, "0")}`;
-    const nuovoRitaglio = {
-      idRitaglio: nuovoIdRitaglio,
-      id_rotolo: id_rotolo,
-      lunghezza: rotolo.lunghezza_attuale,
-      data: {
-        giorno: oggi.getDate(),
-        mese: oggi.getMonth() + 1,
-        anno: oggi.getFullYear(),
-      },
-    };
-    dati.ritagli.push(nuovoRitaglio);
+      // Controlla se esiste già un ritaglio per questo rotolo
+      const ritaglioEsistente = dati.ritagli.find(rit => rit.id_rotolo === id_rotolo);
+
+      if (!ritaglioEsistente) {
+        // Crea nuovo ritaglio solo se non esiste
+        const nuovoIdRitaglio = `RIT${String(dati.ritagli.length + 1).padStart(4, "0")}`;
+        const nuovoRitaglio = {
+          idRitaglio: nuovoIdRitaglio,
+          id_rotolo: id_rotolo,
+          lunghezza: rotolo.lunghezza_attuale,
+          data: {
+            giorno: oggi.getDate(),
+            mese: oggi.getMonth() + 1,
+            anno: oggi.getFullYear(),
+          },
+        };
+        dati.ritagli.push(nuovoRitaglio);
+        console.log(`✅ Ritaglio ${nuovoIdRitaglio} creato per rotolo ${id_rotolo}`);
+      } else {
+        // Aggiorna lunghezza del ritaglio esistente
+        ritaglioEsistente.lunghezza = rotolo.lunghezza_attuale;
+        console.log(`✅ Ritaglio ${ritaglioEsistente.idRitaglio} aggiornato: ${rotolo.lunghezza_attuale.toFixed(2)} m`);
+      }
+    }
+  }
+
+  // ✅ FIX: Imposta ESAURITO se finito completamente
+  if (rotolo.lunghezza_attuale <= 0) {
+    rotolo.stato = "ESAURITO";
   }
 
   dati.prelievi.push(nuovoPrelievo);
@@ -464,6 +508,7 @@ async function registraPrelievo() {
     caricaRotoli();
   }
 }
+
 
 /* ========================================
    GESTIONE RITAGLI
@@ -639,28 +684,51 @@ async function caricaInventario() {
     const rotoli = dati.rotoli || [];
 
     const numeroRotoli = rotoli.length;
-    const metraggioTotale = rotoli.reduce((sum, r) => sum + parseFloat(r.lunghezza_totale || 0), 0);
+    
+    // ✅ FIX: Usa lunghezza_attuale (già in metri dopo conversione)
+    const metraggioTotale = rotoli.reduce((sum, r) => {
+      return sum + parseFloat(r.lunghezza_attuale || 0);
+    }, 0);
+    
+    // ✅ FIX: Calcola valore con lunghezza_attuale (già in metri)
     const valoreTotale = rotoli.reduce((sum, r) => {
       const lunghezza = parseFloat(r.lunghezza_attuale || 0);
       const costo = parseFloat(r.costo_metro || 0);
-      return sum + lunghezza * costo;
+      return sum + (lunghezza * costo);
     }, 0);
+    
     const rotoliDisponibili = rotoli.filter((r) => r.stato === "DISPONIBILE").length;
 
-    if (document.getElementById("totale-rotoli"))
-      document.getElementById("totale-rotoli").textContent = numeroRotoli;
-    if (document.getElementById("metraggio-totale"))
-      document.getElementById("metraggio-totale").textContent = metraggioTotale.toFixed(2) + " m";
-    if (document.getElementById("valore-totale"))
-      document.getElementById("valore-totale").textContent = "€" + valoreTotale.toFixed(2);
-    if (document.getElementById("rotoli-disponibili"))
-      document.getElementById("rotoli-disponibili").textContent = rotoliDisponibili;
+    // Aggiorna DOM
+    const elemTotaleRotoli = document.getElementById("totale-rotoli");
+    const elemMetraggio = document.getElementById("metraggio-totale");
+    const elemValore = document.getElementById("valore-totale");
+    const elemDisponibili = document.getElementById("rotoli-disponibili");
 
-    console.log("✅ Inventario aggiornato");
+    if (elemTotaleRotoli) {
+      elemTotaleRotoli.textContent = numeroRotoli;
+    }
+    if (elemMetraggio) {
+      elemMetraggio.textContent = metraggioTotale.toFixed(2) + " m";
+    }
+    if (elemValore) {
+      elemValore.textContent = "€" + valoreTotale.toFixed(2);
+    }
+    if (elemDisponibili) {
+      elemDisponibili.textContent = rotoliDisponibili;
+    }
+
+    console.log("✅ Inventario aggiornato:", {
+      numeroRotoli,
+      metraggioTotale: metraggioTotale.toFixed(2),
+      valoreTotale: valoreTotale.toFixed(2),
+      rotoliDisponibili
+    });
   } catch (error) {
     console.error("❌ Errore caricamento inventario:", error);
   }
 }
+
 
 /* ========================================
    FUNZIONI EXPORT

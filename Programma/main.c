@@ -174,7 +174,8 @@ int main(){
 
     // PROVA PRIMA IL JSON (più recente)
     if (ImportaDatiDalWeb(rotoli, &nRotoli, prelievi, &nPrelievi, ritagli, &nRitagli, fornitori, &nFornitori, progetti, &nProgetti) == 0){
-        printf("Dati caricati d JSON\n");
+        printf("Dati caricati correttamente da JSON\n");
+        printf("DATI CARICATI: %d rotoli, %d progetti, %d fornitori, %d prelievi, %d ritagli\n", nRotoli, nProgetti, nFornitori, nPrelievi, nRitagli);
         caricato2 = 1;
     }
     // Se JSON non esiste, carica il binario
