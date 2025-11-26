@@ -1260,7 +1260,8 @@ int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int 
 void apriInterfacciaWeb(){
 #ifdef _WIN32
     // Windows
-    system("start /B python -m http.server 5500 --directory ../web");
+    system("start /B python -m http.server 5500 --directory ../web > NUL 2>&1");
+
     system("start http://localhost:5500");
 #endif
     printf("Sito web avviato su http://localhost:5500\n");
