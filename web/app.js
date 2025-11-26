@@ -1,5 +1,5 @@
 // app.js - Frontend JavaScript completo per GestioneSartoria
-// Versione: 3.1 - CORRETTO - Conversione cm/m gestita correttamente
+// Versione: 3.1
 
 // ===== CONFIGURAZIONE =====
 const DATA_FILE = "dati.json";

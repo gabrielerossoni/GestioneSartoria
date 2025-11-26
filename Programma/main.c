@@ -1258,14 +1258,13 @@ int SalvaTuttoSuFile(t_Rotolo rotoli[], int nRotoli, t_Progetto progetti[], int 
 
 // Funzione per aprire l'interfaccia web
 void apriInterfacciaWeb(){
-#ifdef _WIN32
+#ifdef _WIN32 
     // Windows
-    system("start /B python -m http.server 5500 --directory ../web > NUL 2>&1");
-
-    system("start http://localhost:5500");
+    system("start /B python -m http.server 5500 --directory ../web > NUL 2>&1");    // Avvia il server in background
+    system("start http://localhost:5500");                            // Apri il browser
 #endif
-    printf("Sito web avviato su http://localhost:5500\n");
-    getchar();
+    printf("Sito web avviato su http://localhost:5500\n");  
+    getchar(); 
 }
 
 int CaricaTuttoDaFile(t_Rotolo rotoli[], int *nRotoli, t_Progetto progetti[], int *nProgetti, t_Fornitore fornitori[], int *nFornitori, t_Prelievo prelievi[], int *nPrelievi, t_Ritaglio ritagli[], int *nRitagli){
@@ -1315,8 +1314,8 @@ int EsportaDatiPerWeb(t_Rotolo rotoli[], int nRotoli, t_Prelievo prelievi[], int
     /* ========== ROTOLI ========== */
     fprintf(file, "  \"rotoli\": [\n");
     for (i = 0; i < nRotoli; i++){
-        fprintf(file, "    {\n");
-        fprintf(file, "      \"id\": \"%s\",\n", rotoli[i].id);
+        fprintf(file, "    {\n");   // Inizio oggetto rotolo
+        fprintf(file, "      \"id\": \"%s\",\n", rotoli[i].id); // ID fprintf serve per scrivere su file, \n per andare a capo
         fprintf(file, "      \"tipo\": \"%s\",\n", rotoli[i].tipo);
         fprintf(file, "      \"colore\": \"%s\",\n", rotoli[i].colore);
         fprintf(file, "      \"fantasia\": \"%s\",\n", rotoli[i].fantasia);
@@ -1330,23 +1329,23 @@ int EsportaDatiPerWeb(t_Rotolo rotoli[], int nRotoli, t_Prelievo prelievi[], int
 
         /* Rimuovi newline dalle note */
         k = 0;
-        for (j = 0; rotoli[i].noteAggiuntive[j] != '\0' && k < 99; j++){
-            if (rotoli[i].noteAggiuntive[j] != '\n' && rotoli[i].noteAggiuntive[j] != '\r'){
-                note_pulite[k++] = rotoli[i].noteAggiuntive[j];
+        for (j = 0; rotoli[i].noteAggiuntive[j] != '\0' && k < 99; j++){    // Limita a 99 caratteri per sicurezza
+            if (rotoli[i].noteAggiuntive[j] != '\n' && rotoli[i].noteAggiuntive[j] != '\r'){    
+                note_pulite[k++] = rotoli[i].noteAggiuntive[j];     // Copia solo caratteri validi/
             }
         }
-        note_pulite[k] = '\0';
-        fprintf(file, "      \"noteAggiuntive\": \"%s\"\n", note_pulite);
-        fprintf(file, "    }%s\n", (i < nRotoli - 1) ? "," : "");
+        note_pulite[k] = '\0';  
+        fprintf(file, "      \"noteAggiuntive\": \"%s\"\n", note_pulite);; 
+        fprintf(file, "    }%s\n", (i < nRotoli - 1) ? "," : "");  
     }
-    fprintf(file, "  ],\n");
+    fprintf(file, "  ],\n");  
 
     /* ========== PRELIEVI ========== */
-    fprintf(file, "  \"prelievi\": [\n");
-    for (i = 0; i < nPrelievi; i++){
-        fprintf(file, "    {\n");
-        fprintf(file, "      \"id\": \"%s\",\n", prelievi[i].id);
-        fprintf(file, "      \"id_rotolo\": \"%s\",\n", prelievi[i].id_rotolo);
+    fprintf(file, "  \"prelievi\": [\n");  
+    for (i = 0; i < nPrelievi; i++){  
+        fprintf(file, "    {\n");  
+        fprintf(file, "      \"id\": \"%s\",\n", prelievi[i].id); 
+        fprintf(file, "      \"id_rotolo\": \"%s\",\n", prelievi[i].id_rotolo); 
         fprintf(file, "      \"metraggio_prelevato\": %.2f,\n", prelievi[i].metraggio_prelevato);
         fprintf(file, "      \"operatore\": \"%s\",\n", prelievi[i].operatore);
         fprintf(file, "      \"data\": {\"giorno\": %d, \"mese\": %d, \"anno\": %d}\n", prelievi[i].data.giorno, prelievi[i].data.mese, prelievi[i].data.anno);
@@ -1412,24 +1411,24 @@ int EsportaDatiPerWeb(t_Rotolo rotoli[], int nRotoli, t_Prelievo prelievi[], int
 }
 
 int ImportaDatiDalWeb(t_Rotolo rotoli[], int *nRotoli, t_Prelievo prelievi[], int *nPrelievi, t_Ritaglio ritagli[], int *nRitagli, t_Fornitore fornitori[], int *nFornitori, t_Progetto progetti[], int *nProgetti){
-    FILE *f = fopen("../web/dati.json", "r");
-    if (!f) f = fopen("web/dati.json", "r");
+    FILE *f = fopen("../web/dati.json", "r");   // Prova ad aprire il file nella cartella web
+    if (!f) f = fopen("web/dati.json", "r");    // Prova ad aprire il file nella cartella web (alternativa)
     if (!f) return -1;
 
     char buf[50000], *p, *end;
-    fread(buf, 1, 50000, f);
+    fread(buf, 1, 50000, f);    // Leggi tutto il file in un buffer
     fclose(f);
 
     *nRotoli = *nPrelievi = *nRitagli = *nFornitori = *nProgetti = 0;
 
     // ROTOLI
-    if ((p = strstr(buf, "\"rotoli\":"))){
-        while ((p = strchr(p, '{')) && *nRotoli < MAX_ROTOLI){
+    if ((p = strstr(buf, "\"rotoli\":"))){  // Trova inizio sezione rotoli, strstr restituisce un puntatore alla prima occorrenza della stringa
+        while ((p = strchr(p, '{')) && *nRotoli < MAX_ROTOLI){  // Ciclo finché trovo un '{' e non supero il massimo, strchr restituisce un puntatore alla prima occorrenza del carattere
             end = strchr(p, '}');
             if (!end) break;
 
-            if (strstr(p, "\"id\":") < end) sscanf(strstr(p, "\"id\":"), "\"id\": \"%[^\"]\"", rotoli[*nRotoli].id);
-            if (strstr(p, "\"tipo\":") < end) sscanf(strstr(p, "\"tipo\":"), "\"tipo\": \"%[^\"]\"", rotoli[*nRotoli].tipo);
+            if (strstr(p, "\"id\":") < end) sscanf(strstr(p, "\"id\":"), "\"id\": \"%[^\"]\"", rotoli[*nRotoli].id);    // sscanf legge dal buffer formattato, strstr trova la sottostringa
+            if (strstr(p, "\"tipo\":") < end) sscanf(strstr(p, "\"tipo\":"), "\"tipo\": \"%[^\"]\"", rotoli[*nRotoli].tipo); 
             if (strstr(p, "\"colore\":") < end) sscanf(strstr(p, "\"colore\":"), "\"colore\": \"%[^\"]\"", rotoli[*nRotoli].colore);
             if (strstr(p, "\"fantasia\":") < end) sscanf(strstr(p, "\"fantasia\":"), "\"fantasia\": \"%[^\"]\"", rotoli[*nRotoli].fantasia);
             if (strstr(p, "\"lunghezza_totale\":") < end) sscanf(strstr(p, "\"lunghezza_totale\":"), "\"lunghezza_totale\": %f", &rotoli[*nRotoli].lunghezza_totale);
