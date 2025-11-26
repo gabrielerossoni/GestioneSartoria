@@ -21,6 +21,7 @@
 
 //---RITAGLIO---
 #define SOGLIA_RITAGLIO 0.5
+#define SOGLIA_SCARTO 0.3
 
 // ---DATA---
 #define ANNO_MIN 1900
@@ -702,12 +703,29 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
 
         // Aggiorna il lunghezza_attuale del rotolo
         rotoli[rotoloTrovato].lunghezza_attuale -= metraggioCm;
+        rotoli[rotoloTrovato].lunghezza_attuale -= metraggioCm;
+
+        // NUOVA LOGICA: elimina automaticamente se < 30cm
         if (rotoli[rotoloTrovato].lunghezza_attuale <= 0){
             strcpy(rotoli[rotoloTrovato].stato, "ESAURITO");
             printf("ROTOLO %s ESAURITO.\n", rotoli[rotoloTrovato].id);
-        } else if (rotoli[rotoloTrovato].lunghezza_attuale <= (SOGLIA_RITAGLIO*100)){
+        } else if (rotoli[rotoloTrovato].lunghezza_attuale < (SOGLIA_SCARTO * 100)) {
+            // SCARTO: < 30 cm → ELIMINA DIRETTAMENTE
+            strcpy(rotoli[rotoloTrovato].stato, "SCARTO_ELIMINATO");
+            printf("⚠️  ROTOLO %s ha raggiunto %.2f cm (< 30 cm): SCARTO ELIMINATO automaticamente.\n", rotoli[rotoloTrovato].id, rotoli[rotoloTrovato].lunghezza_attuale);
+            // Elimina il rotolo dall'array
+            for (int k = rotoloTrovato; k < nRotoli - 1; k++){
+                rotoli[k] = rotoli[k + 1];
+            }
+            nRotoli--;
+            printf("✅ Rotolo rimosso dal sistema.\n");
+        } else if (rotoli[rotoloTrovato].lunghezza_attuale <= (SOGLIA_RITAGLIO * 100)) {
+            // RITAGLIO: >= 30 cm e <= 50 cm
             strcpy(rotoli[rotoloTrovato].stato, "RITAGLIO");
             creaRitaglioAutomatico(ritagli, nRitagli, &rotoli[rotoloTrovato]);
+        }else {
+            // DISPONIBILE: > 50 cm
+            strcpy(rotoli[rotoloTrovato].stato, "DISPONIBILE");
         }
         printf("DATA (GG MM AAAA): ");
         scanf("%d %d %d", &prelievi[idx].data.giorno, &prelievi[idx].data.mese, &prelievi[idx].data.anno);
