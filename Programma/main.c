@@ -987,16 +987,16 @@ int menuMagazzino(){
 
 // Funzione per controllare il magazzino
 void controlloMagazzino(t_Rotolo rotoli[], int nRotoli){
-    float valoreTotale = 0,  metraggioTotale = 0;
+    float valoreTotale = 0, metraggioTotale = 0;
     int numeroRotoli = nRotoli;
     int i;
 
     for (i = 0; i < nRotoli; i++){
         valoreTotale += (rotoli[i].lunghezza_attuale / 100.0) * rotoli[i].costo_metro;
-        metraggioTotale += rotoli[i].lunghezza_attuale;
+        metraggioTotale += rotoli[i].lunghezza_attuale / 100.0; // ← FIX: converti in metri
     }
-    printf("Valore Totale: %.2f\n", valoreTotale);
-    printf("Metraggio Totale: %.2f\n", metraggioTotale);
+    printf("Valore Totale: %.2f €\n", valoreTotale);
+    printf("Metraggio Totale: %.2f m\n", metraggioTotale); // ← Aggiungi unità "m"
     printf("Numero di Rotoli: %d\n", numeroRotoli);
 }
 
