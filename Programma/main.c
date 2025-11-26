@@ -310,7 +310,7 @@ int main(){
                     controlloMagazzino(rotoli, nRotoli);
                     break;
                 case 2: // VISUALIZZA MAGAZZINO
-                    visualizzaRotolo(rotoli, nRotoli);
+                    visualizzaMagazzino(rotoli, nRotoli);
                     break;
                 case 3:
                     break;
@@ -663,11 +663,13 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
 
         // Aggiorna il lunghezza_attuale del rotolo
         rotoli[rotoloTrovato].lunghezza_attuale -= metraggioCm;
-        if (rotoli[rotoloTrovato].lunghezza_attuale <= SOGLIA_RITAGLIO){
+        if (rotoli[rotoloTrovato].lunghezza_attuale <= 0){
+            strcpy(rotoli[rotoloTrovato].stato, "ESAURITO");
+            printf("ROTOLO %s ESAURITO.\n", rotoli[rotoloTrovato].id);
+        } else if (rotoli[rotoloTrovato].lunghezza_attuale <= (SOGLIA_RITAGLIO*100)){
             strcpy(rotoli[rotoloTrovato].stato, "RITAGLIO");
             creaRitaglioAutomatico(ritagli, nRitagli, &rotoli[rotoloTrovato]);
         }
-
         printf("DATA (GG MM AAAA): ");
         scanf("%d %d %d", &prelievi[idx].data.giorno, &prelievi[idx].data.mese, &prelievi[idx].data.anno);
         if (!controlloData(prelievi[idx].data)){
@@ -823,7 +825,7 @@ int cercaRitaglio(t_Ritaglio ritagli[], int nRitagli){
         }
         break;
     case 3: // Cerca per LUNGHEZZA MINIMA
-        printf("INSERISCI LUNGHEZZA MINIMA (m): ");
+        printf("INSERISCI LUNGHEZZA MINIMA (cm): ");
         scanf("%f", &lunghezzaMin);
         for (i = 0; i < nRitagli; i++){
             if (ritagli[i].lunghezza > lunghezzaMin){
@@ -879,17 +881,20 @@ int inserisciFornitore(t_Fornitore fornitori[], int *nFornitori){
         fornitori[idx].nome[strcspn(fornitori[idx].nome, "\n")] = 0; // RIMUOVI \n
 
         printf("PARTITA IVA: ");
-        scanf("%49s", fornitori[idx].partita_iva);
+        fgets(fornitori[idx].partita_iva, MAX_CARATTERI, stdin);
+        fornitori[idx].partita_iva[strcspn(fornitori[idx].partita_iva, "\n")] = 0; // RIMUOVI \n
 
         printf("INDIRIZZO: ");
         fgets(fornitori[idx].indirizzo, MAX_CARATTERI, stdin);
         fornitori[idx].indirizzo[strcspn(fornitori[idx].indirizzo, "\n")] = 0; // RIMUOVI \n
 
         printf("TELEFONO: ");
-        scanf("%49s", fornitori[idx].telefono);
+        fgets(fornitori[idx].telefono, MAX_CARATTERI, stdin);
+        fornitori[idx].telefono[strcspn(fornitori[idx].telefono, "\n")] = 0; // RIMUOVI \n
 
         printf("EMAIL: ");
-        scanf("%49s", fornitori[idx].email);
+        fgets(fornitori[idx].email, MAX_CARATTERI, stdin);
+        fornitori[idx].email[strcspn(fornitori[idx].email, "\n")] = 0; // RIMUOVI \n
     }
 
     *nFornitori += nuovi;
@@ -986,8 +991,8 @@ void controlloMagazzino(t_Rotolo rotoli[], int nRotoli){
     int i;
 
     for (i = 0; i < nRotoli; i++){
-        valoreTotale += rotoli[i].lunghezza_totale * rotoli[i].costo_metro;
-        metraggioTotale += rotoli[i].lunghezza_totale;
+        valoreTotale += rotoli[i].lunghezza_attuale * rotoli[i].costo_metro;
+        metraggioTotale += rotoli[i].lunghezza_attuale;
     }
     printf("Valore Totale: %.2f\n", valoreTotale);
     printf("Metraggio Totale: %.2f\n", metraggioTotale);
@@ -1028,7 +1033,7 @@ int creaRitaglioAutomatico(t_Ritaglio ritagli[], int *nRitagli, t_Rotolo *rotolo
     }
     sprintf(ritagli[*nRitagli].idRitaglio, "RIT%04d", *nRitagli + 1);
     strcpy(ritagli[*nRitagli].id_rotolo, rotolo->id);
-    ritagli[*nRitagli].lunghezza = rotolo->lunghezza_attuale;
+    ritagli[*nRitagli].lunghezza = rotolo->lunghezza_attuale / 100.0; // Converti cm in m
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     ritagli[*nRitagli].data.giorno = tm.tm_mday;
