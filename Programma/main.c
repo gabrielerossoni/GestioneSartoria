@@ -18,7 +18,6 @@
 #define MAX_RITAGLI 1000                // Numero massimo di ritagli gestibili nel sistema
 #define MAX_CHAR_NOTEAGGIUNTIVE 100     // Lunghezza massima per il campo note aggiuntive dei rotoli
 
-
 //---RITAGLIO---
 #define SOGLIA_RITAGLIO 0.5
 
@@ -778,7 +777,7 @@ void visualizzaRitagli(t_Ritaglio ritagli[], int nRitagli){
     printf("ELENCO RITAGLI:\n");
     for (i = 0; i < nRitagli; i++)
     {
-        printf("ID_RITAGLIO: %s, ID_ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
+        printf("ID RITAGLIO: %s, ID ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
                ritagli[i].idRitaglio, ritagli[i].id_rotolo, ritagli[i].lunghezza,
                ritagli[i].data.giorno, ritagli[i].data.mese, ritagli[i].data.anno);
     }
@@ -803,24 +802,24 @@ int cercaRitaglio(t_Ritaglio ritagli[], int nRitagli){
     scelta = menuCercaRitagli();
 
     switch (scelta){
-    case 1: // Cerca per CODICE RITAGLIO
+    case 1: // Cerca per ID RITAGLIO
         printf("INSERISCI l'ID DEL RITAGLIO: ");
         scanf("%s", ricerca);
         for (i = 0; i < nRitagli; i++){
             if (strcmp(ritagli[i].idRitaglio, ricerca) == 0){
-                printf("ID_RITAGLIO: %s, ID_ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
+                printf("ID RITAGLIO: %s, ID ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
                        ritagli[i].idRitaglio, ritagli[i].id_rotolo, ritagli[i].lunghezza,
                        ritagli[i].data.giorno, ritagli[i].data.mese, ritagli[i].data.anno);
                 trovati++;
             }
         }
         break;
-    case 2: // Cerca per CODICE ROTOLO
+    case 2: // Cerca per ID ROTOLO
         printf("INSERISCI L'ID DEL ROTOLO: ");
         scanf("%s", ricerca);
         for (i = 0; i < nRitagli; i++){
             if (strcmp(ritagli[i].id_rotolo, ricerca) == 0){
-                printf("IDRITAGLIO: %s, ID_ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
+                printf("ID RITAGLIO: %s, ID ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
                        ritagli[i].idRitaglio, ritagli[i].id_rotolo, ritagli[i].lunghezza,
                        ritagli[i].data.giorno, ritagli[i].data.mese, ritagli[i].data.anno);
                 trovati++;
@@ -828,12 +827,12 @@ int cercaRitaglio(t_Ritaglio ritagli[], int nRitagli){
         }
         break;
     case 3: // Cerca per LUNGHEZZA MINIMA
-        printf("INSERISCI LUNGHEZZA MINIMA (cm): ");
+        printf("INSERIRE LUNGHEZZA MINIMA (cm): ");
         scanf("%f", &lunghezzaMin);
         lunghezzaMin = lunghezzaMin / 100.0;
         for (i = 0; i < nRitagli; i++){
             if (ritagli[i].lunghezza >= lunghezzaMin){
-                printf("IDRITAGLIO: %s, ID_ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
+                printf("ID RITAGLIO: %s, ID ROTOLO: %s, LUNGHEZZA: %.2f m, DATA: %02d/%02d/%04d\n",
                        ritagli[i].idRitaglio, ritagli[i].id_rotolo, ritagli[i].lunghezza,
                        ritagli[i].data.giorno, ritagli[i].data.mese, ritagli[i].data.anno);
                 trovati++;
