@@ -436,7 +436,7 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli){
         printf("FORNITORE: ");
         fgets(rotoli[idx].fornitore, MAX_CARATTERI, stdin);
         rotoli[idx].fornitore[strcspn(rotoli[idx].fornitore, "\n")] = 0; // RIMUOVI \n
-
+        while (getchar() != '\n');
         printf("LOTTO: ");
         fgets(rotoli[idx].lotto, MAX_CARATTERI, stdin);
         rotoli[idx].lotto[strcspn(rotoli[idx].lotto, "\n")] = 0; // RIMUOVI \n
