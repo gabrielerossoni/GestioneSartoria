@@ -394,7 +394,7 @@ int menuRotoli(){
 }
 
 int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli){
-    int i, nuovi, idx;
+    int i, nuovi, idx, ok;
     printf("NUMERO ROTOLI DA AGGIUNGERE: ");
     if (scanf("%d", &nuovi) != 1 || nuovi < 1){
         printf("INPUT NON VALIDO.\n");
@@ -438,14 +438,21 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli){
         rotoli[idx].fornitore[strcspn(rotoli[idx].fornitore, "\n")] = 0; // RIMUOVI \n
 
         printf("LOTTO: ");
-        scanf("%49s", rotoli[idx].lotto);
-        while (getchar() != '\n');
-        printf("DATA (GG MM AAAA): ");
-        scanf("%d %d %d", &rotoli[idx].data.giorno, &rotoli[idx].data.mese, &rotoli[idx].data.anno);
-        if (!controlloData(rotoli[idx].data)){
+        fgets(rotoli[idx].lotto, MAX_CARATTERI, stdin);
+        rotoli[idx].lotto[strcspn(rotoli[idx].lotto, "\n")] = 0; // RIMUOVI \n
+     
+        while (1){
+            printf("DATA (GG MM AAAA): ");
+            ok = scanf("%d %d %d",
+                       &rotoli[idx].data.giorno,
+                       &rotoli[idx].data.mese,
+                       &rotoli[idx].data.anno);
+                    while (getchar() != '\n'); // svuota sempre
+
+            if (ok == 3 && controlloData(rotoli[idx].data))
+                break;
+
             printf("DATA NON VALIDA. Riprovare.\n");
-            i--;
-            continue;
         }
         strcpy(rotoli[idx].stato, "DISPONIBILE");
         strcpy(rotoli[idx].noteAggiuntive, "");
