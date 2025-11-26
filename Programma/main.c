@@ -154,15 +154,14 @@ int SalvaTuttoSuFile(t_Rotolo[], int, t_Progetto[], int, t_Fornitore[], int, t_P
 int CaricaTuttoDaFile(t_Rotolo[], int *, t_Progetto[], int *, t_Fornitore[], int *, t_Prelievo[], int *, t_Ritaglio[], int *);
 
 // ---MAIN---
-int main()
-{
+int main(){
     t_Rotolo rotoli[MAX_ROTOLI];
     t_Progetto progetti[MAX_PROGETTI];
     t_Fornitore fornitori[MAX_FORNITORI];
     t_Prelievo prelievi[MAX_PRELIEVI];
     t_Ritaglio ritagli[MAX_RITAGLI];
     int nRotoli = 0, nProgetti = 0, nFornitori = 0, nPrelievi = 0, nRitagli = 0, scelta, flag, quit = 0, scelta_sub, ris;
-    char id[MAX_CARATTERI], ricerca_partita_iva[MAX_CARATTERI];
+    char id[MAX_CARATTERI], ricerca_partita_iva[MAX_CARATTERI], nome[MAX_CARATTERI];
 
     // MENU PRINCIPALE
     // Caricamento dati da file all'avvio del programma
@@ -323,14 +322,14 @@ int main()
                     inserisciFornitore(fornitori, &nFornitori);
                     break;
                 case 2:
-                    printf("INSERISCI L'ID DEL FORNITORE DA MODIFICARE: ");
-                    scanf("%s", id);
-                    modificaFornitore(fornitori, nFornitori, id);
+                    printf("INSERIRE NOME DEL FORNITORE DA MODIFICARE: ");
+                    scanf("%s", nome);
+                    modificaFornitore(fornitori, nFornitori, nome);
                     break;
                 case 3:
-                    printf("INSERISCI L'ID DEL FORNITORE DA ELIMINARE: ");
-                    scanf("%s", id);
-                    eliminaFornitore(fornitori, &nFornitori, id);
+                    printf("INSERIRE NOME DEL FORNITORE DA ELIMINARE: ");
+                    scanf("%s", nome);
+                    eliminaFornitore(fornitori, &nFornitori, nome);
                     break;
                 case 4:
                     visualizzaFornitore(fornitori, nFornitori);
@@ -413,24 +412,31 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli){
         printf("\n--- Rotolo %d di %d ---\n", i + 1, nuovi);
         sprintf(rotoli[idx].id, "R%04d", *nRotoli + i + 1);
         printf("ID: %s (generato automaticamente)\n", rotoli[idx].id);
+
         printf("TIPO: ");
         fgets(rotoli[idx].tipo, 50, stdin);
         rotoli[idx].tipo[strcspn(rotoli[idx].tipo, "\n")] = 0;
+
         printf("COLORE: ");
         fgets(rotoli[idx].colore, 50, stdin);
         rotoli[idx].colore[strcspn(rotoli[idx].colore, "\n")] = 0;
+
         printf("FANTASIA: ");
         fgets(rotoli[idx].fantasia, MAX_CARATTERI, stdin);
         rotoli[idx].fantasia[strcspn(rotoli[idx].fantasia, "\n")] = 0; // RIMUOVI \n
+
         printf("LUNGHEZZA TOTALE (m): ");
         scanf("%f", &rotoli[idx].lunghezza_totale);
         rotoli[idx].lunghezza_attuale = rotoli[idx].lunghezza_totale * 100;
+
         printf("LUNGHEZZA ATTUALE: %.2f cm (calcolato automaticamente)\n", rotoli[idx].lunghezza_attuale);
         printf("COSTO AL METRO: ");
         scanf("%f", &rotoli[idx].costo_metro);
+
         printf("FORNITORE: ");
         fgets(rotoli[idx].fornitore, MAX_CARATTERI, stdin);
         rotoli[idx].fornitore[strcspn(rotoli[idx].fornitore, "\n")] = 0; // RIMUOVI \n
+
         printf("LOTTO: ");
         scanf("%49s", rotoli[idx].lotto);
         printf("DATA (GG MM AAAA): ");
@@ -499,6 +505,7 @@ int visualizzaRotolo(t_Rotolo rotoli[], int nRotoli){
     }
     return 0;
 }
+
 int menuCercaRotoli(){
     int scelta;
     printf("\n--- RICERCA ROTOLO ---\n");
@@ -836,18 +843,20 @@ int inserisciFornitore(t_Fornitore fornitori[], int *nFornitori){
     for (i = 0; i < nuovi; i++){
         idx = *nFornitori + i;
         printf("\n--- Fornitore %d di %d ---\n", i + 1, nuovi);
-        getchar(); // Consuma newline residuo
         printf("NOME: ");
         fgets(fornitori[idx].nome, MAX_CARATTERI, stdin);
         fornitori[idx].nome[strcspn(fornitori[idx].nome, "\n")] = 0; // RIMUOVI \n
+
         printf("PARTITA IVA: ");
         scanf("%49s", fornitori[idx].partita_iva);
-        getchar();
+
         printf("INDIRIZZO: ");
         fgets(fornitori[idx].indirizzo, MAX_CARATTERI, stdin);
         fornitori[idx].indirizzo[strcspn(fornitori[idx].indirizzo, "\n")] = 0; // RIMUOVI \n
+
         printf("TELEFONO: ");
         scanf("%49s", fornitori[idx].telefono);
+
         printf("EMAIL: ");
         scanf("%49s", fornitori[idx].email);
     }
