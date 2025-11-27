@@ -1,11 +1,9 @@
+// app.js - Frontend JavaScript completo per GestioneSartoria
 /* ===========================
   BLOCCO: CONFIGURAZIONE E VARIABILI GLOBALI
   - Costanti e variabili che mantengono lo stato dell'app
   - Non modificano la logica, solo descrivono scopo
   =========================== */
-
-// app.js - Frontend JavaScript completo per GestioneSartoria
-// Versione: 3.1
 
 // ===== CONFIGURAZIONE =====
 const DATA_FILE = "dati.json";
@@ -14,25 +12,17 @@ const DATA_FILE = "dati.json";
 let datiCache = null;
 let fileHandle = null;
 
-/* ===========================
-  BLOCCO: INIZIALIZZAZIONE PAGINA
-  - Setup iniziale al caricamento della pagina
-  =========================== */
-// ===== INIZIALIZZAZIONE PAGINA =====
+/*BLOCCO: INIZIALIZZAZIONE PAGINA
+  - Setup iniziale al caricamento della pagina*/
 window.onload = function () {
   console.log("✅ Pagina caricata");
   caricaDati();
   mostraSezione("rotoli");
 };
 
-/* ===========================
-  BLOCCO: CARICAMENTO DATI DAL FILE JSON
+/*BLOCCO: CARICAMENTO DATI DAL FILE JSON
   - Funzione asincrona per leggere e convertire i dati dal JSON
-  - Converte cm→m per l'interfaccia
-  =========================== */
-/* 
-  CARICAMENTO DATI DAL FILE JSON
- */
+  - Converte cm→m per l'interfaccia*/
 async function caricaDati() { // Async
   try {
    console.log("📡 Caricamento dati da", DATA_FILE); 
@@ -74,14 +64,9 @@ async function caricaDati() { // Async
   }
 }
 
-/* ===========================
-  BLOCCO: SALVATAGGIO DIRETTO SU FILE
+/*BLOCCO: SALVATAGGIO DIRETTO SU FILE
   - Usa File System Access API se disponibile
-  - Converte metri→cm per persistenza
-  =========================== */
-/* ========================================
-  SALVATAGGIO DIRETTO SU FILE
-======================================== */
+  - Converte metri→cm per persistenza*/
 async function salvaDati(nuoviDati) {
   try {
    if (!window.showSaveFilePicker) {
@@ -141,14 +126,9 @@ async function salvaDati(nuoviDati) {
   }
 }
 
-/* ===========================
-  BLOCCO: SALVATAGGIO TRAMITE DOWNLOAD (FALLBACK)
+/*BLOCCO: SALVATAGGIO TRAMITE DOWNLOAD (FALLBACK)
   - Genera Blob e forza il download del file JSON
-  - Converte metri→cm come nel salvataggio diretto
-  =========================== */
-/* ========================================
-  SALVATAGGIO TRAMITE DOWNLOAD (FALLBACK)
-======================================== */
+  - Converte metri→cm come nel salvataggio diretto*/
 function salvaDatiDownload(nuoviDati) {
   try {
    // ✅ FIX: Crea nuova copia convertendo metri → cm
@@ -189,25 +169,15 @@ function salvaDatiDownload(nuoviDati) {
   }
 }
 
-/* ===========================
-  BLOCCO: RESET HANDLE FILE
-  - Permette di resettare il riferimento al file scelto
-  =========================== */
-/* ========================================
-  RESETTA HANDLE FILE
-======================================== */
+/*BLOCCO: RESET HANDLE FILE
+  - Permette di resettare il riferimento al file scelto*/
 function resetFileHandle() {
   fileHandle = null;
   alert("✅ File handle resettato. Al prossimo salvataggio potrai selezionare un nuovo file.");
 }
 
-/* ===========================
-  BLOCCO: GESTIONE NAVIGAZIONE TAB
-  - Manages UI tab switching and triggers data loads per sezione
-  =========================== */
-/* ========================================
-  GESTIONE NAVIGAZIONE TAB
-======================================== */
+/*BLOCCO: GESTIONE NAVIGAZIONE TAB
+  - Manages UI tab switching and triggers data loads per sezione*/
 function mostraSezione(nomeSezione) {
   const sezioni = document.querySelectorAll(".sezione");
   sezioni.forEach((s) => s.classList.remove("active"));
@@ -244,14 +214,9 @@ function mostraSezione(nomeSezione) {
   }
 }
 
-/* ===========================
-  BLOCCO: GESTIONE ROTOLI
+/*BLOCCO: GESTIONE ROTOLI
   - Carica e renderizza la tabella dei rotoli
-  - Include calcoli di percentuali e valori
-  =========================== */
-/* ========================================
-  GESTIONE ROTOLI
-======================================== */
+  - Include calcoli di percentuali e valori*/
 async function caricaRotoli() {
   const container = document.getElementById("rotoli-container");
   if (!container) return;
@@ -340,13 +305,8 @@ function filtraRotoli() {
   });
 }
 
-/* ===========================
-  BLOCCO: AGGIUNTA ROTOLO
-  - Gestisce il form di inserimento e salva i dati
-  =========================== */
-/* ========================================
-  AGGIUNTA ROTOLO
-======================================== */
+/* BLOCCO: AGGIUNTA ROTOLO
+  - Gestisce il form di inserimento e salva i dati*/
 async function aggiungiRotolo() {
   const tipo = document.getElementById("tipo").value;
   const colore = document.getElementById("colore").value;
@@ -404,13 +364,8 @@ async function aggiungiRotolo() {
   }
 }
 
-/* ===========================
-  BLOCCO: GESTIONE PRELIEVI
-  - Visualizzazione dei prelievi registrati
-  =========================== */
-/* ========================================
-  GESTIONE PRELIEVI
-======================================== */
+/*BLOCCO: GESTIONE PRELIEVI
+  - Visualizzazione dei prelievi registrati*/
 async function caricaPrelievi() {
   const container = document.getElementById("prelievi-container");
   if (!container) return;
@@ -461,13 +416,8 @@ async function caricaPrelievi() {
   }
 }
 
-/* ===========================
-  BLOCCO: REGISTRA PRELIEVO (VERSIONE CORRETTA)
-  - Logica per sottrarre metraggio, creare/aggiornare ritagli e salvare
-  =========================== */
-/* ========================================
-  REGISTRA PRELIEVO (VERSIONE CORRETTA)
-======================================== */
+/*BLOCCO: REGISTRA PRELIEVO
+  - Logica per sottrarre metraggio, creare/aggiornare ritagli e salvare*/
 async function registraPrelievo() {
   const id_rotolo = document.getElementById("prelievo-rotolo").value;
   const metraggio = parseFloat(document.getElementById("metraggio").value);
@@ -560,13 +510,8 @@ async function registraPrelievo() {
 }
 
 
-/* ===========================
-  BLOCCO: GESTIONE RITAGLI
-  - Visualizzazione dei ritagli, statistiche su riutilizzabili/scarti
-  =========================== */
-/* ========================================
-  GESTIONE RITAGLI
-======================================== */
+/* BLOCCO: GESTIONE RITAGLI
+  - Visualizzazione dei ritagli, statistiche su riutilizzabili/scarti*/
 async function caricaRitagli() {
   const container = document.getElementById("ritagli-container");
   if (!container) return;
@@ -637,13 +582,8 @@ async function caricaRitagli() {
   }
 }
 
-/* ===========================
-  BLOCCO: GESTIONE FORNITORI
-  - Rendering tabella fornitori
-  =========================== */
-/* ========================================
-  GESTIONE FORNITORI
-======================================== */
+/* BLOCCO: GESTIONE FORNITORI
+  - Rendering tabella fornitori*/
 async function caricaFornitori() {
   const container = document.getElementById("fornitori-container");
   if (!container) return;
@@ -697,9 +637,6 @@ async function caricaFornitori() {
   BLOCCO: AGGIUNGI FORNITORE
   - Inserisce nuovo fornitore e salva i dati
    */
-/* 
-  AGGIUNGI FORNITORE
- */
 async function aggiungiFornitore() {
   const nome = document.getElementById("nome-fornitore").value;
   const piva = document.getElementById("piva").value;
