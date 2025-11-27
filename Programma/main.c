@@ -467,12 +467,13 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli){
     for (i = 0; i < nuovi; i++){
         idx = *nRotoli + i;
         printf("\n--- Rotolo %d di %d ---\n", i + 1, nuovi);
-        sprintf(rotoli[idx].id, "R%04d", *nRotoli + i + 1);
+        // "R" parte fissa del codice %04d → numero intero (d), lungo 4 cifre, con zeri davanti se necessario
+        sprintf(rotoli[idx].id, "R%04d", *nRotoli + i + 1); // Genera ID automatico
         printf("ID: %s (generato automaticamente)\n", rotoli[idx].id);
         
         printf("TIPO: ");
-        fgets(rotoli[idx].tipo, 50, stdin);
-        rotoli[idx].tipo[strcspn(rotoli[idx].tipo, "\n")] = 0;
+        fgets(rotoli[idx].tipo, 50, stdin); // Legge il tipo del rotolo con spazi
+        rotoli[idx].tipo[strcspn(rotoli[idx].tipo, "\n")] = 0;  // RIMUOVI \n
 
         printf("COLORE: ");
         fgets(rotoli[idx].colore, 50, stdin);
@@ -493,12 +494,12 @@ int inserisciRotolo(t_Rotolo rotoli[], int *nRotoli){
         printf("FORNITORE: ");
         fgets(rotoli[idx].fornitore, MAX_CARATTERI, stdin);
         rotoli[idx].fornitore[strcspn(rotoli[idx].fornitore, "\n")] = 0; // RIMUOVI \n
-        while (getchar() != '\n');
+        while (getchar() != '\n');  // svuota il buffer
         printf("LOTTO: ");
         fgets(rotoli[idx].lotto, MAX_CARATTERI, stdin);
         rotoli[idx].lotto[strcspn(rotoli[idx].lotto, "\n")] = 0; // RIMUOVI \n
      
-        while (1){
+        while (1){  // ciclo infinito che continua fino a data valida
             printf("DATA (GG MM AAAA): ");
             ok = scanf("%d %d %d",
                        &rotoli[idx].data.giorno,
@@ -659,7 +660,7 @@ int menuPrelievi(){
 }
 
 int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int nRotoli, t_Ritaglio ritagli[], int *nRitagli){
-    int i, j, nuovi, idx, rotoloTrovato;
+    int i, j, k, nuovi, idx, rotoloTrovato, ok;
     float metraggioCm;
     printf("NUMERO PRELIEVI DA AGGIUNGERE: ");
     if (scanf("%d", &nuovi) != 1 || nuovi < 1){
@@ -676,7 +677,7 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
         sprintf(prelievi[idx].id, "P%04d", *nPrelievi + i + 1);
         printf("ID PRELIEVO: %s (auto)\n", prelievi[idx].id);
         printf("ID ROTOLO: ");
-        scanf("%49s", prelievi[idx].id_rotolo);
+        scanf("%49s", prelievi[idx].id_rotolo); // leggi id rotolo fino a 49 caratteri
         // Verifica che il rotolo esista
         rotoloTrovato = -1;
         for (j = 0; j < nRotoli; j++){
@@ -703,20 +704,20 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
 
         // Aggiorna il lunghezza_attuale del rotolo
         rotoli[rotoloTrovato].lunghezza_attuale -= metraggioCm;
-        // NUOVA LOGICA: elimina automaticamente se < 30cm
+        // elimina automaticamente se < 30cm
         if (rotoli[rotoloTrovato].lunghezza_attuale <= 0){
             strcpy(rotoli[rotoloTrovato].stato, "ESAURITO");
             printf("ROTOLO %s ESAURITO.\n", rotoli[rotoloTrovato].id);
         } else if (rotoli[rotoloTrovato].lunghezza_attuale < (SOGLIA_SCARTO * 100)) {
             // SCARTO: < 30 cm → ELIMINA DIRETTAMENTE
             strcpy(rotoli[rotoloTrovato].stato, "SCARTO_ELIMINATO");
-            printf("⚠️  ROTOLO %s ha raggiunto %.2f cm (< 30 cm): SCARTO ELIMINATO automaticamente.\n", rotoli[rotoloTrovato].id, rotoli[rotoloTrovato].lunghezza_attuale);
+            printf("ROTOLO %s ha raggiunto %.2f cm (< 30 cm): SCARTO ELIMINATO automaticamente.\n", rotoli[rotoloTrovato].id, rotoli[rotoloTrovato].lunghezza_attuale);
             // Elimina il rotolo dall'array
-            for (int k = rotoloTrovato; k < nRotoli - 1; k++){
+            for (k = rotoloTrovato; k < nRotoli - 1; k++){
                 rotoli[k] = rotoli[k + 1];
             }
             nRotoli--;
-            printf("✅ Rotolo rimosso dal sistema.\n");
+            printf("Rotolo rimosso dal sistema.\n");
         } else if (rotoli[rotoloTrovato].lunghezza_attuale <= (SOGLIA_RITAGLIO * 100)) {
             // RITAGLIO: >= 30 cm e <= 50 cm
             strcpy(rotoli[rotoloTrovato].stato, "RITAGLIO");
@@ -725,13 +726,16 @@ int eseguiPrelievo(t_Prelievo prelievi[], int *nPrelievi, t_Rotolo rotoli[], int
             // DISPONIBILE: > 50 cm
             strcpy(rotoli[rotoloTrovato].stato, "DISPONIBILE");
         }
-        printf("DATA (GG MM AAAA): ");
-        scanf("%d %d %d", &prelievi[idx].data.giorno, &prelievi[idx].data.mese, &prelievi[idx].data.anno);
-        if (!controlloData(prelievi[idx].data)){
+
+        while (1){  // ciclo infinito che continua fino a data valida
+            printf("DATA (GG MM AAAA): ");
+            ok = scanf("%d %d %d", &prelievi[idx].data.giorno, &prelievi[idx].data.mese, &prelievi[idx].data.anno);
+                    while (getchar() != '\n'); // svuota sempre
+
+            if (ok == 3 && controlloData(prelievi[idx].data))
+                break;
+
             printf("DATA NON VALIDA. Riprovare.\n");
-            rotoli[rotoloTrovato].lunghezza_attuale += metraggioCm; // Ripristina
-            i--;
-            continue;
         }
         printf("OPERATORE: ");
         scanf("%49s", prelievi[idx].operatore);
@@ -963,7 +967,7 @@ int modificaFornitore(t_Fornitore fornitori[], int nFornitori, char *nome){
     for (i = 0; i < nFornitori; i++){
         if (strcmp(fornitori[i].nome, nome) == 0){
             printf("MODIFICA I DATI DEL FORNITORE %s:\n", nome);
-            getchar();
+            getchar();  // svuota il buffer
 
             printf("PARTITA IVA: ");
             scanf("%49s", fornitori[i].partita_iva);
@@ -1067,15 +1071,15 @@ void visualizzaMagazzino(t_Rotolo rotoli[], int nRotoli){
 
 int controlloData(t_Data data){
     int bisestile;
-    if (data.anno < ANNO_MIN || data.anno > ANNO_MAX) return 0;
-    if (data.mese < 1 || data.mese > 12) return 0;
-    if (data.giorno < 1 || data.giorno > 31) return 0;
-    if (data.mese == 2){
-        bisestile = (data.anno % 4 == 0 && data.anno % 100 != 0) || (data.anno % 400 == 0);
-        if (bisestile && data.giorno > 29) return 0;
-        if (!bisestile && data.giorno > 28) return 0;
-    }else if (data.mese == 4 || data.mese == 6 || data.mese == 9 || data.mese == 11){
-        if (data.giorno > 30) return 0;
+    if (data.anno < ANNO_MIN || data.anno > ANNO_MAX) return 0; // Controllo anno
+    if (data.mese < 1 || data.mese > 12) return 0;  // Controllo mese
+    if (data.giorno < 1 || data.giorno > 31) return 0;  // Controllo giorno
+    if (data.mese == 2){    // Febbraio
+        bisestile = (data.anno % 4 == 0 && data.anno % 100 != 0) || (data.anno % 400 == 0); // Calcolo bisestile
+        if (bisestile && data.giorno > 29) return 0;    // Controllo giorno in bisestile
+        if (!bisestile && data.giorno > 28) return 0;   // Controllo giorno in non bisestile
+    }else if (data.mese == 4 || data.mese == 6 || data.mese == 9 || data.mese == 11){   // Mesi con 30 giorni
+        if (data.giorno > 30) return 0;  // Controllo giorno
     }
     return 1;
 }
@@ -1085,14 +1089,16 @@ int creaRitaglioAutomatico(t_Ritaglio ritagli[], int *nRitagli, t_Rotolo *rotolo
         printf("ERRORE: limite ritagli raggiunto.\n");
         return -1;
     }
-    sprintf(ritagli[*nRitagli].idRitaglio, "RIT%04d", *nRitagli + 1);
-    strcpy(ritagli[*nRitagli].id_rotolo, rotolo->id);
+    sprintf(ritagli[*nRitagli].idRitaglio, "RIT%04d", *nRitagli + 1);   // Genera ID ritaglio
+    strcpy(ritagli[*nRitagli].id_rotolo, rotolo->id);                     // Copia ID rotolo
     ritagli[*nRitagli].lunghezza = rotolo->lunghezza_attuale / 100.0; // Converti cm in m
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    ritagli[*nRitagli].data.giorno = tm.tm_mday;
-    ritagli[*nRitagli].data.mese = tm.tm_mon + 1;
-    ritagli[*nRitagli].data.anno = tm.tm_year + 1900;
+    time_t t = time(NULL);  // Ottieni tempo corrente, time_t è tipo di dato usato per rappresentare il tempo in secondi dal 1° gennaio 1970
+    // time(NULL) restituisce il tempo corrente in secondi, cioè che ore sono adesso, ma come numero.
+    struct tm tm = *localtime(&t);  // Converti in struttura tm, localtime converte il time_t in una struttura tm che contiene informazioni più dettagliate come anno, mese, giorno, ora, minuto, secondo.
+    // localtime restituisce un puntatore a una struttura tm che rappresenta il tempo locale
+    ritagli[*nRitagli].data.giorno = tm.tm_mday;    // Giorno
+    ritagli[*nRitagli].data.mese = tm.tm_mon + 1; // Mese (0-11 + 1)
+    ritagli[*nRitagli].data.anno = tm.tm_year + 1900; // Anno (dal 1900)
 
     (*nRitagli)++;
     printf("Ritaglio %s creato automaticamente (%.2f m).\n", ritagli[*nRitagli - 1].idRitaglio, ritagli[*nRitagli - 1].lunghezza);
@@ -1114,7 +1120,7 @@ int menuProgetti(){
 }
 
 int inserisciProgetto(t_Progetto progetti[], int *nProgetti){
-    int i, nuovi, idx;
+    int i, nuovi, idx, ok;
     printf("NUMERO PROGETTI DA AGGIUNGERE: ");
     if (scanf("%d", &nuovi) != 1 || nuovi < 1){
         printf("INPUT NON VALIDO.\n");
@@ -1142,12 +1148,15 @@ int inserisciProgetto(t_Progetto progetti[], int *nProgetti){
         printf("TESSUTO USATO: ");
         scanf("%49s", progetti[idx].tessuto_usato);
 
-        printf("DATA (GG MM AAAA): ");
-        scanf("%d %d %d", &progetti[idx].data.giorno, &progetti[idx].data.mese, &progetti[idx].data.anno);
-        if (!controlloData(progetti[idx].data)){
+        while (1){  // ciclo infinito che continua fino a data valida
+            printf("DATA (GG MM AAAA): ");
+            ok = scanf("%d %d %d", &progetti[idx].data.giorno, &progetti[idx].data.mese, &progetti[idx].data.anno);
+                    while (getchar() != '\n'); // svuota sempre
+
+            if (ok == 3 && controlloData(progetti[idx].data))
+                break;
+
             printf("DATA NON VALIDA. Riprovare.\n");
-            i--;
-            continue;
         }
     }
     *nProgetti += nuovi;
@@ -1331,7 +1340,7 @@ int EsportaDatiPerWeb(t_Rotolo rotoli[], int nRotoli, t_Prelievo prelievi[], int
         k = 0;
         for (j = 0; rotoli[i].noteAggiuntive[j] != '\0' && k < 99; j++){    // Limita a 99 caratteri per sicurezza
             if (rotoli[i].noteAggiuntive[j] != '\n' && rotoli[i].noteAggiuntive[j] != '\r'){    
-                note_pulite[k++] = rotoli[i].noteAggiuntive[j];     // Copia solo caratteri validi/
+                note_pulite[k++] = rotoli[i].noteAggiuntive[j];     // Copia solo caratteri validi
             }
         }
         note_pulite[k] = '\0';  
