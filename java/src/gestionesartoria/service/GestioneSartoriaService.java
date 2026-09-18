@@ -94,11 +94,12 @@ public class GestioneSartoriaService {
     }
 
     public boolean eliminaFornitore(String id) {
-        return fornitori.removeIf(f -> f.getId().equalsIgnoreCase(id));
+        return id != null && fornitori.removeIf(f -> f.getId() != null && f.getId().equalsIgnoreCase(id));
     }
 
     public Optional<Fornitore> cercaFornitorePerId(String id) {
-        return fornitori.stream().filter(f -> f.getId().equalsIgnoreCase(id)).findFirst();
+        if (id == null || id.trim().isEmpty()) return Optional.empty();
+        return fornitori.stream().filter(f -> f.getId() != null && f.getId().equalsIgnoreCase(id)).findFirst();
     }
 
     public List<Fornitore> filtraFornitori(String testo) {
@@ -123,11 +124,12 @@ public class GestioneSartoriaService {
     }
 
     public boolean eliminaCliente(String id) {
-        return clienti.removeIf(c -> c.getId().equalsIgnoreCase(id));
+        return id != null && clienti.removeIf(c -> c.getId() != null && c.getId().equalsIgnoreCase(id));
     }
 
     public Optional<Cliente> cercaClientePerId(String id) {
-        return clienti.stream().filter(c -> c.getId().equalsIgnoreCase(id)).findFirst();
+        if (id == null || id.trim().isEmpty()) return Optional.empty();
+        return clienti.stream().filter(c -> c.getId() != null && c.getId().equalsIgnoreCase(id)).findFirst();
     }
 
     public List<Cliente> filtraClienti(String testo) {
@@ -152,11 +154,12 @@ public class GestioneSartoriaService {
     }
 
     public boolean eliminaPersonale(String id) {
-        return personale.removeIf(p -> p.getId().equalsIgnoreCase(id));
+        return id != null && personale.removeIf(p -> p.getId() != null && p.getId().equalsIgnoreCase(id));
     }
 
     public Optional<Personale> cercaPersonalePerId(String id) {
-        return personale.stream().filter(p -> p.getId().equalsIgnoreCase(id)).findFirst();
+        if (id == null || id.trim().isEmpty()) return Optional.empty();
+        return personale.stream().filter(p -> p.getId() != null && p.getId().equalsIgnoreCase(id)).findFirst();
     }
 
     public List<Personale> filtraPersonalePerContratto(String contratto) {
@@ -248,13 +251,16 @@ public class GestioneSartoriaService {
         Progetto p = prjOpt.get();
         Componente c = cmpOpt.get();
 
-        double qtaDaPrelevare = Math.min(quantita, c.getQuantitaDisponibile());
-        c.setQuantitaDisponibile(c.getQuantitaDisponibile() - qtaDaPrelevare);
+        if (quantita > c.getQuantitaDisponibile()) {
+            return false;
+        }
+
+        c.setQuantitaDisponibile(c.getQuantitaDisponibile() - quantita);
 
         ComponenteUsato cu = new ComponenteUsato(
                 c.getId(),
                 c.getNome(),
-                qtaDaPrelevare,
+            quantita,
                 c.getUnitaMisura(),
                 c.getCostoUnitario()
         );
@@ -266,16 +272,11 @@ public class GestioneSartoriaService {
      * Sposta un componente a un altro piano/scaffale
      */
     public boolean spostaComponentePiano(String idComponente, int nuovoPiano, String nuovoScaffale) {
-        Optional<Componente> opt = cercaComponentePerId(idComponente);
-        if (opt.isPresent()) {
-            Componente c = opt.get();
-            c.setPianoMagazzino(nuovoPiano);
-            if (nuovoScaffale != null && !nuovoScaffale.trim().isEmpty()) {
-                c.setScaffale(nuovoScaffale);
-            }
-            return true;
-        }
-        return false;
+        return magazzino.spostaComponente(idComponente, nuovoPiano, nuovoScaffale);
+    }
+
+    public void sostituisciComponenti(List<Componente> componenti) {
+        magazzino.sostituisciComponenti(componenti);
     }
 
     // Inizializza dati demo realistici per test e prima apertura

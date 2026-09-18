@@ -57,8 +57,7 @@ public class FilePersistenceService {
             service.getPersonale().clear();
             service.getPersonale().addAll(pList);
 
-            service.getComponenti().clear();
-            service.getComponenti().addAll(compList);
+            service.sostituisciComponenti(compList);
 
             service.getProgetti().clear();
             service.getProgetti().addAll(prjList);

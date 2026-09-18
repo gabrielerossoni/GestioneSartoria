@@ -81,6 +81,15 @@ public class Magazzino implements Serializable {
         piano.aggiungiComponente(c);
     }
 
+    /** Sostituisce l'inventario mantenendo la collocazione sui rispettivi piani. */
+    public void sostituisciComponenti(List<Componente> componenti) {
+        svuota();
+        if (componenti == null) return;
+        for (Componente componente : componenti) {
+            aggiungiComponente(componente);
+        }
+    }
+
     /**
      * Rimuove un componente ricercandolo su tutti i piani.
      */
@@ -98,6 +107,9 @@ public class Magazzino implements Serializable {
      * Cerca un componente per codice identificativo univoco (es. CMP0001).
      */
     public Optional<Componente> cercaComponentePerId(String idComponente) {
+        if (idComponente == null || idComponente.trim().isEmpty()) {
+            return Optional.empty();
+        }
         return getTuttiIComponenti().stream()
                 .filter(c -> c.getId() != null && c.getId().equalsIgnoreCase(idComponente))
                 .findFirst();
