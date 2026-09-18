@@ -12,7 +12,6 @@ public class GestioneSartoriaService {
     private final List<Fornitore> fornitori = new ArrayList<>();
     private final List<Cliente> clienti = new ArrayList<>();
     private final List<Personale> personale = new ArrayList<>();
-    private final List<Componente> componenti = new ArrayList<>();
     private final List<Progetto> progetti = new ArrayList<>();
 
     public GestioneSartoriaService() {
@@ -60,7 +59,7 @@ public class GestioneSartoriaService {
 
     public String generaProssimoIdComponente() {
         int max = 0;
-        for (Componente c : componenti) {
+        for (Componente c : magazzino.getTuttiIComponenti()) {
             try {
                 if (c.getId() != null && c.getId().startsWith("CMP")) {
                     int val = Integer.parseInt(c.getId().substring(3));
@@ -169,45 +168,46 @@ public class GestioneSartoriaService {
                 .collect(Collectors.toList());
     }
 
-    // --- COMPONENTI & MAGAZZINO ---
-    public List<Componente> getComponenti() { return componenti; }
+    // --- COMPONENTI & MAGAZZINO A 3 PIANI ---
+    private final Magazzino magazzino = new Magazzino("Laboratorio Centrale Sartoria", "Via Porta Venezia, Milano");
+
+    public Magazzino getMagazzino() {
+        return magazzino;
+    }
+
+    public List<Componente> getComponenti() {
+        return magazzino.getTuttiIComponenti();
+    }
 
     public void aggiungiComponente(Componente c) {
         if (c.getId() == null || c.getId().trim().isEmpty()) {
             c.setId(generaProssimoIdComponente());
         }
-        componenti.add(c);
+        magazzino.aggiungiComponente(c);
     }
 
     public boolean eliminaComponente(String id) {
-        return componenti.removeIf(c -> c.getId().equalsIgnoreCase(id));
+        return magazzino.eliminaComponente(id);
     }
 
     public Optional<Componente> cercaComponentePerId(String id) {
-        return componenti.stream().filter(c -> c.getId().equalsIgnoreCase(id)).findFirst();
+        return magazzino.cercaComponentePerId(id);
     }
 
     public List<Componente> getComponentiPerPiano(int piano) {
-        return componenti.stream()
-                .filter(c -> c.getPianoMagazzino() == piano)
-                .collect(Collectors.toList());
+        return magazzino.getComponentiPerPiano(piano);
     }
 
     public List<Componente> getComponentiSottoscorta() {
-        return componenti.stream()
-                .filter(Componente::isSottoscorta)
-                .collect(Collectors.toList());
+        return magazzino.getComponentiSottoscorta();
     }
 
     public double getValoreEconomicoTotaleMagazzino() {
-        return componenti.stream().mapToDouble(Componente::getValoreTotale).sum();
+        return magazzino.getValoreEconomicoTotale();
     }
 
     public double getValoreEconomicoPiano(int piano) {
-        return componenti.stream()
-                .filter(c -> c.getPianoMagazzino() == piano)
-                .mapToDouble(Componente::getValoreTotale)
-                .sum();
+        return magazzino.getValoreEconomicoPiano(piano);
     }
 
     // --- PROGETTI & DISTINTA BASE ---
@@ -280,7 +280,7 @@ public class GestioneSartoriaService {
 
     // Inizializza dati demo realistici per test e prima apertura
     public void caricaDatiInizialiDemo() {
-        if (!fornitori.isEmpty() || !componenti.isEmpty()) return;
+        if (!fornitori.isEmpty() || !magazzino.getTuttiIComponenti().isEmpty()) return;
 
         // Fornitori
         aggiungiFornitore(new Fornitore("FOR0001", "Tessitura Serica", "Comasca SpA", "IT01234567890", "+39 031 556677", "ordini@tessituracomasca.it", "Via Seta 12, Como"));
