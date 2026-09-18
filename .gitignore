@@ -7,3 +7,6 @@ backup_sartoria.dat
 /server/rotoli_data.txt
 api_handler.exe
 /Programma/gmon.out
+# Java
+**/build/
+**/dist/
