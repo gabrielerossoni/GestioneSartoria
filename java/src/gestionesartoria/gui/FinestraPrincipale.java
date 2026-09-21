@@ -23,7 +23,7 @@ import java.util.List;
  * Supporta la vista Design di NetBeans tramite FinestraPrincipale.form
  */
 @SuppressWarnings({"serial", "this-escape"})
-public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.event.ActionListener {
+public class FinestraPrincipale extends javax.swing.JFrame {
 
     private static final long serialVersionUID = 1L;
     private static final Color COLONNA_HEADER = new Color(15, 23, 42);
@@ -156,104 +156,38 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         });
     }
 
-    @Override
-    public void actionPerformed(java.awt.event.ActionEvent e) {
-        Object source = e.getSource();
+    private void comboFiltroPianoActionPerformed(java.awt.event.ActionEvent evt) {
+        aggiornaTabellaMagazzino();
+    }
 
-        if (source == btnSalvaDati) {
-            salvaDatiSuFile();
-            return;
-        }
+    private void btnCercaClienteActionPerformed(java.awt.event.ActionEvent evt) {
+        aggiornaTabellaClienti();
+    }
 
-        if (source == btnRicarica) {
-            ricaricaDati();
-            return;
-        }
+    private void btnResetClienteActionPerformed(java.awt.event.ActionEvent evt) {
+        txtCercaCliente.setText("");
+        aggiornaTabellaClienti();
+    }
 
-        if (source == btnNuovoProgetto) {
-            dialogNuovoProgetto();
-            return;
-        }
+    private void txtCercaClienteActionPerformed(java.awt.event.ActionEvent evt) {
+        aggiornaTabellaClienti();
+    }
 
-        if (source == btnEliminaProgetto) {
-            eliminaProgettoSelezionato();
-            return;
-        }
+    private void comboFiltroContrattoActionPerformed(java.awt.event.ActionEvent evt) {
+        aggiornaTabellaPersonale();
+    }
 
-        if (source == btnAggiornaStato) {
-            aggiornaStatoProgettoSelezionato();
-            return;
-        }
+    private void btnCercaFornitoreActionPerformed(java.awt.event.ActionEvent evt) {
+        aggiornaTabellaFornitori();
+    }
 
-        if (source == btnNuovoComp) {
-            dialogNuovoComponente();
-            return;
-        }
+    private void btnResetFornitoreActionPerformed(java.awt.event.ActionEvent evt) {
+        txtCercaFornitore.setText("");
+        aggiornaTabellaFornitori();
+    }
 
-        if (source == btnModificaQta) {
-            modificaComponenteSelezionato();
-            return;
-        }
-
-        if (source == btnEliminaComp) {
-            eliminaComponenteSelezionato();
-            return;
-        }
-
-        if (source == btnNuovoCliente) {
-            dialogNuovoCliente();
-            return;
-        }
-
-        if (source == btnEliminaCliente) {
-            eliminaClienteSelezionato();
-            return;
-        }
-
-        if (source == btnCercaCliente || source == btnResetCliente || source == txtCercaCliente) {
-            if (source == btnResetCliente && txtCercaCliente != null) {
-                txtCercaCliente.setText("");
-            }
-            aggiornaTabellaClienti();
-            return;
-        }
-
-        if (source == btnNuovoDip) {
-            dialogNuovoPersonale();
-            return;
-        }
-
-        if (source == btnEliminaDip) {
-            eliminaPersonaleSelezionato();
-            return;
-        }
-
-        if (source == comboFiltroContratto) {
-            aggiornaTabellaPersonale();
-            return;
-        }
-
-        if (source == btnNuovoFor) {
-            dialogNuovoFornitore();
-            return;
-        }
-
-        if (source == btnEliminaFor) {
-            eliminaFornitoreSelezionato();
-            return;
-        }
-
-        if (source == btnCercaFornitore || source == btnResetFornitore || source == txtCercaFornitore) {
-            if (source == btnResetFornitore && txtCercaFornitore != null) {
-                txtCercaFornitore.setText("");
-            }
-            aggiornaTabellaFornitori();
-            return;
-        }
-
-        if (source == comboFiltroPiano) {
-            aggiornaTabellaMagazzino();
-        }
+    private void txtCercaFornitoreActionPerformed(java.awt.event.ActionEvent evt) {
+        aggiornaTabellaFornitori();
     }
 
     private void inizializzaDati() {
@@ -271,10 +205,6 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
      * layout ergonomico e meccanismi di Drag and Drop.
      */
     private void costruisciVisteAziendali() {
-        // Setup listener pulsanti header
-        btnSalvaDati.addActionListener(this);
-        btnRicarica.addActionListener(this);
-
         costruisciTabDashboard();
         costruisciTabProgettiDnD();
         costruisciTabMagazzino3Piani();
@@ -308,10 +238,12 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
 
         // Sezione centrale con tabella allarmi sottoscorta
         JPanel pnlAlert = new JPanel(new BorderLayout(8, 8));
-        pnlAlert.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(new Color(192, 57, 43), 2),
-                " ⚠️ ALLARMI SOTTO-SCORTA MAGAZZINO (Articoli da Riordinare) ",
-                0, 0, new Font("Segoe UI", Font.BOLD, 14), new Color(192, 57, 43)));
+        pnlAlert.setBorder(BorderFactory.createEmptyBorder(4, 0, 0, 0));
+
+        JLabel lblTitoloAlert = new JLabel("ALLARMI SOTTO-SCORTA MAGAZZINO - Articoli da riordinare");
+        lblTitoloAlert.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblTitoloAlert.setForeground(new Color(192, 57, 43));
+        pnlAlert.add(lblTitoloAlert, BorderLayout.NORTH);
 
         String[] colsAlert = {"ID", "Nome Materiale", "Categoria", "Giacenza", "U.M.", "Soglia Minima", "Piano", "Scaffale", "Stato"};
         modelAlertSottoscorta = new DefaultTableModel(colsAlert, 0) {
@@ -373,12 +305,12 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
 
         // Toolbar azioni progetti
         JPanel pnlToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        btnNuovoProgetto = new JButton("➕ Nuova Commessa / Abito");
+        btnNuovoProgetto = new JButton("Nuova Commessa / Abito");
         btnNuovoProgetto.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnNuovoProgetto.addActionListener(this);
+        btnNuovoProgetto.addActionListener(this::btnNuovoProgettoActionPerformed);
 
-        btnEliminaProgetto = new JButton("🗑️ Elimina Selezionato");
-        btnEliminaProgetto.addActionListener(this);
+        btnEliminaProgetto = new JButton("Elimina Selezionato");
+        btnEliminaProgetto.addActionListener(this::btnEliminaProgettoActionPerformed);
 
         pnlToolbar.add(btnNuovoProgetto);
         pnlToolbar.add(btnEliminaProgetto);
@@ -387,7 +319,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         pnlToolbar.add(new JLabel("Avanzamento Stato:"));
         comboNuovoStato = new JComboBox<>(StatoProgetto.values());
         btnAggiornaStato = new JButton("Aggiorna Stato");
-        btnAggiornaStato.addActionListener(this);
+        btnAggiornaStato.addActionListener(this::btnAggiornaStatoActionPerformed);
         pnlToolbar.add(comboNuovoStato);
         pnlToolbar.add(btnAggiornaStato);
 
@@ -439,7 +371,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         // Box inferiore Catalogo Materiali (DRAG SOURCE)
         JPanel pnlCatalogoDnD = new JPanel(new BorderLayout(5, 5));
         pnlCatalogoDnD.setPreferredSize(new Dimension(300, 240));
-        pnlCatalogoDnD.setBorder(BorderFactory.createTitledBorder(" ⬇️ Trascina Materiale nella distinta sopra (Drag & Drop) "));
+        pnlCatalogoDnD.setBorder(BorderFactory.createTitledBorder("Catalogo materiali - trascina nella distinta"));
 
         modelCatalogoMateriali = new DefaultListModel<>();
         listCatalogoMaterialiPerDnD = new JList<>(modelCatalogoMateriali);
@@ -536,19 +468,19 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
                 "Piano 2: Minuteria, Filati & Accessori"
         });
         comboFiltroPiano.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        comboFiltroPiano.addActionListener(this);
+        comboFiltroPiano.addActionListener(this::comboFiltroPianoActionPerformed);
         pnlFiltri.add(comboFiltroPiano);
 
-        btnNuovoComp = new JButton("➕ Nuovo Componente");
-        btnNuovoComp.addActionListener(this);
+        btnNuovoComp = new JButton("Nuovo Componente");
+        btnNuovoComp.addActionListener(this::btnNuovoCompActionPerformed);
         pnlFiltri.add(btnNuovoComp);
 
-        btnModificaQta = new JButton("✏️ Modifica Giacenza / Scaffale");
-        btnModificaQta.addActionListener(this);
+        btnModificaQta = new JButton("Modifica Giacenza / Scaffale");
+        btnModificaQta.addActionListener(this::btnModificaQtaActionPerformed);
         pnlFiltri.add(btnModificaQta);
 
-        btnEliminaComp = new JButton("🗑️ Elimina Componente");
-        btnEliminaComp.addActionListener(this);
+        btnEliminaComp = new JButton("Elimina Componente");
+        btnEliminaComp.addActionListener(this::btnEliminaCompActionPerformed);
         pnlFiltri.add(btnEliminaComp);
 
         lblValorePianoCorrente = new JLabel("Valore Piano: € 0.00");
@@ -596,21 +528,21 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         tabClienti.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        btnNuovoCliente = new JButton("➕ Nuovo Cliente");
-        btnNuovoCliente.addActionListener(this);
+        btnNuovoCliente = new JButton("Nuovo Cliente");
+        btnNuovoCliente.addActionListener(this::btnNuovoClienteActionPerformed);
 
-        btnEliminaCliente = new JButton("🗑️ Elimina");
-        btnEliminaCliente.addActionListener(this);
+        btnEliminaCliente = new JButton("Elimina");
+        btnEliminaCliente.addActionListener(this::btnEliminaClienteActionPerformed);
 
         pnlTop.add(btnNuovoCliente);
         pnlTop.add(btnEliminaCliente);
         pnlTop.add(new JLabel("Cerca (CF o Cognome):"));
         txtCercaCliente = new JTextField(15);
-        txtCercaCliente.addActionListener(this);
+        txtCercaCliente.addActionListener(this::txtCercaClienteActionPerformed);
         btnCercaCliente = new JButton("Filtra");
-        btnCercaCliente.addActionListener(this);
+        btnCercaCliente.addActionListener(this::btnCercaClienteActionPerformed);
         btnResetCliente = new JButton("Reset");
-        btnResetCliente.addActionListener(this);
+        btnResetCliente.addActionListener(this::btnResetClienteActionPerformed);
 
         pnlTop.add(txtCercaCliente);
         pnlTop.add(btnCercaCliente);
@@ -635,11 +567,11 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         tabPersonale.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        btnNuovoDip = new JButton("➕ Nuovo Dipendente");
-        btnNuovoDip.addActionListener(this);
+        btnNuovoDip = new JButton("Nuovo Dipendente");
+        btnNuovoDip.addActionListener(this::btnNuovoDipActionPerformed);
 
-        btnEliminaDip = new JButton("🗑️ Elimina");
-        btnEliminaDip.addActionListener(this);
+        btnEliminaDip = new JButton("Elimina");
+        btnEliminaDip.addActionListener(this::btnEliminaDipActionPerformed);
 
         pnlTop.add(btnNuovoDip);
         pnlTop.add(btnEliminaDip);
@@ -648,7 +580,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         comboFiltroContratto = new JComboBox<>(new String[]{
                 "TUTTI", "Indeterminato", "Determinato", "Apprendistato", "Stage", "Part-Time"
         });
-        comboFiltroContratto.addActionListener(this);
+        comboFiltroContratto.addActionListener(this::comboFiltroContrattoActionPerformed);
         pnlTop.add(comboFiltroContratto);
 
         tabPersonale.add(pnlTop, BorderLayout.NORTH);
@@ -670,22 +602,22 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         tabFornitori.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        btnNuovoFor = new JButton("➕ Nuovo Fornitore");
-        btnNuovoFor.addActionListener(this);
+        btnNuovoFor = new JButton("Nuovo Fornitore");
+        btnNuovoFor.addActionListener(this::btnNuovoForActionPerformed);
 
-        btnEliminaFor = new JButton("🗑️ Elimina");
-        btnEliminaFor.addActionListener(this);
+        btnEliminaFor = new JButton("Elimina");
+        btnEliminaFor.addActionListener(this::btnEliminaForActionPerformed);
 
         pnlTop.add(btnNuovoFor);
         pnlTop.add(btnEliminaFor);
 
         pnlTop.add(new JLabel("Cerca (Ragione Sociale / P.IVA):"));
         txtCercaFornitore = new JTextField(15);
-        txtCercaFornitore.addActionListener(this);
+        txtCercaFornitore.addActionListener(this::txtCercaFornitoreActionPerformed);
         btnCercaFornitore = new JButton("Filtra");
-        btnCercaFornitore.addActionListener(this);
+        btnCercaFornitore.addActionListener(this::btnCercaFornitoreActionPerformed);
         btnResetFornitore = new JButton("Reset");
-        btnResetFornitore.addActionListener(this);
+        btnResetFornitore.addActionListener(this::btnResetFornitoreActionPerformed);
 
         pnlTop.add(txtCercaFornitore);
         pnlTop.add(btnCercaFornitore);
@@ -840,7 +772,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
     // =========================================================================
     // AZIONI CRUD DIALOGHI
     // =========================================================================
-    private void dialogNuovoProgetto() {
+    private void btnNuovoProgettoActionPerformed(java.awt.event.ActionEvent evt) {
         JTextField txtCapo = new JTextField();
         JComboBox<Cliente> cbClienti = new JComboBox<>(service.getClienti().toArray(new Cliente[0]));
         JComboBox<Personale> cbSarti = new JComboBox<>(service.getPersonale().toArray(new Personale[0]));
@@ -881,7 +813,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void aggiornaStatoProgettoSelezionato() {
+    private void btnAggiornaStatoActionPerformed(java.awt.event.ActionEvent evt) {
         int sel = tableProgetti.getSelectedRow();
         if (sel >= 0) {
             String prjId = (String) modelProgetti.getValueAt(sel, 0);
@@ -896,7 +828,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void eliminaProgettoSelezionato() {
+    private void btnEliminaProgettoActionPerformed(java.awt.event.ActionEvent evt) {
         int sel = tableProgetti.getSelectedRow();
         if (sel >= 0) {
             String id = (String) modelProgetti.getValueAt(sel, 0);
@@ -908,7 +840,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void dialogNuovoComponente() {
+    private void btnNuovoCompActionPerformed(java.awt.event.ActionEvent evt) {
         JTextField txtNome = new JTextField();
         JComboBox<String> cbCat = new JComboBox<>(new String[]{"TESSUTO", "MINUTERIA", "FODERA", "ACCESSORIO", "FILATO"});
         JTextField txtQta = new JTextField("10.0");
@@ -955,7 +887,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void modificaComponenteSelezionato() {
+    private void btnModificaQtaActionPerformed(java.awt.event.ActionEvent evt) {
         int sel = tableMagazzinoPiani.getSelectedRow();
         if (sel >= 0) {
             String id = (String) modelMagazzinoPiani.getValueAt(sel, 0);
@@ -985,7 +917,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void eliminaComponenteSelezionato() {
+    private void btnEliminaCompActionPerformed(java.awt.event.ActionEvent evt) {
         int sel = tableMagazzinoPiani.getSelectedRow();
         if (sel >= 0) {
             String id = (String) modelMagazzinoPiani.getValueAt(sel, 0);
@@ -997,7 +929,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void dialogNuovoCliente() {
+    private void btnNuovoClienteActionPerformed(java.awt.event.ActionEvent evt) {
         JTextField txtCf = new JTextField();
         JTextField txtNome = new JTextField();
         JTextField txtCognome = new JTextField();
@@ -1024,7 +956,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void eliminaClienteSelezionato() {
+    private void btnEliminaClienteActionPerformed(java.awt.event.ActionEvent evt) {
         int sel = tableClienti.getSelectedRow();
         if (sel >= 0) {
             String id = (String) modelClienti.getValueAt(sel, 0);
@@ -1036,7 +968,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void dialogNuovoPersonale() {
+    private void btnNuovoDipActionPerformed(java.awt.event.ActionEvent evt) {
         JTextField txtCognome = new JTextField();
         JTextField txtNome = new JTextField();
         JTextField txtRuolo = new JTextField("Sarto Specializzato");
@@ -1072,7 +1004,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void eliminaPersonaleSelezionato() {
+    private void btnEliminaDipActionPerformed(java.awt.event.ActionEvent evt) {
         int sel = tablePersonale.getSelectedRow();
         if (sel >= 0) {
             String id = (String) modelPersonale.getValueAt(sel, 0);
@@ -1084,7 +1016,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void dialogNuovoFornitore() {
+    private void btnNuovoForActionPerformed(java.awt.event.ActionEvent evt) {
         JTextField txtNome = new JTextField();
         JTextField txtCognome = new JTextField();
         JTextField txtPiva = new JTextField();
@@ -1111,7 +1043,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         }
     }
 
-    private void eliminaFornitoreSelezionato() {
+    private void btnEliminaForActionPerformed(java.awt.event.ActionEvent evt) {
         int sel = tableFornitori.getSelectedRow();
         if (sel >= 0) {
             String id = (String) modelFornitori.getValueAt(sel, 0);
@@ -1171,21 +1103,29 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         setTitle("Sistema Gestione Sartoria Digitale - V2 (Java Desktop Enterprise)");
         setMinimumSize(new java.awt.Dimension(1150, 750));
 
-        panelHeader.setBackground(new java.awt.Color(26, 45, 70));
+        panelHeader.setBackground(new java.awt.Color(15, 35, 66));
+        panelHeader.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
         lblTitoloApp.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         lblTitoloApp.setForeground(new java.awt.Color(255, 255, 255));
-        lblTitoloApp.setText("\uD83E\uDDF5 GESTIONE SARTORIA DIGITALE - V2");
+        lblTitoloApp.setText("GESTIONE SARTORIA DIGITALE - V2");
 
-        lblSottotitolo.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        lblSottotitolo.setForeground(new java.awt.Color(204, 204, 204));
         lblSottotitolo.setText("Commesse su misura, Magazzino a 3 Piani con Drag&Drop, Dipendenti, Clienti e Fornitori");
 
+        btnSalvaDati.setBackground(new java.awt.Color(40, 100, 235));
         btnSalvaDati.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnSalvaDati.setText("\uD83D\uDCBE Salva Archivio");
+        btnSalvaDati.setForeground(new java.awt.Color(255, 255, 255));
+        btnSalvaDati.setText("Salva Archivio");
+        btnSalvaDati.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvaDatiActionPerformed(evt);
+            }
+        });
 
-        btnRicarica.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        btnRicarica.setText("\u21BB Ricarica Dati");
+        btnRicarica.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnRicarica.setBackground(new java.awt.Color(99, 107, 125));
+        btnRicarica.setForeground(new java.awt.Color(255, 255, 255));
+        btnRicarica.setText("Ricarica Dati");
 
         javax.swing.GroupLayout panelHeaderLayout = new javax.swing.GroupLayout(panelHeader);
         panelHeader.setLayout(panelHeaderLayout);
@@ -1214,37 +1154,38 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
                     .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnSalvaDati, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnRicarica, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabbedPanePrincipale.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        tabbedPanePrincipale.setBackground(new java.awt.Color(244, 248, 247));
+        tabbedPanePrincipale.setForeground(new java.awt.Color(35, 58, 45));
 
         tabDashboard.setLayout(new java.awt.BorderLayout());
-        tabbedPanePrincipale.addTab("\uD83D\uDCCA Panoramica & Alert", tabDashboard);
+        tabbedPanePrincipale.addTab("Panoramica e Alert", tabDashboard);
 
         tabProgetti.setLayout(new java.awt.BorderLayout());
-        tabbedPanePrincipale.addTab("\u2702\uFE0F Commesse & Progetti (Drag&Drop)", tabProgetti);
+        tabbedPanePrincipale.addTab("Commesse e Progetti (Drag&Drop)", tabProgetti);
 
         tabMagazzino.setLayout(new java.awt.BorderLayout());
-        tabbedPanePrincipale.addTab("\uD83D\uDCE6 Magazzino a 3 Piani", tabMagazzino);
+        tabbedPanePrincipale.addTab("Magazzino a 3 Piani", tabMagazzino);
 
         tabClienti.setLayout(new java.awt.BorderLayout());
-        tabbedPanePrincipale.addTab("\uD83D\uDC65 Clienti & Misure", tabClienti);
+        tabbedPanePrincipale.addTab("Clienti e Misure", tabClienti);
 
         tabPersonale.setLayout(new java.awt.BorderLayout());
-        tabbedPanePrincipale.addTab("\uD83D\uDC54 Personale & Contratti", tabPersonale);
+        tabbedPanePrincipale.addTab("Personale e Contratti", tabPersonale);
 
         tabFornitori.setLayout(new java.awt.BorderLayout());
-        tabbedPanePrincipale.addTab("\uD83C\uDFED Fornitori", tabFornitori);
+        tabbedPanePrincipale.addTab("Fornitori", tabFornitori);
 
-        panelStatusBar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelStatusBar.setBackground(new java.awt.Color(246, 249, 248));
 
-        lblStatusInfo.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         lblStatusInfo.setText("Pronto. Sistema avviato con successo.");
 
         lblValoreMagazzinoStatus.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblValoreMagazzinoStatus.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblValoreMagazzinoStatus.setText("Valore Magazzino: \u20AC 0.00");
+        lblValoreMagazzinoStatus.setText("Valore Magazzino: € 0.00");
 
         javax.swing.GroupLayout panelStatusBarLayout = new javax.swing.GroupLayout(panelStatusBar);
         panelStatusBar.setLayout(panelStatusBarLayout);
@@ -1275,7 +1216,7 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tabbedPanePrincipale, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1285,6 +1226,14 @@ public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.e
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSalvaDatiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvaDatiActionPerformed
+        salvaDatiSuFile();
+    }//GEN-LAST:event_btnSalvaDatiActionPerformed
+
+    private void btnRicaricaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRicaricaActionPerformed
+        ricaricaDati();
+    }//GEN-LAST:event_btnRicaricaActionPerformed
 
     /**
      * Entry point principale dell'applicazione aziendale

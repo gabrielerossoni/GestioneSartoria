@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.8" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
     <Component class="javax.swing.ButtonGroup" name="buttonGroupPiani">
     </Component>
@@ -43,7 +43,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="tabbedPanePrincipale" pref="640" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="panelStatusBar" min="-2" pref="32" max="-2" attributes="0"/>
+              <Component id="panelStatusBar" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -52,7 +52,7 @@
     <Container class="javax.swing.JPanel" name="panelHeader">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="42" green="23" red="0f" type="rgb"/>
+          <Color blue="42" green="23" red="f" type="rgb"/>
         </Property>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
@@ -93,7 +93,7 @@
                           <Component id="btnRicarica" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -107,61 +107,60 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="&#x1f9f5; GESTIONE SARTORIA DIGITALE - V2"/>
+            <Property name="text" type="java.lang.String" value="GESTIONE SARTORIA DIGITALE - V2"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblSottotitolo">
           <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="12" style="0"/>
-            </Property>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="Commesse su misura, Magazzino a 3 Piani con Drag&amp;Drop, Dipendenti, Clienti e Fornitori"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnSalvaDati">
           <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="12" style="1"/>
-            </Property>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="eb" green="64" red="28" type="rgb"/>
             </Property>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="&#x1f4be; Salva Archivio"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnRicarica">
-          <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="12" style="1"/>
             </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Salva Archivio"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalvaDatiActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnRicarica">
+          <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="7d" green="6b" red="63" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="&#x21bb; Ricarica Dati"/>
+            <Property name="text" type="java.lang.String" value="Ricarica Dati"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRicaricaActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
-
     <Container class="javax.swing.JTabbedPane" name="tabbedPanePrincipale">
       <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Segoe UI" size="13" style="1"/>
-        </Property>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="f7" green="f8" red="f4" type="rgb"/>
         </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="2d" green="3a" red="23" type="rgb"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="13" style="1"/>
         </Property>
       </Properties>
 
@@ -170,86 +169,133 @@
         <Container class="javax.swing.JPanel" name="tabDashboard">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="&#x1f4ca; Panoramica &amp; Alert">
-                <Property name="tabTitle" type="java.lang.String" value="&#x1f4ca; Panoramica &amp; Alert"/>
+              <JTabbedPaneConstraints tabName="Panoramica e Alert">
+                <Property name="tabTitle" type="java.lang.String" value="Panoramica e Alert"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="lblAnteprimaDashboard">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="16" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Panoramica | KPI commesse, magazzino, clienti, personale e tabella degli alert"/>
+              </Properties>
+            </Component>
+          </SubComponents>
         </Container>
-
         <Container class="javax.swing.JPanel" name="tabProgetti">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="&#x2702;&#xfe0f; Commesse &amp; Progetti (Drag&amp;Drop)">
-                <Property name="tabTitle" type="java.lang.String" value="&#x2702;&#xfe0f; Commesse &amp; Progetti (Drag&amp;Drop)"/>
+              <JTabbedPaneConstraints tabName="Commesse e Progetti (Drag&amp;Drop)">
+                <Property name="tabTitle" type="java.lang.String" value="Commesse e Progetti (Drag&amp;Drop)"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="lblAnteprimaProgetti">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="16" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Commesse | elenco progetti, stato avanzamento, distinta base e catalogo materiali"/>
+              </Properties>
+            </Component>
+          </SubComponents>
         </Container>
-
         <Container class="javax.swing.JPanel" name="tabMagazzino">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="&#x1f4e6; Magazzino a 3 Piani">
-                <Property name="tabTitle" type="java.lang.String" value="&#x1f4e6; Magazzino a 3 Piani"/>
+              <JTabbedPaneConstraints tabName="Magazzino a 3 Piani">
+                <Property name="tabTitle" type="java.lang.String" value="Magazzino a 3 Piani"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="lblAnteprimaMagazzino">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="16" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Magazzino | filtro piano, giacenze, scaffali, valori e sottoscorta"/>
+              </Properties>
+            </Component>
+          </SubComponents>
         </Container>
-
         <Container class="javax.swing.JPanel" name="tabClienti">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="&#x1f465; Clienti &amp; Misure">
-                <Property name="tabTitle" type="java.lang.String" value="&#x1f465; Clienti &amp; Misure"/>
+              <JTabbedPaneConstraints tabName="Clienti e Misure">
+                <Property name="tabTitle" type="java.lang.String" value="Clienti e Misure"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="lblAnteprimaClienti">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="16" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Clienti | anagrafica, ricerca, contatti e note sulle misure"/>
+              </Properties>
+            </Component>
+          </SubComponents>
         </Container>
-
         <Container class="javax.swing.JPanel" name="tabPersonale">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="&#x1f454; Personale &amp; Contratti">
-                <Property name="tabTitle" type="java.lang.String" value="&#x1f454; Personale &amp; Contratti"/>
+              <JTabbedPaneConstraints tabName="Personale e Contratti">
+                <Property name="tabTitle" type="java.lang.String" value="Personale e Contratti"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="lblAnteprimaPersonale">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="16" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Personale | dipendenti, ruoli, contratti, stipendi e stato operativo"/>
+              </Properties>
+            </Component>
+          </SubComponents>
         </Container>
-
         <Container class="javax.swing.JPanel" name="tabFornitori">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="&#x1f3ed; Fornitori">
-                <Property name="tabTitle" type="java.lang.String" value="&#x1f3ed; Fornitori"/>
+              <JTabbedPaneConstraints tabName="Fornitori">
+                <Property name="tabTitle" type="java.lang.String" value="Fornitori"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="lblAnteprimaFornitori">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="16" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Fornitori | ragione sociale, partita IVA, contatti e sede operativa"/>
+              </Properties>
+            </Component>
+          </SubComponents>
         </Container>
       </SubComponents>
     </Container>
-
     <Container class="javax.swing.JPanel" name="panelStatusBar">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.MatteBorderInfo">
-            <MatteBorder bottom="0" left="0" right="0" top="1">
-              <Color PropertyName="color" blue="d9" green="d9" red="d9" type="rgb"/>
-            </MatteBorder>
-          </Border>
-        </Property>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="f8" green="f9" red="f6" type="rgb"/>
         </Property>
@@ -279,9 +325,6 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblStatusInfo">
           <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="12" style="0"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="Pronto. Sistema avviato con successo."/>
           </Properties>
         </Component>
