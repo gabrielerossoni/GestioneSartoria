@@ -13,6 +13,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -35,8 +36,10 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     private static final Font FONT_TITOLO = new Font("Segoe UI", Font.BOLD, 20);
     private static final Font FONT_TESTO = new Font("Segoe UI", Font.PLAIN, 12);
     private static final Font FONT_TESTO_BOLD = new Font("Segoe UI", Font.BOLD, 12);
+    private static final int INTERVALLO_SALVATAGGIO_AUTOMATICO = 3 * 60 * 1000;
 
     private final GestioneSartoriaService service = new GestioneSartoriaService();
+    private javax.swing.Timer timerSalvataggioAutomatico;
 
     // Componenti UI interni alle tab
     // --- TAB DASHBOARD ---
@@ -105,6 +108,16 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         costruisciVisteAziendali();
         inizializzaDati();
         aggiornaTutteLeTabelle();
+        avviaSalvataggioAutomatico();
+    }
+
+    private void avviaSalvataggioAutomatico() {
+        timerSalvataggioAutomatico = new javax.swing.Timer(
+                INTERVALLO_SALVATAGGIO_AUTOMATICO,
+                e -> salvaDatiAutomaticamente()
+        );
+        timerSalvataggioAutomatico.setRepeats(true);
+        timerSalvataggioAutomatico.start();
     }
 
     private void impostaStileUi() {
@@ -353,7 +366,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
 
         // Area Distinta Base (DROP TARGET)
         JPanel pnlDistinta = new JPanel(new BorderLayout(5, 5));
-        lblDettaglioProgetto = new JLabel("Seleziona una commessa per visualizzare o trascinare materiali");
+        lblDettaglioProgetto = new JLabel("Seleziona una commessa per visualizzare i materiali utilizzati");
         lblDettaglioProgetto.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblDettaglioProgetto.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         pnlDistinta.add(lblDettaglioProgetto, BorderLayout.NORTH);
@@ -364,6 +377,35 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         };
         tableDistintaProgetto = new JTable(modelDistintaProgetto);
         tableDistintaProgetto.setRowHeight(22);
+        tableDistintaProgetto.setDragEnabled(true);
+        tableDistintaProgetto.setTransferHandler(new TransferHandler() {
+            @Override
+            protected Transferable createTransferable(JComponent c) {
+                int riga = tableDistintaProgetto.getSelectedRow();
+                if (riga < 0) {
+                    return null;
+                }
+
+                String idComponente = (String) modelDistintaProgetto.getValueAt(riga, 0);
+                int rigaProgetto = tableProgetti.getSelectedRow();
+                if (rigaProgetto < 0) {
+                    return null;
+                }
+
+                String idProgetto = (String) modelProgetti.getValueAt(rigaProgetto, 0);
+                return service.cercaProgettoPerId(idProgetto)
+                        .flatMap(progetto -> progetto.getComponentiUsati().stream()
+                                .filter(materiale -> idComponente.equals(materiale.getIdComponente()))
+                                .findFirst())
+                        .map(ComponenteTransferable::new)
+                        .orElse(null);
+            }
+
+            @Override
+            public int getSourceActions(JComponent c) {
+                return MOVE;
+            }
+        });
 
         JScrollPane scrollDistinta = new JScrollPane(tableDistintaProgetto);
         pnlDistinta.add(scrollDistinta, BorderLayout.CENTER);
@@ -371,7 +413,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         // Box inferiore Catalogo Materiali (DRAG SOURCE)
         JPanel pnlCatalogoDnD = new JPanel(new BorderLayout(5, 5));
         pnlCatalogoDnD.setPreferredSize(new Dimension(300, 240));
-        pnlCatalogoDnD.setBorder(BorderFactory.createTitledBorder("Catalogo materiali - trascina nella distinta"));
+        pnlCatalogoDnD.setBorder(BorderFactory.createTitledBorder("Catalogo materiali disponibili"));
 
         modelCatalogoMateriali = new DefaultListModel<>();
         listCatalogoMaterialiPerDnD = new JList<>(modelCatalogoMateriali);
@@ -392,10 +434,108 @@ public class FinestraPrincipale extends javax.swing.JFrame {
             }
         });
 
-        pnlCatalogoDnD.add(new JScrollPane(listCatalogoMaterialiPerDnD), BorderLayout.CENTER);
+        JScrollPane scrollCatalogo = new JScrollPane(listCatalogoMaterialiPerDnD);
+        pnlCatalogoDnD.add(scrollCatalogo, BorderLayout.CENTER);
 
-        // ABILITA DROP TARGET SULLA TABELLA DISTINTA
-        new DropTarget(tableDistintaProgetto, DnDConstants.ACTION_COPY, new DropTargetAdapter() {
+        DropTargetAdapter gestoreRestituzioneMateriale = new DropTargetAdapter() {
+            private boolean accettaMaterialeAssegnato(DropTargetDragEvent evento) {
+                if (evento.isDataFlavorSupported(ComponenteTransferable.COMPONENTE_USATO_FLAVOR)) {
+                    evento.acceptDrag(DnDConstants.ACTION_MOVE);
+                    return true;
+                }
+                evento.rejectDrag();
+                return false;
+            }
+
+            @Override
+            public void dragEnter(DropTargetDragEvent dtde) {
+                accettaMaterialeAssegnato(dtde);
+            }
+
+            @Override
+            public void dragOver(DropTargetDragEvent dtde) {
+                accettaMaterialeAssegnato(dtde);
+            }
+
+            @Override
+            public void dropActionChanged(DropTargetDragEvent dtde) {
+                accettaMaterialeAssegnato(dtde);
+            }
+
+            @Override
+            public void drop(DropTargetDropEvent dtde) {
+                try {
+                    if (!dtde.isDataFlavorSupported(ComponenteTransferable.COMPONENTE_USATO_FLAVOR)) {
+                        dtde.rejectDrop();
+                        return;
+                    }
+
+                    int rigaProgetto = tableProgetti.getSelectedRow();
+                    if (rigaProgetto < 0) {
+                        dtde.rejectDrop();
+                        return;
+                    }
+
+                    dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+                    ComponenteUsato materiale = (ComponenteUsato) dtde.getTransferable()
+                            .getTransferData(ComponenteTransferable.COMPONENTE_USATO_FLAVOR);
+                    String idProgetto = (String) modelProgetti.getValueAt(rigaProgetto, 0);
+                    String quantita = JOptionPane.showInputDialog(FinestraPrincipale.this,
+                            "Quantita da restituire al magazzino:", "Restituisci materiale",
+                            JOptionPane.QUESTION_MESSAGE);
+
+                    if (quantita != null && !quantita.trim().isEmpty()) {
+                        double quantitaDaRestituire = Double.parseDouble(quantita.replace(",", "."));
+                        boolean restituito = service.restituisciMaterialeDaProgetto(
+                                idProgetto, materiale.getIdComponente(), quantitaDaRestituire);
+                        if (restituito) {
+                            aggiornaTutteLeTabelle();
+                            mostraDettagliProgettoSelezionato();
+                        } else {
+                            JOptionPane.showMessageDialog(FinestraPrincipale.this,
+                                    "Quantita non valida o superiore a quella assegnata.",
+                                    "Errore", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    dtde.dropComplete(true);
+                } catch (java.io.IOException | java.awt.datatransfer.UnsupportedFlavorException
+                        | NumberFormatException ex) {
+                    dtde.rejectDrop();
+                }
+            }
+        };
+
+        new DropTarget(pnlCatalogoDnD, DnDConstants.ACTION_MOVE, gestoreRestituzioneMateriale);
+        new DropTarget(scrollCatalogo, DnDConstants.ACTION_MOVE, gestoreRestituzioneMateriale);
+        new DropTarget(scrollCatalogo.getViewport(), DnDConstants.ACTION_MOVE, gestoreRestituzioneMateriale);
+        new DropTarget(listCatalogoMaterialiPerDnD, DnDConstants.ACTION_MOVE, gestoreRestituzioneMateriale);
+
+        // Gestore comune per l'intero riquadro della distinta base.
+        DropTargetAdapter gestoreDropMateriale = new DropTargetAdapter() {
+            private boolean accettaMateriale(DropTargetDragEvent evento) {
+                if (evento.isDataFlavorSupported(ComponenteTransferable.COMPONENTE_FLAVOR)) {
+                    evento.acceptDrag(DnDConstants.ACTION_COPY);
+                    return true;
+                }
+                evento.rejectDrag();
+                return false;
+            }
+
+            @Override
+            public void dragEnter(DropTargetDragEvent dtde) {
+                accettaMateriale(dtde);
+            }
+
+            @Override
+            public void dragOver(DropTargetDragEvent dtde) {
+                accettaMateriale(dtde);
+            }
+
+            @Override
+            public void dropActionChanged(DropTargetDragEvent dtde) {
+                accettaMateriale(dtde);
+            }
+
             @Override
             public void drop(DropTargetDropEvent dtde) {
                 try {
@@ -415,7 +555,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                         String qtaStr = JOptionPane.showInputDialog(FinestraPrincipale.this,
                                 "Inserisci la quantità da prelevare per " + comp.getNome() + "\n(Disponibili: " +
                                         String.format("%.2f", comp.getQuantitaDisponibile()) + " " + comp.getUnitaMisura() + "):",
-                                "Preleva Materiale (Drag & Drop)", JOptionPane.QUESTION_MESSAGE);
+                                "Preleva materiale", JOptionPane.QUESTION_MESSAGE);
 
                         if (qtaStr != null && !qtaStr.trim().isEmpty()) {
                             double qta = Double.parseDouble(qtaStr.replace(",", "."));
@@ -442,7 +582,14 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                     dtde.rejectDrop();
                 }
             }
-        });
+        };
+
+        // Il cursore deve accettare il materiale anche sopra il titolo e lo spazio vuoto.
+        new DropTarget(pnlDistinta, DnDConstants.ACTION_COPY, gestoreDropMateriale);
+        new DropTarget(lblDettaglioProgetto, DnDConstants.ACTION_COPY, gestoreDropMateriale);
+        new DropTarget(scrollDistinta, DnDConstants.ACTION_COPY, gestoreDropMateriale);
+        new DropTarget(scrollDistinta.getViewport(), DnDConstants.ACTION_COPY, gestoreDropMateriale);
+        new DropTarget(tableDistintaProgetto, DnDConstants.ACTION_COPY, gestoreDropMateriale);
 
         pnlDestra.add(pnlDistinta, BorderLayout.CENTER);
         pnlDestra.add(pnlCatalogoDnD, BorderLayout.SOUTH);
@@ -699,7 +846,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                 }
             });
         } else {
-            lblDettaglioProgetto.setText("Seleziona una commessa per visualizzare o trascinare materiali");
+            lblDettaglioProgetto.setText("Seleziona una commessa per visualizzare i materiali utilizzati");
         }
     }
 
@@ -1064,12 +1211,30 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         }
     }
 
+    private void salvaDatiAutomaticamente() {
+        boolean salvato = FilePersistenceService.salvaDati(service, null);
+        String ora = java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        if (salvato) {
+            lblStatusInfo.setText("Salvataggio automatico completato alle ore: " + ora);
+        } else {
+            lblStatusInfo.setText("Errore nel salvataggio automatico alle ore: " + ora);
+        }
+    }
+
     private void ricaricaDati() {
         int ok = JOptionPane.showConfirmDialog(this, "Ricaricare l'archivio salvato annullando le modifiche non salvate?", "Conferma Ricarica", JOptionPane.YES_NO_OPTION);
         if (ok == JOptionPane.YES_OPTION) {
-            FilePersistenceService.caricaDati(service, null);
-            aggiornaTutteLeTabelle();
-            lblStatusInfo.setText("Dati ricaricati dall'archivio persistente.");
+            boolean caricato = FilePersistenceService.caricaDati(service, null);
+            if (caricato) {
+                aggiornaTutteLeTabelle();
+                lblStatusInfo.setText("Dati ricaricati dall'archivio persistente.");
+                JOptionPane.showMessageDialog(this, "Dati ricaricati con successo.", "Ricarica", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                lblStatusInfo.setText("Nessun archivio valido trovato.");
+                JOptionPane.showMessageDialog(this,
+                        "Impossibile ricaricare i dati: archivio non trovato o non valido.",
+                        "Errore Ricarica", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -1110,7 +1275,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         lblTitoloApp.setForeground(new java.awt.Color(255, 255, 255));
         lblTitoloApp.setText("GESTIONE SARTORIA DIGITALE - V2");
 
-        lblSottotitolo.setText("Commesse su misura, Magazzino a 3 Piani con Drag&Drop, Dipendenti, Clienti e Fornitori");
+        lblSottotitolo.setText("Commesse su misura, Magazzino a 3 Piani, Dipendenti, Clienti e Fornitori");
 
         btnSalvaDati.setBackground(new java.awt.Color(40, 100, 235));
         btnSalvaDati.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -1126,6 +1291,11 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         btnRicarica.setBackground(new java.awt.Color(99, 107, 125));
         btnRicarica.setForeground(new java.awt.Color(255, 255, 255));
         btnRicarica.setText("Ricarica Dati");
+        btnRicarica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRicaricaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelHeaderLayout = new javax.swing.GroupLayout(panelHeader);
         panelHeader.setLayout(panelHeaderLayout);
@@ -1165,7 +1335,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         tabbedPanePrincipale.addTab("Panoramica e Alert", tabDashboard);
 
         tabProgetti.setLayout(new java.awt.BorderLayout());
-        tabbedPanePrincipale.addTab("Commesse e Progetti (Drag&Drop)", tabProgetti);
+        tabbedPanePrincipale.addTab("Commesse e Progetti", tabProgetti);
 
         tabMagazzino.setLayout(new java.awt.BorderLayout());
         tabbedPanePrincipale.addTab("Magazzino a 3 Piani", tabMagazzino);

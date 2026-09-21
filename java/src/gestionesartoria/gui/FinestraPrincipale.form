@@ -112,7 +112,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblSottotitolo">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Commesse su misura, Magazzino a 3 Piani con Drag&amp;Drop, Dipendenti, Clienti e Fornitori"/>
+            <Property name="text" type="java.lang.String" value="Commesse su misura, Magazzino a 3 Piani, Dipendenti, Clienti e Fornitori"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnSalvaDati">
@@ -190,8 +190,8 @@
         <Container class="javax.swing.JPanel" name="tabProgetti">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Commesse e Progetti (Drag&amp;Drop)">
-                <Property name="tabTitle" type="java.lang.String" value="Commesse e Progetti (Drag&amp;Drop)"/>
+              <JTabbedPaneConstraints tabName="Commesse e Progetti">
+                <Property name="tabTitle" type="java.lang.String" value="Commesse e Progetti"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>

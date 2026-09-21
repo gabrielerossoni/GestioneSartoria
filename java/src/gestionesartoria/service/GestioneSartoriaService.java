@@ -288,6 +288,36 @@ public class GestioneSartoriaService {
         return true;
     }
 
+    /** Restituisce al magazzino un materiale precedentemente assegnato a una commessa. */
+    public boolean restituisciMaterialeDaProgetto(String idProgetto, String idComponente, double quantita) {
+        Optional<Progetto> progettoTrovato = cercaProgettoPerId(idProgetto);
+        Optional<Componente> componenteTrovato = cercaComponentePerId(idComponente);
+
+        if (progettoTrovato.isEmpty() || componenteTrovato.isEmpty() || quantita <= 0) {
+            return false;
+        }
+
+        Progetto progetto = progettoTrovato.get();
+        Componente componente = componenteTrovato.get();
+
+        for (int i = 0; i < progetto.getComponentiUsati().size(); i++) {
+            ComponenteUsato componenteUsato = progetto.getComponentiUsati().get(i);
+            if (idComponente.equalsIgnoreCase(componenteUsato.getIdComponente())
+                    && quantita <= componenteUsato.getQuantitaUsata()) {
+                componente.setQuantitaDisponibile(componente.getQuantitaDisponibile() + quantita);
+                double quantitaRestante = componenteUsato.getQuantitaUsata() - quantita;
+
+                if (quantitaRestante == 0) {
+                    progetto.getComponentiUsati().remove(i);
+                } else {
+                    componenteUsato.setQuantitaUsata(quantitaRestante);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Sposta un componente a un altro piano/scaffale
      */

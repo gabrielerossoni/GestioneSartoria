@@ -11,15 +11,10 @@ if exist %ANT_CMD% (
     echo [*] Compilazione ed esecuzione con Apache Ant...
     call %ANT_CMD% run
 ) else (
-    echo [*] Apache Ant non trovato nel percorso di default, provo esecuzione diretta JAR...
-    if exist "dist\GestioneSartoria.jar" (
-        java -jar dist\GestioneSartoria.jar
-    ) else (
-        echo [*] Compilazione rapida con javac...
-        if not exist build\classes mkdir build\classes
-        javac -encoding UTF-8 -d build\classes src\gestionesartoria\model\*.java src\gestionesartoria\service\*.java src\gestionesartoria\gui\dnd\*.java src\gestionesartoria\gui\*.java
-        java -cp build\classes gestionesartoria.gui.FinestraPrincipale
-    )
+    echo [*] Apache Ant non trovato nel percorso di default, esecuzione diretta dalle classi compilate...
+    if not exist build\classes mkdir build\classes
+    javac -encoding UTF-8 -d build\classes src\gestionesartoria\model\*.java src\gestionesartoria\service\*.java src\gestionesartoria\gui\dnd\*.java src\gestionesartoria\gui\*.java
+    java -cp build\classes gestionesartoria.gui.FinestraPrincipale
 )
 
 pause
