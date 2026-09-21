@@ -49,13 +49,13 @@ public class Fornitore implements Serializable {
 
     public String getDenominazioneCompleta() {
         if (cognome != null && !cognome.trim().isEmpty()) {
-            return nome + " " + cognome;
+            return String.format("%s %s", nome != null ? nome : "", cognome);
         }
-        return nome;
+        return nome != null ? nome : "";
     }
 
     @Override
     public String toString() {
-        return id + " - " + getDenominazioneCompleta() + " (P.IVA: " + partitaIva + ")";
+        return String.format("%s - %s (P.IVA: %s)", id, getDenominazioneCompleta(), partitaIva != null ? partitaIva : "");
     }
 }

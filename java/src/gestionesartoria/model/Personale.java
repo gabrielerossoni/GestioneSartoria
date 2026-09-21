@@ -61,11 +61,11 @@ public class Personale implements Serializable {
     public void setStato(String stato) { this.stato = stato; }
 
     public String getNomeCompleto() {
-        return nome + " " + cognome;
+        return String.format("%s %s", nome != null ? nome : "", cognome != null ? cognome : "").trim();
     }
 
     @Override
     public String toString() {
-        return id + " - " + getNomeCompleto() + " (" + ruolo + ")";
+        return String.format("%s - %s (%s)", id, getNomeCompleto(), ruolo != null ? ruolo : "");
     }
 }

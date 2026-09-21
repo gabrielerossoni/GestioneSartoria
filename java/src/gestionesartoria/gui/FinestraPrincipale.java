@@ -22,10 +22,21 @@ import java.util.List;
  * Finestra principale NetBeans GUI Form.
  * Supporta la vista Design di NetBeans tramite FinestraPrincipale.form
  */
-public class FinestraPrincipale extends javax.swing.JFrame {
+@SuppressWarnings({"serial", "this-escape"})
+public class FinestraPrincipale extends javax.swing.JFrame implements java.awt.event.ActionListener {
+
+    private static final long serialVersionUID = 1L;
+    private static final Color COLONNA_HEADER = new Color(15, 23, 42);
+    private static final Color COLONNA_CHIARA = new Color(244, 247, 250);
+    private static final Color COLONNA_ACCENT = new Color(37, 99, 235);
+    private static final Color COLONNA_ACCENT_DARK = new Color(29, 78, 216);
+    private static final Color COLONNA_BOTTONE_SECONDARIO = new Color(108, 117, 125);
+    private static final Color COLONNA_BORDO = new Color(209, 213, 219);
+    private static final Font FONT_TITOLO = new Font("Segoe UI", Font.BOLD, 20);
+    private static final Font FONT_TESTO = new Font("Segoe UI", Font.PLAIN, 12);
+    private static final Font FONT_TESTO_BOLD = new Font("Segoe UI", Font.BOLD, 12);
 
     private final GestioneSartoriaService service = new GestioneSartoriaService();
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     // Componenti UI interni alle tab
     // --- TAB DASHBOARD ---
@@ -51,30 +62,198 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     private DefaultTableModel modelMagazzinoPiani;
     private JComboBox<String> comboFiltroPiano;
     private JLabel lblValorePianoCorrente;
+    private JButton btnNuovoComp;
+    private JButton btnModificaQta;
+    private JButton btnEliminaComp;
 
     // --- TAB CLIENTI ---
     private JTable tableClienti;
     private DefaultTableModel modelClienti;
     private JTextField txtCercaCliente;
+    private JButton btnCercaCliente;
+    private JButton btnResetCliente;
+    private JButton btnNuovoCliente;
+    private JButton btnEliminaCliente;
 
     // --- TAB PERSONALE ---
     private JTable tablePersonale;
     private DefaultTableModel modelPersonale;
     private JComboBox<String> comboFiltroContratto;
+    private JButton btnNuovoDip;
+    private JButton btnEliminaDip;
 
     // --- TAB FORNITORI ---
     private JTable tableFornitori;
     private DefaultTableModel modelFornitori;
     private JTextField txtCercaFornitore;
+    private JButton btnCercaFornitore;
+    private JButton btnResetFornitore;
+    private JButton btnNuovoFor;
+    private JButton btnEliminaFor;
+
+    // --- TAB PROGETTI EXTRA ---
+    private JButton btnNuovoProgetto;
+    private JButton btnEliminaProgetto;
+    private JButton btnAggiornaStato;
 
     /**
      * Creates new form FinestraPrincipale
      */
     public FinestraPrincipale() {
         initComponents();
+        impostaStileUi();
         costruisciVisteAziendali();
         inizializzaDati();
         aggiornaTutteLeTabelle();
+    }
+
+    private void impostaStileUi() {
+        panelHeader.setBackground(COLONNA_HEADER);
+        panelHeader.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        panelStatusBar.setBackground(COLONNA_CHIARA);
+        panelStatusBar.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, COLONNA_BORDO));
+
+        lblTitoloApp.setFont(FONT_TITOLO);
+        lblTitoloApp.setForeground(Color.WHITE);
+        lblSottotitolo.setFont(FONT_TESTO);
+        lblSottotitolo.setForeground(new Color(204, 204, 204));
+
+        impostaStileBottone(btnSalvaDati, COLONNA_ACCENT, COLONNA_ACCENT_DARK, Color.WHITE);
+        impostaStileBottone(btnRicarica, COLONNA_BOTTONE_SECONDARIO, new Color(86, 94, 102), Color.WHITE);
+
+        tabbedPanePrincipale.setBackground(COLONNA_CHIARA);
+        tabbedPanePrincipale.setForeground(new Color(23, 35, 45));
+        tabbedPanePrincipale.setFont(FONT_TESTO_BOLD);
+    }
+
+    private void impostaStileBottone(JButton bottone, Color base, Color hover, Color testo) {
+        if (bottone == null) {
+            return;
+        }
+
+        bottone.setFont(FONT_TESTO_BOLD);
+        bottone.setBackground(base);
+        bottone.setForeground(testo);
+        bottone.setFocusPainted(false);
+        bottone.setOpaque(true);
+        bottone.setBorderPainted(true);
+        bottone.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        bottone.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(base.darker(), 1, true),
+                BorderFactory.createEmptyBorder(8, 14, 8, 14)
+        ));
+
+        bottone.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                bottone.setBackground(hover);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                bottone.setBackground(base);
+            }
+        });
+    }
+
+    @Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        Object source = e.getSource();
+
+        if (source == btnSalvaDati) {
+            salvaDatiSuFile();
+            return;
+        }
+
+        if (source == btnRicarica) {
+            ricaricaDati();
+            return;
+        }
+
+        if (source == btnNuovoProgetto) {
+            dialogNuovoProgetto();
+            return;
+        }
+
+        if (source == btnEliminaProgetto) {
+            eliminaProgettoSelezionato();
+            return;
+        }
+
+        if (source == btnAggiornaStato) {
+            aggiornaStatoProgettoSelezionato();
+            return;
+        }
+
+        if (source == btnNuovoComp) {
+            dialogNuovoComponente();
+            return;
+        }
+
+        if (source == btnModificaQta) {
+            modificaComponenteSelezionato();
+            return;
+        }
+
+        if (source == btnEliminaComp) {
+            eliminaComponenteSelezionato();
+            return;
+        }
+
+        if (source == btnNuovoCliente) {
+            dialogNuovoCliente();
+            return;
+        }
+
+        if (source == btnEliminaCliente) {
+            eliminaClienteSelezionato();
+            return;
+        }
+
+        if (source == btnCercaCliente || source == btnResetCliente || source == txtCercaCliente) {
+            if (source == btnResetCliente && txtCercaCliente != null) {
+                txtCercaCliente.setText("");
+            }
+            aggiornaTabellaClienti();
+            return;
+        }
+
+        if (source == btnNuovoDip) {
+            dialogNuovoPersonale();
+            return;
+        }
+
+        if (source == btnEliminaDip) {
+            eliminaPersonaleSelezionato();
+            return;
+        }
+
+        if (source == comboFiltroContratto) {
+            aggiornaTabellaPersonale();
+            return;
+        }
+
+        if (source == btnNuovoFor) {
+            dialogNuovoFornitore();
+            return;
+        }
+
+        if (source == btnEliminaFor) {
+            eliminaFornitoreSelezionato();
+            return;
+        }
+
+        if (source == btnCercaFornitore || source == btnResetFornitore || source == txtCercaFornitore) {
+            if (source == btnResetFornitore && txtCercaFornitore != null) {
+                txtCercaFornitore.setText("");
+            }
+            aggiornaTabellaFornitori();
+            return;
+        }
+
+        if (source == comboFiltroPiano) {
+            aggiornaTabellaMagazzino();
+        }
     }
 
     private void inizializzaDati() {
@@ -93,8 +272,8 @@ public class FinestraPrincipale extends javax.swing.JFrame {
      */
     private void costruisciVisteAziendali() {
         // Setup listener pulsanti header
-        btnSalvaDati.addActionListener(e -> salvaDatiSuFile());
-        btnRicarica.addActionListener(e -> ricaricaDati());
+        btnSalvaDati.addActionListener(this);
+        btnRicarica.addActionListener(this);
 
         costruisciTabDashboard();
         costruisciTabProgettiDnD();
@@ -194,12 +373,12 @@ public class FinestraPrincipale extends javax.swing.JFrame {
 
         // Toolbar azioni progetti
         JPanel pnlToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        JButton btnNuovoProgetto = new JButton("➕ Nuova Commessa / Abito");
+        btnNuovoProgetto = new JButton("➕ Nuova Commessa / Abito");
         btnNuovoProgetto.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnNuovoProgetto.addActionListener(e -> dialogNuovoProgetto());
+        btnNuovoProgetto.addActionListener(this);
 
-        JButton btnEliminaProgetto = new JButton("🗑️ Elimina Selezionato");
-        btnEliminaProgetto.addActionListener(e -> eliminaProgettoSelezionato());
+        btnEliminaProgetto = new JButton("🗑️ Elimina Selezionato");
+        btnEliminaProgetto.addActionListener(this);
 
         pnlToolbar.add(btnNuovoProgetto);
         pnlToolbar.add(btnEliminaProgetto);
@@ -207,8 +386,8 @@ public class FinestraPrincipale extends javax.swing.JFrame {
 
         pnlToolbar.add(new JLabel("Avanzamento Stato:"));
         comboNuovoStato = new JComboBox<>(StatoProgetto.values());
-        JButton btnAggiornaStato = new JButton("Aggiorna Stato");
-        btnAggiornaStato.addActionListener(e -> aggiornaStatoProgettoSelezionato());
+        btnAggiornaStato = new JButton("Aggiorna Stato");
+        btnAggiornaStato.addActionListener(this);
         pnlToolbar.add(comboNuovoStato);
         pnlToolbar.add(btnAggiornaStato);
 
@@ -327,8 +506,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                     } else {
                         dtde.rejectDrop();
                     }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                } catch (java.io.IOException | java.awt.datatransfer.UnsupportedFlavorException | NumberFormatException ex) {
                     dtde.rejectDrop();
                 }
             }
@@ -358,19 +536,19 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                 "Piano 2: Minuteria, Filati & Accessori"
         });
         comboFiltroPiano.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        comboFiltroPiano.addActionListener(e -> aggiornaTabellaMagazzino());
+        comboFiltroPiano.addActionListener(this);
         pnlFiltri.add(comboFiltroPiano);
 
-        JButton btnNuovoComp = new JButton("➕ Nuovo Componente");
-        btnNuovoComp.addActionListener(e -> dialogNuovoComponente());
+        btnNuovoComp = new JButton("➕ Nuovo Componente");
+        btnNuovoComp.addActionListener(this);
         pnlFiltri.add(btnNuovoComp);
 
-        JButton btnModificaQta = new JButton("✏️ Modifica Giacenza / Scaffale");
-        btnModificaQta.addActionListener(e -> modificaComponenteSelezionato());
+        btnModificaQta = new JButton("✏️ Modifica Giacenza / Scaffale");
+        btnModificaQta.addActionListener(this);
         pnlFiltri.add(btnModificaQta);
 
-        JButton btnEliminaComp = new JButton("🗑️ Elimina Componente");
-        btnEliminaComp.addActionListener(e -> eliminaComponenteSelezionato());
+        btnEliminaComp = new JButton("🗑️ Elimina Componente");
+        btnEliminaComp.addActionListener(this);
         pnlFiltri.add(btnEliminaComp);
 
         lblValorePianoCorrente = new JLabel("Valore Piano: € 0.00");
@@ -418,25 +596,25 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         tabClienti.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        JButton btnNuovoCliente = new JButton("➕ Nuovo Cliente");
-        btnNuovoCliente.addActionListener(e -> dialogNuovoCliente());
+        btnNuovoCliente = new JButton("➕ Nuovo Cliente");
+        btnNuovoCliente.addActionListener(this);
 
-        JButton btnEliminaCliente = new JButton("🗑️ Elimina");
-        btnEliminaCliente.addActionListener(e -> eliminaClienteSelezionato());
+        btnEliminaCliente = new JButton("🗑️ Elimina");
+        btnEliminaCliente.addActionListener(this);
 
         pnlTop.add(btnNuovoCliente);
         pnlTop.add(btnEliminaCliente);
         pnlTop.add(new JLabel("Cerca (CF o Cognome):"));
         txtCercaCliente = new JTextField(15);
-        txtCercaCliente.addActionListener(e -> aggiornaTabellaClienti());
-        JButton btnCerca = new JButton("Filtra");
-        btnCerca.addActionListener(e -> aggiornaTabellaClienti());
-        JButton btnReset = new JButton("Reset");
-        btnReset.addActionListener(e -> { txtCercaCliente.setText(""); aggiornaTabellaClienti(); });
+        txtCercaCliente.addActionListener(this);
+        btnCercaCliente = new JButton("Filtra");
+        btnCercaCliente.addActionListener(this);
+        btnResetCliente = new JButton("Reset");
+        btnResetCliente.addActionListener(this);
 
         pnlTop.add(txtCercaCliente);
-        pnlTop.add(btnCerca);
-        pnlTop.add(btnReset);
+        pnlTop.add(btnCercaCliente);
+        pnlTop.add(btnResetCliente);
 
         tabClienti.add(pnlTop, BorderLayout.NORTH);
 
@@ -457,11 +635,11 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         tabPersonale.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        JButton btnNuovoDip = new JButton("➕ Nuovo Dipendente");
-        btnNuovoDip.addActionListener(e -> dialogNuovoPersonale());
+        btnNuovoDip = new JButton("➕ Nuovo Dipendente");
+        btnNuovoDip.addActionListener(this);
 
-        JButton btnEliminaDip = new JButton("🗑️ Elimina");
-        btnEliminaDip.addActionListener(e -> eliminaPersonaleSelezionato());
+        btnEliminaDip = new JButton("🗑️ Elimina");
+        btnEliminaDip.addActionListener(this);
 
         pnlTop.add(btnNuovoDip);
         pnlTop.add(btnEliminaDip);
@@ -470,7 +648,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         comboFiltroContratto = new JComboBox<>(new String[]{
                 "TUTTI", "Indeterminato", "Determinato", "Apprendistato", "Stage", "Part-Time"
         });
-        comboFiltroContratto.addActionListener(e -> aggiornaTabellaPersonale());
+        comboFiltroContratto.addActionListener(this);
         pnlTop.add(comboFiltroContratto);
 
         tabPersonale.add(pnlTop, BorderLayout.NORTH);
@@ -492,26 +670,26 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         tabFornitori.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        JButton btnNuovoFor = new JButton("➕ Nuovo Fornitore");
-        btnNuovoFor.addActionListener(e -> dialogNuovoFornitore());
+        btnNuovoFor = new JButton("➕ Nuovo Fornitore");
+        btnNuovoFor.addActionListener(this);
 
-        JButton btnEliminaFor = new JButton("🗑️ Elimina");
-        btnEliminaFor.addActionListener(e -> eliminaFornitoreSelezionato());
+        btnEliminaFor = new JButton("🗑️ Elimina");
+        btnEliminaFor.addActionListener(this);
 
         pnlTop.add(btnNuovoFor);
         pnlTop.add(btnEliminaFor);
 
         pnlTop.add(new JLabel("Cerca (Ragione Sociale / P.IVA):"));
         txtCercaFornitore = new JTextField(15);
-        txtCercaFornitore.addActionListener(e -> aggiornaTabellaFornitori());
-        JButton btnCerca = new JButton("Filtra");
-        btnCerca.addActionListener(e -> aggiornaTabellaFornitori());
-        JButton btnReset = new JButton("Reset");
-        btnReset.addActionListener(e -> { txtCercaFornitore.setText(""); aggiornaTabellaFornitori(); });
+        txtCercaFornitore.addActionListener(this);
+        btnCercaFornitore = new JButton("Filtra");
+        btnCercaFornitore.addActionListener(this);
+        btnResetFornitore = new JButton("Reset");
+        btnResetFornitore.addActionListener(this);
 
         pnlTop.add(txtCercaFornitore);
-        pnlTop.add(btnCerca);
-        pnlTop.add(btnReset);
+        pnlTop.add(btnCercaFornitore);
+        pnlTop.add(btnResetFornitore);
 
         tabFornitori.add(pnlTop, BorderLayout.NORTH);
 
@@ -697,7 +875,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                 service.aggiungiProgetto(prj);
                 aggiornaTutteLeTabelle();
                 lblStatusInfo.setText("Commessa " + prj.getId() + " creata con successo.");
-            } catch (Exception ex) {
+            } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Dati non validi: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -771,7 +949,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                 service.aggiungiComponente(c);
                 aggiornaTutteLeTabelle();
                 lblStatusInfo.setText("Componente " + c.getId() + " inserito con successo.");
-            } catch (Exception ex) {
+            } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Dati errati: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -799,7 +977,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                         c.setPianoMagazzino(cbPiano.getSelectedIndex());
                         c.setScaffale(txtScaffale.getText().trim());
                         aggiornaTutteLeTabelle();
-                    } catch (Exception ex) {
+                    } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(this, "Valore non valido.", "Errore", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -888,7 +1066,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                 service.aggiungiPersonale(p);
                 aggiornaTabellaPersonale();
                 aggiornaDashboard();
-            } catch (Exception ex) {
+            } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Dati non validi.", "Errore", JOptionPane.ERROR_MESSAGE);
             }
         }

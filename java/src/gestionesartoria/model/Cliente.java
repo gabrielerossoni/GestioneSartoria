@@ -48,11 +48,11 @@ public class Cliente implements Serializable {
     public void setNoteMisure(String noteMisure) { this.noteMisure = noteMisure; }
 
     public String getNomeCompleto() {
-        return nome + " " + cognome;
+        return String.format("%s %s", nome != null ? nome : "", cognome != null ? cognome : "").trim();
     }
 
     @Override
     public String toString() {
-        return id + " - " + getNomeCompleto() + " (" + codiceFiscale + ")";
+        return String.format("%s - %s (%s)", id, getNomeCompleto(), codiceFiscale != null ? codiceFiscale : "");
     }
 }

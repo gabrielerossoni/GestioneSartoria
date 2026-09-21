@@ -1,6 +1,13 @@
 package gestionesartoria.service;
 
-import gestionesartoria.model.*;
+import gestionesartoria.model.Cliente;
+import gestionesartoria.model.Componente;
+import gestionesartoria.model.ComponenteUsato;
+import gestionesartoria.model.Fornitore;
+import gestionesartoria.model.Magazzino;
+import gestionesartoria.model.Personale;
+import gestionesartoria.model.Progetto;
+import gestionesartoria.model.StatoProgetto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +33,8 @@ public class GestioneSartoriaService {
                     int val = Integer.parseInt(f.getId().substring(3));
                     if (val > max) max = val;
                 }
-            } catch (Exception ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
         return String.format("FOR%04d", max + 1);
     }
@@ -39,7 +47,8 @@ public class GestioneSartoriaService {
                     int val = Integer.parseInt(c.getId().substring(3));
                     if (val > max) max = val;
                 }
-            } catch (Exception ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
         return String.format("CLI%04d", max + 1);
     }
@@ -52,7 +61,8 @@ public class GestioneSartoriaService {
                     int val = Integer.parseInt(p.getId().substring(3));
                     if (val > max) max = val;
                 }
-            } catch (Exception ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
         return String.format("DIP%04d", max + 1);
     }
@@ -65,7 +75,8 @@ public class GestioneSartoriaService {
                     int val = Integer.parseInt(c.getId().substring(3));
                     if (val > max) max = val;
                 }
-            } catch (Exception ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
         return String.format("CMP%04d", max + 1);
     }
@@ -78,7 +89,8 @@ public class GestioneSartoriaService {
                     int val = Integer.parseInt(p.getId().substring(3));
                     if (val > max) max = val;
                 }
-            } catch (Exception ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
         return String.format("PRJ%04d", max + 1);
     }
@@ -87,6 +99,7 @@ public class GestioneSartoriaService {
     public List<Fornitore> getFornitori() { return fornitori; }
 
     public void aggiungiFornitore(Fornitore f) {
+        if (f == null) return;
         if (f.getId() == null || f.getId().trim().isEmpty()) {
             f.setId(generaProssimoIdFornitore());
         }
@@ -104,10 +117,10 @@ public class GestioneSartoriaService {
 
     public List<Fornitore> filtraFornitori(String testo) {
         if (testo == null || testo.trim().isEmpty()) return new ArrayList<>(fornitori);
-        String q = testo.toLowerCase();
+        String q = testo.trim().toLowerCase();
         return fornitori.stream()
-                .filter(f -> f.getId().toLowerCase().contains(q)
-                        || f.getNome().toLowerCase().contains(q)
+            .filter(f -> (f.getId() != null && f.getId().toLowerCase().contains(q))
+                || (f.getNome() != null && f.getNome().toLowerCase().contains(q))
                         || (f.getCognome() != null && f.getCognome().toLowerCase().contains(q))
                         || (f.getPartitaIva() != null && f.getPartitaIva().toLowerCase().contains(q)))
                 .collect(Collectors.toList());
@@ -117,6 +130,7 @@ public class GestioneSartoriaService {
     public List<Cliente> getClienti() { return clienti; }
 
     public void aggiungiCliente(Cliente c) {
+        if (c == null) return;
         if (c.getId() == null || c.getId().trim().isEmpty()) {
             c.setId(generaProssimoIdCliente());
         }
@@ -134,11 +148,11 @@ public class GestioneSartoriaService {
 
     public List<Cliente> filtraClienti(String testo) {
         if (testo == null || testo.trim().isEmpty()) return new ArrayList<>(clienti);
-        String q = testo.toLowerCase();
+        String q = testo.trim().toLowerCase();
         return clienti.stream()
-                .filter(c -> c.getId().toLowerCase().contains(q)
-                        || c.getNome().toLowerCase().contains(q)
-                        || c.getCognome().toLowerCase().contains(q)
+            .filter(c -> (c.getId() != null && c.getId().toLowerCase().contains(q))
+                || (c.getNome() != null && c.getNome().toLowerCase().contains(q))
+                || (c.getCognome() != null && c.getCognome().toLowerCase().contains(q))
                         || (c.getCodiceFiscale() != null && c.getCodiceFiscale().toLowerCase().contains(q)))
                 .collect(Collectors.toList());
     }
@@ -147,6 +161,7 @@ public class GestioneSartoriaService {
     public List<Personale> getPersonale() { return personale; }
 
     public void aggiungiPersonale(Personale p) {
+        if (p == null) return;
         if (p.getId() == null || p.getId().trim().isEmpty()) {
             p.setId(generaProssimoIdPersonale());
         }
@@ -183,6 +198,7 @@ public class GestioneSartoriaService {
     }
 
     public void aggiungiComponente(Componente c) {
+        if (c == null) return;
         if (c.getId() == null || c.getId().trim().isEmpty()) {
             c.setId(generaProssimoIdComponente());
         }
@@ -217,6 +233,7 @@ public class GestioneSartoriaService {
     public List<Progetto> getProgetti() { return progetti; }
 
     public void aggiungiProgetto(Progetto p) {
+        if (p == null) return;
         if (p.getId() == null || p.getId().trim().isEmpty()) {
             p.setId(generaProssimoIdProgetto());
         }
@@ -224,11 +241,14 @@ public class GestioneSartoriaService {
     }
 
     public boolean eliminaProgetto(String id) {
-        return progetti.removeIf(p -> p.getId().equalsIgnoreCase(id));
+        return id != null && progetti.removeIf(p -> p.getId() != null && p.getId().equalsIgnoreCase(id));
     }
 
     public Optional<Progetto> cercaProgettoPerId(String id) {
-        return progetti.stream().filter(p -> p.getId().equalsIgnoreCase(id)).findFirst();
+        if (id == null || id.trim().isEmpty()) return Optional.empty();
+        return progetti.stream()
+                .filter(p -> p.getId() != null && p.getId().equalsIgnoreCase(id))
+                .findFirst();
     }
 
     public List<Progetto> getProgettiPerStato(StatoProgetto stato) {

@@ -2,7 +2,6 @@ package gestionesartoria.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +9,7 @@ import java.util.stream.Collectors;
  * Rappresenta un singolo piano logistico e fisico del magazzino sartoriale.
  * Incapsula la lista dei componenti stoccati al piano, le coordinate e le metriche di inventario.
  */
+@SuppressWarnings("serial")
 public class PianoMagazzino implements Serializable {
     private static final long serialVersionUID = 1L;
 

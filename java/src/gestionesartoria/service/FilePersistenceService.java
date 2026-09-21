@@ -1,9 +1,16 @@
 package gestionesartoria.service;
 
-import gestionesartoria.model.*;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import gestionesartoria.model.Cliente;
+import gestionesartoria.model.Componente;
+import gestionesartoria.model.Fornitore;
+import gestionesartoria.model.Personale;
+import gestionesartoria.model.Progetto;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 public class FilePersistenceService {
@@ -28,7 +35,6 @@ public class FilePersistenceService {
             }
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -63,8 +69,7 @@ public class FilePersistenceService {
             service.getProgetti().addAll(prjList);
 
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | ClassNotFoundException | ClassCastException e) {
             return false;
         }
     }

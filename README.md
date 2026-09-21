@@ -1,6 +1,6 @@
 # 🧵 Sistema di Gestione Sartoria - Versione 2 (V2)
 
-Sistema di gestione sartoriale artigianale modulare sviluppato in **C**, evoluto per gestire in modo integrato commesse su misura, tracciamento materiali per piani di magazzino, anagrafica clienti, fornitori e organico dipendenti con relative forme contrattuali.
+Sistema di gestione sartoriale artigianale modulare sviluppato in **Java Swing**, evoluto per gestire in modo integrato commesse su misura, tracciamento materiali per piani di magazzino, anagrafica clienti, fornitori e organico dipendenti con relative forme contrattuali.
 
 ---
 
@@ -59,7 +59,7 @@ Il sistema include la modellazione completa delle entità richieste per la Versi
 ## 🏗️ Persistenza Dati
 
 I dati della V2 vengono salvati in modalità binaria su:
-- `../file/backup_sartoria_v2.dat`
+- `java/data/archivio_sartoria_v2.dat`
 
 In questo modo i dati e i backup della versione precedente (V1) rimangono intatti e protetti da sovrascritture.
 

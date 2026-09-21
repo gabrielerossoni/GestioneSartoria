@@ -10,3 +10,5 @@ api_handler.exe
 # Java
 **/build/
 **/dist/
+/java/nbproject/private/
+Relazione - Gestione Sartoria Digitale - V2.pdf

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
  * Incapsula l'architettura logistica ripartita sui 3 Piani (Piano 0, 1, 2)
  * e fornisce i metodi centralizzati per la gestione delle giacenze, sottoscorta e inventario monetario.
  */
+@SuppressWarnings("serial")
 public class Magazzino implements Serializable {
     private static final long serialVersionUID = 1L;
 

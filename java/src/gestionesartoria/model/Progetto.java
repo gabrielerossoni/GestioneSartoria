@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class Progetto implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -92,6 +93,7 @@ public class Progetto implements Serializable {
 
     @Override
     public String toString() {
-        return id + " - " + tipoCapo + " [" + statoAvanzamento.getLabel() + "] € " + String.format("%.2f", prezzoFinale);
+        String stato = (statoAvanzamento != null) ? statoAvanzamento.getLabel() : "NON DEFINITO";
+        return String.format("%s - %s [%s] € %.2f", id, tipoCapo, stato, prezzoFinale);
     }
 }
