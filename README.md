@@ -1,4 +1,4 @@
-# 🧵 Sistema di Gestione Sartoria - Versione 2 (V2)
+# Gestione Sartoria
 
 Sistema di gestione sartoriale artigianale modulare sviluppato in **Java Swing**, evoluto per gestire in modo integrato commesse su misura, tracciamento materiali per piani di magazzino, anagrafica clienti, fornitori e organico dipendenti con relative forme contrattuali.
 

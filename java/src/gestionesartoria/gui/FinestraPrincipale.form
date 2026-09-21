@@ -7,7 +7,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" value="Sistema Gestione Sartoria Digitale - V2 (Java Desktop Enterprise)"/>
+    <Property name="title" type="java.lang.String" value="Gestione Sartoria"/>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
       <Dimension value="[1150, 750]"/>
     </Property>
@@ -68,7 +68,6 @@
                   <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="lblTitoloApp" min="-2" pref="450" max="-2" attributes="0"/>
-                      <Component id="lblSottotitolo" min="-2" pref="550" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="btnSalvaDati" min="-2" pref="140" max="-2" attributes="0"/>
@@ -85,8 +84,6 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="lblTitoloApp" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblSottotitolo" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="btnSalvaDati" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
@@ -107,12 +104,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="GESTIONE SARTORIA DIGITALE - V2"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblSottotitolo">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Commesse su misura, Magazzino a 3 Piani, Dipendenti, Clienti e Fornitori"/>
+            <Property name="text" type="java.lang.String" value="GESTIONE SARTORIA"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnSalvaDati">

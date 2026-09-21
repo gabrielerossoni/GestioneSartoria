@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="GestioneSartoria_Java" default="default" basedir=".">
-    <description>Builds, tests, and runs the project GestioneSartoria_Java.</description>
+<project name="AtelierManager" default="default" basedir=".">
+    <description>Builds, tests, and runs Gestione Sartoria.</description>
 
     <!-- Proprietà generali del progetto -->
     <property name="src.dir" location="src"/>

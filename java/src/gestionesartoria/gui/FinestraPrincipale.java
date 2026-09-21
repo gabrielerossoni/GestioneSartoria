@@ -8,6 +8,7 @@ import gestionesartoria.service.GestioneSartoriaService;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
@@ -64,7 +65,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     private JTable tableMagazzinoPiani;
     private DefaultTableModel modelMagazzinoPiani;
     private JComboBox<String> comboFiltroPiano;
-    private JLabel lblValorePianoCorrente;
+    private JLabel lblRiepilogoMagazzino;
     private JButton btnNuovoComp;
     private JButton btnModificaQta;
     private JButton btnEliminaComp;
@@ -82,6 +83,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     private JTable tablePersonale;
     private DefaultTableModel modelPersonale;
     private JComboBox<String> comboFiltroContratto;
+    private JLabel lblRiepilogoPersonale;
     private JButton btnNuovoDip;
     private JButton btnEliminaDip;
 
@@ -151,8 +153,6 @@ public class FinestraPrincipale extends javax.swing.JFrame {
 
         lblTitoloApp.setFont(FONT_TITOLO);
         lblTitoloApp.setForeground(Color.WHITE);
-        lblSottotitolo.setFont(FONT_TESTO);
-        lblSottotitolo.setForeground(new Color(204, 204, 204));
 
         impostaStileBottone(btnSalvaDati, COLONNA_ACCENT, COLONNA_ACCENT_DARK, Color.WHITE);
         impostaStileBottone(btnRicarica, COLONNA_BOTTONE_SECONDARIO, new Color(86, 94, 102), Color.WHITE);
@@ -168,13 +168,17 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         }
 
         bottone.setFont(FONT_TESTO_BOLD);
+        bottone.setUI(new BasicButtonUI());
         bottone.setBackground(base);
         bottone.setForeground(testo);
         bottone.setFocusPainted(false);
         bottone.setOpaque(true);
-        bottone.setBorderPainted(false);
+        bottone.setBorderPainted(true);
         bottone.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        bottone.setBorder(BorderFactory.createEmptyBorder(8, 14, 8, 14));
+        bottone.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(160, 174, 190), 1, true),
+            BorderFactory.createEmptyBorder(8, 14, 8, 14)
+        ));
 
         bottone.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -226,8 +230,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     private void inizializzaDati() {
         boolean caricato = FilePersistenceService.caricaDati(service, null);
         if (!caricato) {
-            service.caricaDatiInizialiDemo();
-            lblStatusInfo.setText("Caricati dati dimostrativi aziendali (nessun archivio precedente trovato).");
+            lblStatusInfo.setText("Nessun archivio trovato. Inserire i primi dati per iniziare.");
         } else {
             lblStatusInfo.setText("Archivio caricato con successo dal file locale.");
         }
@@ -654,11 +657,6 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         btnEliminaComp.addActionListener(this::btnEliminaCompActionPerformed);
         pnlFiltri.add(btnEliminaComp);
 
-        lblValorePianoCorrente = new JLabel("Valore Piano: € 0.00");
-        lblValorePianoCorrente.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblValorePianoCorrente.setForeground(new Color(39, 174, 96));
-        pnlFiltri.add(lblValorePianoCorrente);
-
         tabMagazzino.add(pnlFiltri, BorderLayout.NORTH);
 
         String[] colsMag = {"ID", "Nome Materiale", "Categoria", "Giacenza", "U.M.", "Costo (€)", "Valore (€)", "Piano", "Scaffale", "Soglia Min.", "Fornitore", "Alert"};
@@ -690,6 +688,14 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         });
 
         tabMagazzino.add(new JScrollPane(tableMagazzinoPiani), BorderLayout.CENTER);
+
+        lblRiepilogoMagazzino = new JLabel("Articoli: 0    Valore visualizzato: € 0,00    Sottoscorta: 0");
+        lblRiepilogoMagazzino.setFont(FONT_TESTO_BOLD);
+        lblRiepilogoMagazzino.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(1, 0, 0, 0, COLONNA_BORDO),
+                BorderFactory.createEmptyBorder(4, 10, 2, 10)
+        ));
+        tabMagazzino.add(lblRiepilogoMagazzino, BorderLayout.SOUTH);
     }
 
     // =========================================================================
@@ -766,6 +772,14 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         tablePersonale.setRowHeight(24);
         tablePersonale.setAutoCreateRowSorter(true);
         tabPersonale.add(new JScrollPane(tablePersonale), BorderLayout.CENTER);
+
+        lblRiepilogoPersonale = new JLabel("Dipendenti visualizzati: 0    Attivi: 0    Costo mensile: € 0,00");
+        lblRiepilogoPersonale.setFont(FONT_TESTO_BOLD);
+        lblRiepilogoPersonale.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(1, 0, 0, 0, COLONNA_BORDO),
+                BorderFactory.createEmptyBorder(4, 10, 2, 10)
+        ));
+        tabPersonale.add(lblRiepilogoPersonale, BorderLayout.SOUTH);
     }
 
     // =========================================================================
@@ -895,14 +909,18 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         List<Componente> lista;
         if (idxPiano == 0) {
             lista = service.getComponenti();
-            lblValorePianoCorrente.setText(String.format("Valore Totale Tutti i Piani: € %.2f", service.getValoreEconomicoTotaleMagazzino()));
         } else {
             int piano = idxPiano - 1;
             lista = service.getComponentiPerPiano(piano);
-            lblValorePianoCorrente.setText(String.format("Valore Piano %d: € %.2f", piano, service.getValoreEconomicoPiano(piano)));
         }
 
+        double valoreVisualizzato = 0.0;
+        int articoliSottoscorta = 0;
         for (Componente c : lista) {
+            valoreVisualizzato += c.getValoreTotale();
+            if (c.isSottoscorta()) {
+                articoliSottoscorta++;
+            }
             modelMagazzinoPiani.addRow(new Object[]{
                     c.getId(), c.getNome(), c.getCategoria(),
                     String.format("%.2f", c.getQuantitaDisponibile()), c.getUnitaMisura(),
@@ -911,6 +929,9 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                     c.getIdFornitore(), c.isSottoscorta() ? "SOTTOSCORTA" : "OK"
             });
         }
+                lblRiepilogoMagazzino.setText(String.format(
+                    "Articoli visualizzati: %d    Valore visualizzato: € %.2f    Sottoscorta: %d",
+                    lista.size(), valoreVisualizzato, articoliSottoscorta));
     }
 
     private void aggiornaTabellaClienti() {
@@ -927,13 +948,23 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     private void aggiornaTabellaPersonale() {
         modelPersonale.setRowCount(0);
         String f = (comboFiltroContratto != null) ? (String) comboFiltroContratto.getSelectedItem() : "TUTTI";
-        for (Personale p : service.filtraPersonalePerContratto(f)) {
+        List<Personale> personaleVisualizzato = service.filtraPersonalePerContratto(f);
+        int dipendentiAttivi = 0;
+        double costoMensile = 0.0;
+        for (Personale p : personaleVisualizzato) {
+            if ("ATTIVO".equalsIgnoreCase(p.getStato())) {
+                dipendentiAttivi++;
+            }
+            costoMensile += p.getRetribuzioneMensile();
             modelPersonale.addRow(new Object[]{
                     p.getId(), p.getCognome(), p.getNome(), p.getRuolo(),
                     p.getTipoContratto(), String.format("%.2f", p.getRetribuzioneMensile()),
                     p.getDataAssunzioneFormattata(), p.getStato()
             });
         }
+        lblRiepilogoPersonale.setText(String.format(
+                "Dipendenti visualizzati: %d    Attivi: %d    Costo mensile: € %.2f",
+                personaleVisualizzato.size(), dipendentiAttivi, costoMensile));
     }
 
     private void aggiornaTabellaFornitori() {
@@ -1281,7 +1312,6 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         buttonGroupPiani = new javax.swing.ButtonGroup();
         panelHeader = new javax.swing.JPanel();
         lblTitoloApp = new javax.swing.JLabel();
-        lblSottotitolo = new javax.swing.JLabel();
         btnSalvaDati = new javax.swing.JButton();
         btnRicarica = new javax.swing.JButton();
         tabbedPanePrincipale = new javax.swing.JTabbedPane();
@@ -1296,7 +1326,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         lblValoreMagazzinoStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Sistema Gestione Sartoria Digitale - V2 (Java Desktop Enterprise)");
+        setTitle("Gestione Sartoria");
         setMinimumSize(new java.awt.Dimension(1150, 750));
 
         panelHeader.setBackground(new java.awt.Color(15, 35, 66));
@@ -1304,9 +1334,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
 
         lblTitoloApp.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         lblTitoloApp.setForeground(new java.awt.Color(255, 255, 255));
-        lblTitoloApp.setText("GESTIONE SARTORIA DIGITALE - V2");
-
-        lblSottotitolo.setText("Commesse su misura, Magazzino a 3 Piani, Dipendenti, Clienti e Fornitori");
+        lblTitoloApp.setText("GESTIONE SARTORIA");
 
         btnSalvaDati.setBackground(new java.awt.Color(40, 100, 235));
         btnSalvaDati.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -1335,8 +1363,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
             .addGroup(panelHeaderLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitoloApp, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSottotitolo, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTitoloApp, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnSalvaDati, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1349,9 +1376,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelHeaderLayout.createSequentialGroup()
-                        .addComponent(lblTitoloApp)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblSottotitolo))
+                        .addComponent(lblTitoloApp))
                     .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnSalvaDati, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnRicarica, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1460,7 +1485,6 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     private javax.swing.JButton btnRicarica;
     private javax.swing.JButton btnSalvaDati;
     private javax.swing.ButtonGroup buttonGroupPiani;
-    private javax.swing.JLabel lblSottotitolo;
     private javax.swing.JLabel lblStatusInfo;
     private javax.swing.JLabel lblTitoloApp;
     private javax.swing.JLabel lblValoreMagazzinoStatus;

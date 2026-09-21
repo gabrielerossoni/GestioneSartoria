@@ -8,7 +8,6 @@ import gestionesartoria.model.Magazzino;
 import gestionesartoria.model.Personale;
 import gestionesartoria.model.Progetto;
 import gestionesartoria.model.StatoProgetto;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -329,57 +328,4 @@ public class GestioneSartoriaService {
         magazzino.sostituisciComponenti(componenti);
     }
 
-    // Inizializza dati demo realistici per test e prima apertura
-    public void caricaDatiInizialiDemo() {
-        if (!fornitori.isEmpty() || !magazzino.getTuttiIComponenti().isEmpty()) return;
-
-        // Fornitori
-        aggiungiFornitore(new Fornitore("FOR0001", "Tessitura Serica", "Comasca SpA", "IT01234567890", "+39 031 556677", "ordini@tessituracomasca.it", "Via Seta 12, Como"));
-        aggiungiFornitore(new Fornitore("FOR0002", "Lanificio Biellese", "Srl", "IT09876543211", "+39 015 889900", "info@lanificiobiella.it", "Via Lana 45, Biella"));
-        aggiungiFornitore(new Fornitore("FOR0003", "Minuterie Sartoriali", "Rossi & Figli", "IT05432167894", "+39 02 445566", "vendite@rossiminuterie.it", "Via Bottoni 8, Milano"));
-
-        // Clienti
-        aggiungiCliente(new Cliente("CLI0001", "RSSMRA80A01F205X", "Mario", "Rossi", "+39 333 1122334", "mario.rossi@email.it", "Spalle 46, Torace 102, Vita 88, Bacino 98, Manica 64"));
-        aggiungiCliente(new Cliente("CLI0002", "BNCGLI92B42H501Y", "Giulia", "Bianchi", "+39 347 9988776", "giulia.b@email.it", "Altezza 172, Seno 90, Vita 68, Fianchi 94, Lunghezza gonna 60"));
-        aggiungiCliente(new Cliente("CLI0003", "VRDLGU75C15F205W", "Luigi", "Verdi", "+39 328 4455667", "luigi.verdi@studiolegale.it", "Giacca TG 50 drop 6, Pantalone vita 92 lunghezza 105"));
-
-        // Personale
-        aggiungiPersonale(new Personale("DIP0001", "Alessandro", "Maestri", "Sarto Capo Modellista", "Indeterminato", 2800.0, LocalDate.of(2018, 2, 1), "ATTIVO"));
-        aggiungiPersonale(new Personale("DIP0002", "Elena", "Fontana", "Sarta Specializzata", "Indeterminato", 2100.0, LocalDate.of(2020, 5, 15), "ATTIVO"));
-        aggiungiPersonale(new Personale("DIP0003", "Marco", "Riva", "Apprendista Sartoriale", "Apprendistato", 1250.0, LocalDate.of(2025, 9, 1), "ATTIVO"));
-        aggiungiPersonale(new Personale("DIP0004", "Chiara", "Colombo", "Receptionist / Assistente", "Part-Time", 1050.0, LocalDate.of(2024, 1, 10), "ATTIVO"));
-
-        // Componenti Magazzino
-        // Piano 0: Scorte pesanti
-        aggiungiComponente(new Componente("CMP0001", "Rotolo Panno Lana Pesante Blu", "TESSUTO", 35.0, "m", 28.50, "FOR0002", 0, "A-01", 10.0));
-        aggiungiComponente(new Componente("CMP0002", "Interfodera Termoadesiva Rigida", "FODERA", 60.0, "m", 6.20, "FOR0003", 0, "A-04", 15.0));
-
-        // Piano 1: Tessuti Pregiati
-        aggiungiComponente(new Componente("CMP0003", "Seta Shantung Naturale Avorio", "TESSUTO", 18.5, "m", 45.00, "FOR0001", 1, "B-02", 8.0));
-        aggiungiComponente(new Componente("CMP0004", "Lana Tasmania Grigio Antracite", "TESSUTO", 24.0, "m", 52.00, "FOR0002", 1, "B-05", 10.0));
-        aggiungiComponente(new Componente("CMP0005", "Fodera Bemberg Cupro Bordeaux", "FODERA", 4.0, "m", 9.50, "FOR0001", 1, "B-09", 8.0)); // Sottoscorta!
-
-        // Piano 2: Minuteria e Filati
-        aggiungiComponente(new Componente("CMP0006", "Bottoni Madreperla 18mm", "MINUTERIA", 120.0, "pezzi", 0.85, "FOR0003", 2, "C-01", 30.0));
-        aggiungiComponente(new Componente("CMP0007", "Rocchetto Filo Seta Cucirino Nero", "FILATO", 5.0, "rocchetti", 4.50, "FOR0003", 2, "C-08", 6.0)); // Sottoscorta!
-        aggiungiComponente(new Componente("CMP0008", "Cerniere Lampo Invisibili 50cm", "ACCESSORIO", 45.0, "pezzi", 1.80, "FOR0003", 2, "C-12", 10.0));
-
-        // Progetti
-        Progetto p1 = new Progetto("PRJ0001", "CLI0001", "Completo Sartoriale 3 Pezzi", "DIP0001",
-                StatoProgetto.IN_LAVORAZIONE, LocalDate.now().minusDays(10), LocalDate.now().plusDays(15), 1250.0);
-        p1.addComponenteUsato(new ComponenteUsato("CMP0004", "Lana Tasmania Grigio Antracite", 3.4, "m", 52.00));
-        p1.addComponenteUsato(new ComponenteUsato("CMP0005", "Fodera Bemberg Cupro Bordeaux", 1.8, "m", 9.50));
-        p1.addComponenteUsato(new ComponenteUsato("CMP0006", "Bottoni Madreperla 18mm", 14.0, "pezzi", 0.85));
-        progetti.add(p1);
-
-        Progetto p2 = new Progetto("PRJ0002", "CLI0002", "Abito da Sera in Seta Avorio", "DIP0002",
-                StatoProgetto.PRIMA_PROVA, LocalDate.now().minusDays(20), LocalDate.now().plusDays(5), 890.0);
-        p2.addComponenteUsato(new ComponenteUsato("CMP0003", "Seta Shantung Naturale Avorio", 4.2, "m", 45.00));
-        p2.addComponenteUsato(new ComponenteUsato("CMP0008", "Cerniere Lampo Invisibili 50cm", 1.0, "pezzi", 1.80));
-        progetti.add(p2);
-
-        Progetto p3 = new Progetto("PRJ0003", "CLI0003", "Cappotto Lana Pesante Doppio Petto", "DIP0001",
-                StatoProgetto.IN_ATTESA, LocalDate.now().minusDays(2), LocalDate.now().plusDays(30), 1100.0);
-        progetti.add(p3);
-    }
 }
