@@ -108,7 +108,30 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         costruisciVisteAziendali();
         inizializzaDati();
         aggiornaTutteLeTabelle();
+        impostaStileControlli();
         avviaSalvataggioAutomatico();
+    }
+
+    private void impostaStileControlli() {
+        JButton[] pulsanti = {
+                btnNuovoProgetto, btnEliminaProgetto, btnAggiornaStato,
+                btnNuovoComp, btnModificaQta, btnEliminaComp,
+                btnNuovoCliente, btnEliminaCliente, btnCercaCliente, btnResetCliente,
+                btnNuovoDip, btnEliminaDip,
+                btnNuovoFor, btnEliminaFor, btnCercaFornitore, btnResetFornitore
+        };
+        for (JButton pulsante : pulsanti) {
+            impostaStileBottone(pulsante, COLONNA_ACCENT, COLONNA_ACCENT_DARK, Color.WHITE);
+        }
+
+        btnEliminaProgetto.setToolTipText("Elimina la commessa selezionata");
+        btnEliminaComp.setToolTipText("Elimina il materiale selezionato dal magazzino");
+        btnModificaQta.setToolTipText("Modifica quantità, piano e scaffale");
+        btnResetCliente.setToolTipText("Mostra nuovamente tutti i clienti");
+        btnResetFornitore.setToolTipText("Mostra nuovamente tutti i fornitori");
+        comboFiltroPiano.setToolTipText("Scegli quale piano visualizzare");
+        comboFiltroContratto.setToolTipText("Filtra il personale per contratto");
+        comboNuovoStato.setToolTipText("Scegli il nuovo stato della commessa");
     }
 
     private void avviaSalvataggioAutomatico() {
@@ -149,12 +172,9 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         bottone.setForeground(testo);
         bottone.setFocusPainted(false);
         bottone.setOpaque(true);
-        bottone.setBorderPainted(true);
+        bottone.setBorderPainted(false);
         bottone.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        bottone.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(base.darker(), 1, true),
-                BorderFactory.createEmptyBorder(8, 14, 8, 14)
-        ));
+        bottone.setBorder(BorderFactory.createEmptyBorder(8, 14, 8, 14));
 
         bottone.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -240,7 +260,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         lblKpiCommesse = creaKpiCard("COMMESSE ATTIVE", "0", new Color(41, 128, 185));
         lblKpiMagazzino = creaKpiCard("VALORE MAGAZZINO", "€ 0.00", new Color(39, 174, 96));
         lblKpiClienti = creaKpiCard("CLIENTI REGISTRATI", "0", new Color(142, 68, 173));
-        lblKpiPersonale = creaKpiCard("ORGANICO ATTIVO", "0", new Color(211, 84, 0));
+        lblKpiPersonale = creaKpiCard("DIPENDENTI ATTIVI", "0", new Color(211, 84, 0));
 
         pnlKpi.add(lblKpiCommesse.getParent());
         pnlKpi.add(lblKpiMagazzino.getParent());
@@ -264,6 +284,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         };
         tableAlertSottoscorta = new JTable(modelAlertSottoscorta);
         tableAlertSottoscorta.setRowHeight(26);
+        tableAlertSottoscorta.setAutoCreateRowSorter(true);
         tableAlertSottoscorta.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
 
         // Renderer rosso per evidenziare la sottoscorta
@@ -353,6 +374,8 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         };
         tableProgetti = new JTable(modelProgetti);
         tableProgetti.setRowHeight(24);
+        tableProgetti.setAutoCreateRowSorter(true);
+        tableProgetti.setToolTipText("Seleziona una commessa per visualizzarne i materiali");
         tableProgetti.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableProgetti.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) mostraDettagliProgettoSelezionato();
@@ -377,6 +400,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         };
         tableDistintaProgetto = new JTable(modelDistintaProgetto);
         tableDistintaProgetto.setRowHeight(22);
+        tableDistintaProgetto.setToolTipText("Trascina una riga verso il catalogo per restituire il materiale");
         tableDistintaProgetto.setDragEnabled(true);
         tableDistintaProgetto.setTransferHandler(new TransferHandler() {
             @Override
@@ -387,7 +411,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                 }
 
                 String idComponente = (String) modelDistintaProgetto.getValueAt(riga, 0);
-                int rigaProgetto = tableProgetti.getSelectedRow();
+                int rigaProgetto = tableProgetti.convertRowIndexToModel(tableProgetti.getSelectedRow());
                 if (rigaProgetto < 0) {
                     return null;
                 }
@@ -470,7 +494,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
                         return;
                     }
 
-                    int rigaProgetto = tableProgetti.getSelectedRow();
+                    int rigaProgetto = tableProgetti.convertRowIndexToModel(tableProgetti.getSelectedRow());
                     if (rigaProgetto < 0) {
                         dtde.rejectDrop();
                         return;
@@ -539,7 +563,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
             @Override
             public void drop(DropTargetDropEvent dtde) {
                 try {
-                    int selPrjRow = tableProgetti.getSelectedRow();
+                    int selPrjRow = tableProgetti.convertRowIndexToModel(tableProgetti.getSelectedRow());
                     if (selPrjRow < 0) {
                         JOptionPane.showMessageDialog(FinestraPrincipale.this,
                                 "Seleziona prima una commessa a sinistra su cui assegnare il materiale!",
@@ -643,6 +667,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         };
         tableMagazzinoPiani = new JTable(modelMagazzinoPiani);
         tableMagazzinoPiani.setRowHeight(24);
+        tableMagazzinoPiani.setAutoCreateRowSorter(true);
         tableMagazzinoPiani.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
 
         // Evidenziazione righe sottoscorta
@@ -703,6 +728,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         };
         tableClienti = new JTable(modelClienti);
         tableClienti.setRowHeight(24);
+        tableClienti.setAutoCreateRowSorter(true);
         tabClienti.add(new JScrollPane(tableClienti), BorderLayout.CENTER);
     }
 
@@ -738,6 +764,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         };
         tablePersonale = new JTable(modelPersonale);
         tablePersonale.setRowHeight(24);
+        tablePersonale.setAutoCreateRowSorter(true);
         tabPersonale.add(new JScrollPane(tablePersonale), BorderLayout.CENTER);
     }
 
@@ -778,6 +805,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         };
         tableFornitori = new JTable(modelFornitori);
         tableFornitori.setRowHeight(24);
+        tableFornitori.setAutoCreateRowSorter(true);
         tabFornitori.add(new JScrollPane(tableFornitori), BorderLayout.CENTER);
     }
 
@@ -801,7 +829,10 @@ public class FinestraPrincipale extends javax.swing.JFrame {
         lblKpiCommesse.setText(String.valueOf(service.getProgetti().size()));
         lblKpiMagazzino.setText(String.format("€ %.2f", service.getValoreEconomicoTotaleMagazzino()));
         lblKpiClienti.setText(String.valueOf(service.getClienti().size()));
-        lblKpiPersonale.setText(String.valueOf(service.getPersonale().size()));
+        long dipendentiAttivi = service.getPersonale().stream()
+            .filter(p -> "ATTIVO".equalsIgnoreCase(p.getStato()))
+            .count();
+        lblKpiPersonale.setText(String.valueOf(dipendentiAttivi));
 
         modelAlertSottoscorta.setRowCount(0);
         for (Componente c : service.getComponentiSottoscorta()) {
@@ -827,7 +858,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     }
 
     private void mostraDettagliProgettoSelezionato() {
-        int sel = tableProgetti.getSelectedRow();
+        int sel = tableProgetti.convertRowIndexToModel(tableProgetti.getSelectedRow());
         modelDistintaProgetto.setRowCount(0);
         if (sel >= 0) {
             String idPrj = (String) modelProgetti.getValueAt(sel, 0);
@@ -961,7 +992,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     }
 
     private void btnAggiornaStatoActionPerformed(java.awt.event.ActionEvent evt) {
-        int sel = tableProgetti.getSelectedRow();
+        int sel = tableProgetti.convertRowIndexToModel(tableProgetti.getSelectedRow());
         if (sel >= 0) {
             String prjId = (String) modelProgetti.getValueAt(sel, 0);
             StatoProgetto nuovo = (StatoProgetto) comboNuovoStato.getSelectedItem();
@@ -1035,7 +1066,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     }
 
     private void btnModificaQtaActionPerformed(java.awt.event.ActionEvent evt) {
-        int sel = tableMagazzinoPiani.getSelectedRow();
+        int sel = tableMagazzinoPiani.convertRowIndexToModel(tableMagazzinoPiani.getSelectedRow());
         if (sel >= 0) {
             String id = (String) modelMagazzinoPiani.getValueAt(sel, 0);
             service.cercaComponentePerId(id).ifPresent(c -> {
@@ -1065,7 +1096,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     }
 
     private void btnEliminaCompActionPerformed(java.awt.event.ActionEvent evt) {
-        int sel = tableMagazzinoPiani.getSelectedRow();
+        int sel = tableMagazzinoPiani.convertRowIndexToModel(tableMagazzinoPiani.getSelectedRow());
         if (sel >= 0) {
             String id = (String) modelMagazzinoPiani.getValueAt(sel, 0);
             int ok = JOptionPane.showConfirmDialog(this, "Eliminare " + id + "?", "Conferma", JOptionPane.YES_NO_OPTION);
@@ -1104,7 +1135,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     }
 
     private void btnEliminaClienteActionPerformed(java.awt.event.ActionEvent evt) {
-        int sel = tableClienti.getSelectedRow();
+        int sel = tableClienti.convertRowIndexToModel(tableClienti.getSelectedRow());
         if (sel >= 0) {
             String id = (String) modelClienti.getValueAt(sel, 0);
             if (JOptionPane.showConfirmDialog(this, "Eliminare il cliente " + id + "?", "Elimina", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -1152,7 +1183,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     }
 
     private void btnEliminaDipActionPerformed(java.awt.event.ActionEvent evt) {
-        int sel = tablePersonale.getSelectedRow();
+        int sel = tablePersonale.convertRowIndexToModel(tablePersonale.getSelectedRow());
         if (sel >= 0) {
             String id = (String) modelPersonale.getValueAt(sel, 0);
             if (JOptionPane.showConfirmDialog(this, "Rimuovere dipendente " + id + "?", "Elimina", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -1191,7 +1222,7 @@ public class FinestraPrincipale extends javax.swing.JFrame {
     }
 
     private void btnEliminaForActionPerformed(java.awt.event.ActionEvent evt) {
-        int sel = tableFornitori.getSelectedRow();
+        int sel = tableFornitori.convertRowIndexToModel(tableFornitori.getSelectedRow());
         if (sel >= 0) {
             String id = (String) modelFornitori.getValueAt(sel, 0);
             if (JOptionPane.showConfirmDialog(this, "Eliminare fornitore " + id + "?", "Elimina", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
